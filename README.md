@@ -2,6 +2,13 @@ This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-
 
 ## Getting Started
 
+```bash
+sudo apt update && sudo apt upgrade -y
+sudo apt install nodejs npm && npm -V
+npx create-next-app my-nextjs-app --typescript --tailwind && cd my-nextjs-app && npm install && npm install lucide-react
+# Move `pages_index.tsx` to `my-nextjs-app/app/page.tsx`
+```
+
 First, run the development server:
 
 ```bash
