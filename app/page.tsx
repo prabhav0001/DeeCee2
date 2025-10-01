@@ -1,3 +1,5 @@
+"use client"
+
 import React, { useState, useEffect } from 'react';
 import { Heart, User, Search, ShoppingCart, Menu, X } from 'lucide-react';
 
