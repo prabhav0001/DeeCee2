@@ -191,7 +191,8 @@ export default function DeeceeHair(): React.ReactElement {
         <div className="flex items-center justify-between h-16">
           <div className="flex items-center space-x-8">
             <button onClick={() => navigateTo("home")} className="flex items-center space-x-2">
-              <div className="bg-gray-200 border-2 border-dashed rounded-xl w-16 h-16" />
+              {/* <div className="bg-gray-200 border-2 border-dashed rounded-xl w-16 h-16" /> */}
+              {/* <img src="/dc-logo.svg" alt="DEECEE" className="h-18 w-auto" /> */}
               <span className="text-2xl font-bold text-rose-600">DEECEE</span>
               <span className="text-2xl font-light text-gray-800">HAIR</span>
             </button>
