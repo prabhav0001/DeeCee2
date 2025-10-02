@@ -191,6 +191,7 @@ export default function DeeceeHair(): React.ReactElement {
         <div className="flex items-center justify-between h-16">
           <div className="flex items-center space-x-8">
             <button onClick={() => navigateTo("home")} className="flex items-center space-x-2">
+              <div className="bg-gray-200 border-2 border-dashed rounded-xl w-16 h-16" />
               <span className="text-2xl font-bold text-rose-600">DEECEE</span>
               <span className="text-2xl font-light text-gray-800">HAIR</span>
             </button>
@@ -242,7 +243,7 @@ export default function DeeceeHair(): React.ReactElement {
         {heroSlides.map((slide, index) => (
           <div key={index} className={`absolute inset-0 transition-opacity duration-1000 ${index === currentSlide ? "opacity-100" : "opacity-0"}`} style={{ backgroundImage: `url('${slide.image}')`, backgroundSize: "cover", backgroundPosition: "center" }} />
         ))}
-        <div className="absolute inset-0 bg-gradient-to-br from-rose-600/70 via-pink-600/70 to-rose-500/70"></div>
+        <div className="absolute inset-0 bg-gradient-to-br from-rose-600/40 via-transparent to-rose-600/40"></div>
         <div className="relative z-10 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
           <div className="transform transition-all duration-700">
             <h1 className="text-5xl lg:text-7xl font-bold text-white mb-6 tracking-tight">
