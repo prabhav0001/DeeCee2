@@ -34,15 +34,8 @@ const products: Product[] = [
 const promoMessages = [
   'Sign up and Get 5% OFF on your 1st order',
   'COD AVAILABLE',
-  'Free Shipping on Orders Above \u20b95000',
+  'Free Shipping on Orders Above ₹5000',
   'Premium Quality Hair Extensions',
-];
-
-const heroImages = [
-  'https://images.unsplash.com/photo-1560069007-67bbe5e4d4f5?auto=format&fit=crop&w=1920&q=80',
-  'https://images.unsplash.com/photo-1522337360788-8b13dee7a37e?auto=format&fit=crop&w=1920&q=80',
-  'https://images.unsplash.com/photo-1495567720989-cebdbdd97913?auto=format&fit=crop&w=1920&q=80',
-  'https://images.unsplash.com/photo-1487412720507-e7ab37603c6f?auto=format&fit=crop&w=1920&q=80',
 ];
 
 export default function DeeceeHair() {
@@ -55,19 +48,11 @@ export default function DeeceeHair() {
   const [searchOpen, setSearchOpen] = useState(false);
   const [filterCategory, setFilterCategory] = useState<string>('all');
   const [promoIndex, setPromoIndex] = useState(0);
-  const [heroImageIndex, setHeroImageIndex] = useState(0);
 
   useEffect(() => {
     const interval = setInterval(() => {
       setPromoIndex((prev) => (prev + 1) % promoMessages.length);
     }, 3000);
-    return () => clearInterval(interval);
-  }, []);
-
-  useEffect(() => {
-    const interval = setInterval(() => {
-      setHeroImageIndex((prev) => (prev + 1) % heroImages.length);
-    }, 5000);
     return () => clearInterval(interval);
   }, []);
 
@@ -124,7 +109,15 @@ export default function DeeceeHair() {
           {promoMessages[promoIndex]}
         </span>
       </div>
-      <style jsx>{`\n        @keyframes marquee {\n          0% { transform: translateX(100%); }\n          100% { transform: translateX(-100%); }\n        }\n        .animate-marquee {\n          animation: marquee 15s linear infinite;\n        }\n      `}</style>
+      <style jsx>{`
+        @keyframes marquee {
+          0% { transform: translateX(100%); }
+          100% { transform: translateX(-100%); }
+        }
+        .animate-marquee {
+          animation: marquee 15s linear infinite;
+        }
+      `}</style>
     </div>
   );
 
@@ -219,42 +212,22 @@ export default function DeeceeHair() {
 
   const HomePage = () => (
     <div>
-      <section className="relative py-20 lg:py-32 overflow-hidden">
-        {heroImages.map((image, index) => (
-          <div
-            key={index}
-            className={`absolute inset-0 bg-cover bg-center bg-no-repeat transition-opacity duration-1000 ${index === heroImageIndex ? 'opacity-100' : 'opacity-0'}`}
-            style={{
-              backgroundImage: `linear-gradient(rgba(244, 63, 94, 0.7), rgba(251, 113, 133, 0.7)), url('${image}')`
-            }}
-          />
-        ))}
-        <div className="relative z-10">
-          <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-            <div className="text-center">
-              <h1 className="text-4xl lg:text-6xl font-bold text-white mb-6 tracking-tight drop-shadow-lg">
-                Premium Hair Extensions
-              </h1>
-              <p className="text-lg lg:text-xl text-white mb-8 max-w-2xl mx-auto drop-shadow-md">
-                Transform your look with our luxurious collection of hair extensions. Quality you can feel, beauty you can see.
-              </p>
-              <button
-                onClick={() => { setCurrentPage('shop'); setFilterCategory('all'); }}
-                className="bg-white text-rose-600 px-8 py-3 rounded-lg font-medium hover:bg-gray-100 transition shadow-lg"
-              >
-                Shop Now
-              </button>
-            </div>
-          </div>
-        </div>
-        <div className="absolute bottom-4 left-1/2 transform -translate-x-1/2 flex space-x-2 z-10">
-          {heroImages.map((_, index) => (
+      <section className="relative bg-gradient-to-br from-rose-50 to-pink-50 py-20 lg:py-32">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+          <div className="text-center">
+            <h1 className="text-4xl lg:text-6xl font-bold text-gray-900 mb-6 tracking-tight">
+              Premium Hair Extensions
+            </h1>
+            <p className="text-lg lg:text-xl text-gray-600 mb-8 max-w-2xl mx-auto">
+              Transform your look with our luxurious collection of hair extensions. Quality you can feel, beauty you can see.
+            </p>
             <button
-              key={index}
-              onClick={() => setHeroImageIndex(index)}
-              className={`w-2 h-2 rounded-full transition-all ${index === heroImageIndex ? 'bg-white w-8' : 'bg-white bg-opacity-50'}`}
-            />
-          ))}
+              onClick={() => { setCurrentPage('shop'); setFilterCategory('all'); }}
+              className="bg-rose-600 text-white px-8 py-3 rounded-lg font-medium hover:bg-rose-700 transition"
+            >
+              Shop Now
+            </button>
+          </div>
         </div>
       </section>
 
@@ -339,7 +312,7 @@ export default function DeeceeHair() {
             }}>
               <img src={product.image} alt={product.name} className="w-full h-48 object-cover rounded-md mb-4" />
               <h3 className="text-lg font-semibold text-gray-900 mb-1">{product.name}</h3>
-              <p className="text-rose-600 font-bold">\u20b9{product.price}</p>
+              <p className="text-rose-600 font-bold">₹{product.price}</p>
               {product.isBestseller && <span className="inline-block mt-2 px-2 py-1 text-xs font-semibold bg-rose-100 text-rose-700 rounded-full">Bestseller</span>}
               {product.isNew && <span className="inline-block mt-2 ml-2 px-2 py-1 text-xs font-semibold bg-green-100 text-green-700 rounded-full">New</span>}
             </div>
@@ -354,12 +327,12 @@ export default function DeeceeHair() {
 
     return (
       <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
-        <button onClick={() => setCurrentPage('shop')} className="mb-6 text-rose-600 hover:underline">\u2190 Back to Shop</button>
+        <button onClick={() => setCurrentPage('shop')} className="mb-6 text-rose-600 hover:underline">← Back to Shop</button>
         <div className="flex flex-col md:flex-row gap-8">
           <img src={selectedProduct.image} alt={selectedProduct.name} className="w-full md:w-1/2 rounded-lg object-cover" />
           <div className="flex flex-col flex-1">
             <h1 className="text-3xl font-bold text-gray-900 mb-4">{selectedProduct.name}</h1>
-            <p className="text-rose-600 text-2xl font-semibold mb-6">\u20b9{selectedProduct.price}</p>
+            <p className="text-rose-600 text-2xl font-semibold mb-6">₹{selectedProduct.price}</p>
 
             <div className="mb-4">
               <h3 className="font-semibold text-gray-700 mb-2">Select Color</h3>
@@ -465,7 +438,7 @@ export default function DeeceeHair() {
                 <h3 className="text-lg font-semibold text-gray-900">{item.product.name}</h3>
                 <p className="text-gray-700">Color: {item.color}</p>
                 <p className="text-gray-700">Size: {item.size}</p>
-                <p className="text-rose-600 font-semibold">\u20b9{item.product.price}</p>
+                <p className="text-rose-600 font-semibold">₹{item.product.price}</p>
               </div>
               <div className="flex items-center space-x-2">
                 <button
@@ -492,7 +465,7 @@ export default function DeeceeHair() {
           ))}
 
           <div className="text-right text-xl font-semibold text-gray-900">
-            Total: \u20b9{getTotalPrice()}
+            Total: ₹{getTotalPrice()}
           </div>
 
           <button
