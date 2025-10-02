@@ -126,8 +126,8 @@ export default function DeeceeHair() {
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="flex items-center justify-between h-16">
           <div className="flex items-center space-x-8">
-            <button onClick={() => { setCurrentPage('home'); setFilterCategory('all'); }} className="text-2xl font-bold tracking-tight text-gray-900">
-              DEECEE HAIR
+            <button onClick={() => { setCurrentPage('home'); setFilterCategory('all'); }} className="flex items-center space-x-2" >
+              <img src="/logo.png" alt="Deecee Hair Logo" className="h-15 w-auto" />
             </button>
             <nav className="hidden lg:flex space-x-6">
               <button onClick={() => { setCurrentPage('shop'); setFilterCategory('all'); }} className="text-sm font-medium text-gray-700 hover:text-rose-600 transition">
