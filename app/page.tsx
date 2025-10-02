@@ -1,7 +1,7 @@
 "use client"
 
 import React, { useState, useEffect } from 'react';
-import { Heart, User, Search, ShoppingCart, Menu, X } from 'lucide-react';
+import { Heart, User, Search, ShoppingCart, Menu, X, Star, Truck, Shield, CreditCard } from 'lucide-react';
 
 type Product = {
   id: number;
@@ -103,31 +103,23 @@ export default function DeeceeHair() {
   const filteredProducts = filterCategory === 'all' ? products : products.filter(p => p.category === filterCategory);
 
   const PromoSlider = () => (
-    <div className="bg-rose-50 py-2 overflow-hidden relative">
-      <div className="animate-marquee whitespace-nowrap">
-        <span className="text-sm font-medium text-rose-900 mx-8">
+    <div className="bg-rose-600 py-2 overflow-hidden relative">
+      <div className="animate-pulse text-center">
+        <span className="text-sm font-medium text-white mx-8">
           {promoMessages[promoIndex]}
         </span>
       </div>
-      <style jsx>{`
-        @keyframes marquee {
-          0% { transform: translateX(100%); }
-          100% { transform: translateX(-100%); }
-        }
-        .animate-marquee {
-          animation: marquee 15s linear infinite;
-        }
-      `}</style>
     </div>
   );
 
   const Header = () => (
-    <header className="bg-white border-b border-gray-200 sticky top-0 z-50">
+    <header className="bg-white border-b border-gray-200 sticky top-0 z-50 shadow-sm">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="flex items-center justify-between h-16">
           <div className="flex items-center space-x-8">
             <button onClick={() => { setCurrentPage('home'); setFilterCategory('all'); }} className="flex items-center space-x-2" >
-              <img src="/logo.png" alt="Deecee Hair Logo" className="h-15 w-auto" />
+              <span className="text-2xl font-bold text-rose-600">DEECEE</span>
+              <span className="text-2xl font-light text-gray-800">HAIR</span>
             </button>
             <nav className="hidden lg:flex space-x-6">
               <button onClick={() => { setCurrentPage('shop'); setFilterCategory('all'); }} className="text-sm font-medium text-gray-700 hover:text-rose-600 transition">
@@ -201,7 +193,7 @@ export default function DeeceeHair() {
             <button className="text-sm font-medium text-gray-700 hover:text-rose-600 transition text-left">
               Book Appointment
             </button>
-            <button className="text-sm font-medium text-gray-700 hover:text-rose-600 transition text-left">
+            <button onClick={() => { setCurrentPage('contact'); setMobileMenuOpen(false); }} className="text-sm font-medium text-gray-700 hover:text-rose-600 transition text-left">
               Contact Us
             </button>
           </nav>
@@ -212,56 +204,122 @@ export default function DeeceeHair() {
 
   const HomePage = () => (
     <div>
-      <section className="relative bg-gradient-to-br from-rose-50 to-pink-50 py-20 lg:py-32">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="text-center">
-            <h1 className="text-4xl lg:text-6xl font-bold text-gray-900 mb-6 tracking-tight">
-              Premium Hair Extensions
-            </h1>
-            <p className="text-lg lg:text-xl text-gray-600 mb-8 max-w-2xl mx-auto">
-              Transform your look with our luxurious collection of hair extensions. Quality you can feel, beauty you can see.
-            </p>
+      {/* Hero Section with Background Image */}
+      <section 
+        className="relative min-h-screen flex items-center justify-center overflow-hidden"
+        style={{
+          backgroundImage: `url('https://images.unsplash.com/photo-1519699047748-de8e457a634e?auto=format&fit=crop&w=1920&q=80')`,
+          backgroundSize: 'cover',
+          backgroundPosition: 'center',
+        }}
+      >
+        <div className="absolute inset-0 bg-gradient-to-br from-rose-600/80 to-pink-600/80"></div>
+        <div className="relative z-10 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
+          <h1 className="text-5xl lg:text-7xl font-bold text-white mb-6 tracking-tight animate-fade-in">
+            Luxurious Hair
+            <span className="block text-3xl lg:text-5xl mt-2 font-light">Extensions</span>
+          </h1>
+          <p className="text-lg lg:text-xl text-white/90 mb-8 max-w-2xl mx-auto">
+            Transform your look with our premium collection of 100% human hair extensions. Quality you can feel, beauty you can see.
+          </p>
+          <div className="flex flex-col sm:flex-row gap-4 justify-center">
             <button
               onClick={() => { setCurrentPage('shop'); setFilterCategory('all'); }}
-              className="bg-rose-600 text-white px-8 py-3 rounded-lg font-medium hover:bg-rose-700 transition"
+              className="bg-white text-rose-600 px-8 py-4 rounded-full font-semibold hover:bg-gray-100 transition transform hover:scale-105 shadow-lg"
             >
-              Shop Now
+              Shop Collection
+            </button>
+            <button
+              className="bg-transparent border-2 border-white text-white px-8 py-4 rounded-full font-semibold hover:bg-white hover:text-rose-600 transition transform hover:scale-105"
+            >
+              Book Consultation
             </button>
           </div>
         </div>
       </section>
 
+      {/* Features Section */}
       <section className="py-16 bg-white">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <h2 className="text-3xl font-bold text-gray-900 mb-12 text-center">Featured Collections</h2>
+          <div className="grid grid-cols-1 md:grid-cols-4 gap-8">
+            <div className="text-center">
+              <div className="bg-rose-100 w-16 h-16 rounded-full flex items-center justify-center mx-auto mb-4">
+                <Truck className="w-8 h-8 text-rose-600" />
+              </div>
+              <h3 className="font-semibold text-gray-900 mb-2">Free Shipping</h3>
+              <p className="text-sm text-gray-600">On orders above ₹5000</p>
+            </div>
+            <div className="text-center">
+              <div className="bg-rose-100 w-16 h-16 rounded-full flex items-center justify-center mx-auto mb-4">
+                <Shield className="w-8 h-8 text-rose-600" />
+              </div>
+              <h3 className="font-semibold text-gray-900 mb-2">100% Authentic</h3>
+              <p className="text-sm text-gray-600">Premium quality guaranteed</p>
+            </div>
+            <div className="text-center">
+              <div className="bg-rose-100 w-16 h-16 rounded-full flex items-center justify-center mx-auto mb-4">
+                <CreditCard className="w-8 h-8 text-rose-600" />
+              </div>
+              <h3 className="font-semibold text-gray-900 mb-2">COD Available</h3>
+              <p className="text-sm text-gray-600">Cash on delivery option</p>
+            </div>
+            <div className="text-center">
+              <div className="bg-rose-100 w-16 h-16 rounded-full flex items-center justify-center mx-auto mb-4">
+                <Star className="w-8 h-8 text-rose-600" />
+              </div>
+              <h3 className="font-semibold text-gray-900 mb-2">5% Off</h3>
+              <p className="text-sm text-gray-600">On your first order</p>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      {/* Featured Collections */}
+      <section className="py-20 bg-gray-50">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+          <h2 className="text-4xl font-bold text-gray-900 mb-4 text-center">Featured Collections</h2>
+          <p className="text-gray-600 text-center mb-12 max-w-2xl mx-auto">Discover our premium hair extensions in various textures to match your style</p>
           <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
-            {['Straight', 'Wavy', 'Curly'].map((type) => (
-              <div key={type} className="group cursor-pointer" onClick={() => { setFilterCategory(type.toLowerCase()); setCurrentPage('shop'); }}>
-                <div className="bg-gray-100 rounded-2xl h-64 mb-4 flex items-center justify-center group-hover:bg-gray-200 transition">
-                  <div className="bg-gray-200 border-2 border-dashed rounded-xl w-32 h-32" />
+            {[
+              { type: 'Straight', image: 'https://images.unsplash.com/photo-1492106087820-71f1a00d2b11?auto=format&fit=crop&w=400&q=80' },
+              { type: 'Wavy', image: 'https://images.unsplash.com/photo-1519699047748-de8e457a634e?auto=format&fit=crop&w=400&q=80' },
+              { type: 'Curly', image: 'https://images.unsplash.com/photo-1508214751196-bcfd4ca60f91?auto=format&fit=crop&w=400&q=80' }
+            ].map((item) => (
+              <div key={item.type} className="group cursor-pointer" onClick={() => { setFilterCategory(item.type.toLowerCase()); setCurrentPage('shop'); }}>
+                <div className="relative overflow-hidden rounded-2xl shadow-lg">
+                  <img src={item.image} alt={item.type} className="w-full h-80 object-cover group-hover:scale-110 transition duration-500" />
+                  <div className="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent"></div>
+                  <div className="absolute bottom-0 left-0 right-0 p-6">
+                    <h3 className="text-2xl font-bold text-white mb-2">{item.type} Extensions</h3>
+                    <button className="text-white underline hover:no-underline">Shop Now →</button>
+                  </div>
                 </div>
-                <h3 className="text-xl font-semibold text-gray-900 text-center">{type} Extensions</h3>
               </div>
             ))}
           </div>
         </div>
       </section>
 
-      <section className="py-16 bg-rose-50">
+      {/* Testimonials */}
+      <section className="py-20 bg-rose-50">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-8 text-center">
-            <div>
-              <div className="text-4xl font-bold text-rose-600 mb-2">100%</div>
-              <div className="text-gray-700 font-medium">Premium Quality</div>
-            </div>
-            <div>
-              <div className="text-4xl font-bold text-rose-600 mb-2">COD</div>
-              <div className="text-gray-700 font-medium">Cash on Delivery</div>
-            </div>
-            <div>
-              <div className="text-4xl font-bold text-rose-600 mb-2">5%</div>
-              <div className="text-gray-700 font-medium">First Order Discount</div>
-            </div>
+          <h2 className="text-4xl font-bold text-gray-900 mb-12 text-center">What Our Customers Say</h2>
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
+            {[
+              { name: 'Priya S.', review: 'Amazing quality! The hair extensions blend perfectly with my natural hair.' },
+              { name: 'Anjali M.', review: 'Best purchase ever! The texture is so soft and natural looking.' },
+              { name: 'Neha K.', review: 'Excellent service and the hair quality is outstanding. Highly recommend!' }
+            ].map((testimonial, index) => (
+              <div key={index} className="bg-white p-6 rounded-xl shadow-md">
+                <div className="flex mb-4">
+                  {[...Array(5)].map((_, i) => (
+                    <Star key={i} className="w-5 h-5 text-yellow-400 fill-current" />
+                  ))}
+                </div>
+                <p className="text-gray-700 mb-4 italic">\"{testimonial.review}\"</p>
+                <p className="font-semibold text-gray-900">- {testimonial.name}</p>
+              </div>
+            ))}
           </div>
         </div>
       </section>
@@ -428,7 +486,15 @@ export default function DeeceeHair() {
     <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
       <h2 className="text-3xl font-bold text-gray-900 mb-8">Your Cart</h2>
       {cart.length === 0 ? (
-        <p className="text-gray-700">Your cart is empty.</p>
+        <div className="text-center py-12">
+          <p className="text-gray-700 mb-4">Your cart is empty.</p>
+          <button
+            onClick={() => setCurrentPage('shop')}
+            className="bg-rose-600 text-white px-6 py-3 rounded-lg font-semibold hover:bg-rose-700 transition"
+          >
+            Continue Shopping
+          </button>
+        </div>
       ) : (
         <div className="space-y-6">
           {cart.map((item, index) => (
@@ -490,9 +556,41 @@ export default function DeeceeHair() {
         {currentPage === 'cart' && <CartPage />}
         {currentPage === 'contact' && <ContactPage />}
       </main>
-      <footer className="bg-rose-50 py-8 mt-16">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center text-gray-700 text-sm">
-          &copy; {new Date().getFullYear()} DEECEE HAIR. All rights reserved.
+      <footer className="bg-gray-900 text-white py-12">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+          <div className="grid grid-cols-1 md:grid-cols-4 gap-8">
+            <div>
+              <h3 className="text-lg font-semibold mb-4">DEECEE HAIR</h3>
+              <p className="text-gray-400 text-sm">Premium quality hair extensions for the modern woman.</p>
+            </div>
+            <div>
+              <h4 className="font-semibold mb-4">Quick Links</h4>
+              <ul className="space-y-2 text-sm text-gray-400">
+                <li><button className="hover:text-white transition">About Us</button></li>
+                <li><button className="hover:text-white transition">Shop</button></li>
+                <li><button className="hover:text-white transition">Contact</button></li>
+              </ul>
+            </div>
+            <div>
+              <h4 className="font-semibold mb-4">Customer Service</h4>
+              <ul className="space-y-2 text-sm text-gray-400">
+                <li><button className="hover:text-white transition">Shipping Info</button></li>
+                <li><button className="hover:text-white transition">Returns</button></li>
+                <li><button className="hover:text-white transition">FAQ</button></li>
+              </ul>
+            </div>
+            <div>
+              <h4 className="font-semibold mb-4">Connect</h4>
+              <ul className="space-y-2 text-sm text-gray-400">
+                <li><button className="hover:text-white transition">Instagram</button></li>
+                <li><button className="hover:text-white transition">Facebook</button></li>
+                <li><button className="hover:text-white transition">YouTube</button></li>
+              </ul>
+            </div>
+          </div>
+          <div className="border-t border-gray-800 mt-8 pt-8 text-center text-sm text-gray-400">
+            &copy; {new Date().getFullYear()} DEECEE HAIR. All rights reserved.
+          </div>
         </div>
       </footer>
     </div>
