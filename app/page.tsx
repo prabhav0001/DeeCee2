@@ -1,7 +1,7 @@
 "use client"
 
 import React, { useState, useEffect } from 'react';
-import { Heart, User, Search, ShoppingCart, Menu, X, Star, Truck, Shield, CreditCard, ChevronLeft, ChevronRight } from 'lucide-react';
+import { Heart, User, Search, ShoppingCart, Menu, X, Star, Truck, Shield, CreditCard, ChevronLeft, ChevronRight, Phone, Mail, MapPin, Clock, Instagram, Facebook, Youtube, Calendar, CheckCircle } from 'lucide-react';
 
 type Product = {
   id: number;
@@ -20,6 +20,16 @@ type CartItem = {
   color: string;
   size: string;
   quantity: number;
+};
+
+type AppointmentData = {
+  service: string;
+  date: string;
+  time: string;
+  name: string;
+  email: string;
+  phone: string;
+  notes: string;
 };
 
 const products: Product[] = [
@@ -71,8 +81,20 @@ const heroSlides = [
   }
 ];
 
+const services = [
+  { id: 'consultation', name: 'Hair Consultation', duration: '30 mins', price: 'Free' },
+  { id: 'installation', name: 'Extension Installation', duration: '2 hours', price: '₹2000' },
+  { id: 'maintenance', name: 'Extension Maintenance', duration: '1 hour', price: '₹1000' },
+  { id: 'removal', name: 'Extension Removal', duration: '1 hour', price: '₹800' },
+  { id: 'styling', name: 'Hair Styling Session', duration: '1.5 hours', price: '₹1500' },
+];
+
+const timeSlots = [
+  '10:00 AM', '11:00 AM', '12:00 PM', '1:00 PM', '2:00 PM', '3:00 PM', '4:00 PM', '5:00 PM', '6:00 PM'
+];
+
 export default function DeeceeHair() {
-  const [currentPage, setCurrentPage] = useState<'home' | 'shop' | 'product' | 'cart' | 'contact'>('home');
+  const [currentPage, setCurrentPage] = useState<'home' | 'shop' | 'product' | 'cart' | 'contact' | 'appointment'>('home');
   const [selectedProduct, setSelectedProduct] = useState<Product | null>(null);
   const [selectedColor, setSelectedColor] = useState<string>('');
   const [selectedSize, setSelectedSize] = useState<string>('');
@@ -82,6 +104,16 @@ export default function DeeceeHair() {
   const [filterCategory, setFilterCategory] = useState<string>('all');
   const [promoIndex, setPromoIndex] = useState(0);
   const [currentSlide, setCurrentSlide] = useState(0);
+  const [appointmentStep, setAppointmentStep] = useState(1);
+  const [appointmentData, setAppointmentData] = useState<AppointmentData>({
+    service: '',
+    date: '',
+    time: '',
+    name: '',
+    email: '',
+    phone: '',
+    notes: ''
+  });
 
   useEffect(() => {
     const interval = setInterval(() => {
@@ -187,7 +219,7 @@ export default function DeeceeHair() {
               <button className="text-sm font-medium text-gray-700 hover:text-rose-600 transition">
                 Our Boutiques
               </button>
-              <button className="text-sm font-medium text-gray-700 hover:text-rose-600 transition">
+              <button onClick={() => { setCurrentPage('appointment'); setAppointmentStep(1); }} className="text-sm font-medium text-gray-700 hover:text-rose-600 transition">
                 Book Appointment
               </button>
               <button onClick={() => { setCurrentPage('contact'); }} className="text-sm font-medium text-gray-700 hover:text-rose-600 transition">
@@ -243,7 +275,7 @@ export default function DeeceeHair() {
             <button className="text-sm font-medium text-gray-700 hover:text-rose-600 transition text-left">
               Our Boutiques
             </button>
-            <button className="text-sm font-medium text-gray-700 hover:text-rose-600 transition text-left">
+            <button onClick={() => { setCurrentPage('appointment'); setAppointmentStep(1); setMobileMenuOpen(false); }} className="text-sm font-medium text-gray-700 hover:text-rose-600 transition text-left">
               Book Appointment
             </button>
             <button onClick={() => { setCurrentPage('contact'); setMobileMenuOpen(false); }} className="text-sm font-medium text-gray-700 hover:text-rose-600 transition text-left">
@@ -273,10 +305,10 @@ export default function DeeceeHair() {
             }}
           />
         ))}
-        
+
         {/* Rose Gradient Overlay */}
         <div className="absolute inset-0 bg-gradient-to-br from-rose-600/70 via-pink-600/70 to-rose-500/70"></div>
-        
+
         {/* Content */}
         <div className="relative z-10 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
           <div className="transform transition-all duration-700">
@@ -304,7 +336,7 @@ export default function DeeceeHair() {
             </button>
           </div>
         </div>
-        
+
         {/* Navigation Arrows */}
         <button
           onClick={prevSlide}
@@ -318,7 +350,7 @@ export default function DeeceeHair() {
         >
           <ChevronRight className="w-6 h-6" />
         </button>
-        
+
         {/* Dots Indicator */}
         <div className="absolute bottom-8 left-1/2 transform -translate-x-1/2 flex space-x-2 z-20">
           {heroSlides.map((_, index) => (
@@ -532,52 +564,254 @@ export default function DeeceeHair() {
   };
 
   const ContactPage = () => (
-    <div className="max-w-3xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
-      <h2 className="text-3xl font-bold text-gray-900 mb-6 text-center">Contact Us</h2>
-      <p className="text-gray-700 mb-8 text-center">
-        We'd love to hear from you! Fill out the form below and our team will get in touch with you soon.
-      </p>
-
-      <form
-        onSubmit={(e) => {
-          e.preventDefault();
-          alert('Thank you for contacting us!');
-        }}
-        className="space-y-6"
-      >
-        <div>
-          <label className="block text-sm font-medium text-gray-700">Name</label>
-          <input
-            type="text"
-            required
-            className="w-full border border-gray-300 rounded-lg px-4 py-2 mt-1 focus:outline-none focus:ring-2 focus:ring-rose-500"
-          />
+    <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
+      <h2 className="text-3xl font-bold text-gray-900 mb-8 text-center">Contact Us</h2>
+      <div className="grid grid-cols-1 md:grid-cols-2 gap-12">
+        <div className="space-y-8">
+          <div className="flex items-center space-x-4">
+            <div className="bg-rose-100 p-4 rounded-full">
+              <Phone className="w-6 h-6 text-rose-600" />
+            </div>
+            <div>
+              <h3 className="text-lg font-semibold text-gray-900">Phone</h3>
+              <p className="text-gray-700">+91 98765 43210</p>
+            </div>
+          </div>
+          <div className="flex items-center space-x-4">
+            <div className="bg-rose-100 p-4 rounded-full">
+              <Mail className="w-6 h-6 text-rose-600" />
+            </div>
+            <div>
+              <h3 className="text-lg font-semibold text-gray-900">Email</h3>
+              <p className="text-gray-700">support@deeceehair.com</p>
+            </div>
+          </div>
+          <div className="flex items-center space-x-4">
+            <div className="bg-rose-100 p-4 rounded-full">
+              <MapPin className="w-6 h-6 text-rose-600" />
+            </div>
+            <div>
+              <h3 className="text-lg font-semibold text-gray-900">Address</h3>
+              <p className="text-gray-700">123 Rose Street, Mumbai, India</p>
+            </div>
+          </div>
+          <div className="flex items-center space-x-4">
+            <div className="bg-rose-100 p-4 rounded-full">
+              <Clock className="w-6 h-6 text-rose-600" />
+            </div>
+            <div>
+              <h3 className="text-lg font-semibold text-gray-900">Business Hours</h3>
+              <p className="text-gray-700">Mon - Sat: 10:00 AM - 7:00 PM</p>
+              <p className="text-gray-700">Sun: Closed</p>
+            </div>
+          </div>
+          <div className="flex space-x-4 mt-6">
+            <a href="#" className="text-rose-600 hover:text-rose-800 transition" aria-label="Instagram">
+              <Instagram className="w-6 h-6" />
+            </a>
+            <a href="#" className="text-rose-600 hover:text-rose-800 transition" aria-label="Facebook">
+              <Facebook className="w-6 h-6" />
+            </a>
+            <a href="#" className="text-rose-600 hover:text-rose-800 transition" aria-label="YouTube">
+              <Youtube className="w-6 h-6" />
+            </a>
+          </div>
         </div>
-        <div>
-          <label className="block text-sm font-medium text-gray-700">Email</label>
-          <input
-            type="email"
-            required
-            className="w-full border border-gray-300 rounded-lg px-4 py-2 mt-1 focus:outline-none focus:ring-2 focus:ring-rose-500"
-          />
+        <div className="bg-gray-100 rounded-lg overflow-hidden">
+          {/* Placeholder for Map */}
+          <iframe
+            title="DEECEE HAIR Location"
+            src="https://maps.google.com/maps?q=123%20Rose%20Street%2C%20Mumbai%2C%20India&t=&z=13&ie=UTF8&iwloc=&output=embed"
+            width="100%"
+            height="100%"
+            className="min-h-[400px] border-0"
+            loading="lazy"
+          ></iframe>
         </div>
-        <div>
-          <label className="block text-sm font-medium text-gray-700">Message</label>
-          <textarea
-            rows={4}
-            required
-            className="w-full border border-gray-300 rounded-lg px-4 py-2 mt-1 focus:outline-none focus:ring-2 focus:ring-rose-500"
-          />
-        </div>
-        <button
-          type="submit"
-          className="w-full bg-rose-600 text-white py-3 rounded-lg font-semibold hover:bg-rose-700 transition"
-        >
-          Send Message
-        </button>
-      </form>
+      </div>
     </div>
   );
+
+  const AppointmentPage = () => {
+    const handleNext = () => {
+      if (appointmentStep === 1 && !appointmentData.service) {
+        alert('Please select a service');
+        return;
+      }
+      if (appointmentStep === 2 && (!appointmentData.date || !appointmentData.time)) {
+        alert('Please select date and time');
+        return;
+      }
+      if (appointmentStep === 3 && (!appointmentData.name || !appointmentData.email || !appointmentData.phone)) {
+        alert('Please fill in all required personal information');
+        return;
+      }
+      setAppointmentStep(appointmentStep + 1);
+    };
+
+    const handleBack = () => {
+      setAppointmentStep(appointmentStep - 1);
+    };
+
+    const handleChange = (field: keyof AppointmentData, value: string) => {
+      setAppointmentData({ ...appointmentData, [field]: value });
+    };
+
+    const handleSubmit = (e: React.FormEvent) => {
+      e.preventDefault();
+      alert(`Appointment booked successfully!\n\nDetails:\nService: ${appointmentData.service}\nDate: ${appointmentData.date}\nTime: ${appointmentData.time}\nName: ${appointmentData.name}\nEmail: ${appointmentData.email}\nPhone: ${appointmentData.phone}\nNotes: ${appointmentData.notes}`);
+      setAppointmentStep(1);
+      setAppointmentData({ service: '', date: '', time: '', name: '', email: '', phone: '', notes: '' });
+      setCurrentPage('home');
+    };
+
+    return (
+      <div className="max-w-3xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
+        <h2 className="text-3xl font-bold text-gray-900 mb-8 text-center">Book Appointment</h2>
+        <form onSubmit={handleSubmit} className="space-y-8">
+          {appointmentStep === 1 && (
+            <div>
+              <h3 className="text-xl font-semibold mb-4">Select Service</h3>
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                {services.map((service) => (
+                  <button
+                    key={service.id}
+                    type="button"
+                    onClick={() => handleChange('service', service.name)}
+                    className={`border rounded-lg p-4 text-left transition ${appointmentData.service === service.name ? 'bg-rose-600 text-white border-rose-600' : 'border-gray-300 text-gray-700 hover:bg-rose-100'}`}
+                  >
+                    <h4 className="font-semibold text-lg">{service.name}</h4>
+                    <p className="text-sm">Duration: {service.duration}</p>
+                    <p className="text-sm">Price: {service.price}</p>
+                  </button>
+                ))}
+              </div>
+            </div>
+          )}
+
+          {appointmentStep === 2 && (
+            <div>
+              <h3 className="text-xl font-semibold mb-4">Select Date & Time</h3>
+              <div className="mb-4">
+                <label htmlFor="date" className="block text-sm font-medium text-gray-700 mb-1">Date</label>
+                <input
+                  type="date"
+                  id="date"
+                  min={new Date().toISOString().split('T')[0]}
+                  value={appointmentData.date}
+                  onChange={(e) => handleChange('date', e.target.value)}
+                  className="w-full border border-gray-300 rounded-lg px-4 py-2 focus:outline-none focus:ring-2 focus:ring-rose-500"
+                  required
+                />
+              </div>
+              <div>
+                <label htmlFor="time" className="block text-sm font-medium text-gray-700 mb-1">Time</label>
+                <select
+                  id="time"
+                  value={appointmentData.time}
+                  onChange={(e) => handleChange('time', e.target.value)}
+                  className="w-full border border-gray-300 rounded-lg px-4 py-2 focus:outline-none focus:ring-2 focus:ring-rose-500"
+                  required
+                >
+                  <option value="">Select a time slot</option>
+                  {timeSlots.map((slot) => (
+                    <option key={slot} value={slot}>{slot}</option>
+                  ))}
+                </select>
+              </div>
+            </div>
+          )}
+
+          {appointmentStep === 3 && (
+            <div>
+              <h3 className="text-xl font-semibold mb-4">Your Information</h3>
+              <div className="space-y-4">
+                <div>
+                  <label htmlFor="name" className="block text-sm font-medium text-gray-700">Name</label>
+                  <input
+                    type="text"
+                    id="name"
+                    value={appointmentData.name}
+                    onChange={(e) => handleChange('name', e.target.value)}
+                    className="w-full border border-gray-300 rounded-lg px-4 py-2 focus:outline-none focus:ring-2 focus:ring-rose-500"
+                    required
+                  />
+                </div>
+                <div>
+                  <label htmlFor="email" className="block text-sm font-medium text-gray-700">Email</label>
+                  <input
+                    type="email"
+                    id="email"
+                    value={appointmentData.email}
+                    onChange={(e) => handleChange('email', e.target.value)}
+                    className="w-full border border-gray-300 rounded-lg px-4 py-2 focus:outline-none focus:ring-2 focus:ring-rose-500"
+                    required
+                  />
+                </div>
+                <div>
+                  <label htmlFor="phone" className="block text-sm font-medium text-gray-700">Phone</label>
+                  <input
+                    type="tel"
+                    id="phone"
+                    value={appointmentData.phone}
+                    onChange={(e) => handleChange('phone', e.target.value)}
+                    className="w-full border border-gray-300 rounded-lg px-4 py-2 focus:outline-none focus:ring-2 focus:ring-rose-500"
+                    required
+                  />
+                </div>
+                <div>
+                  <label htmlFor="notes" className="block text-sm font-medium text-gray-700">Additional Notes</label>
+                  <textarea
+                    id="notes"
+                    rows={4}
+                    value={appointmentData.notes}
+                    onChange={(e) => handleChange('notes', e.target.value)}
+                    className="w-full border border-gray-300 rounded-lg px-4 py-2 focus:outline-none focus:ring-2 focus:ring-rose-500"
+                  />
+                </div>
+              </div>
+            </div>
+          )}
+
+          {appointmentStep === 4 && (
+            <div className="text-center">
+              <CheckCircle className="mx-auto mb-4 text-rose-600" size={48} />
+              <h3 className="text-2xl font-semibold mb-2">Appointment Confirmed!</h3>
+              <p className="mb-4">Thank you for booking with DEECEE HAIR. We look forward to seeing you!</p>
+              <button
+                type="button"
+                onClick={() => { setAppointmentStep(1); setAppointmentData({ service: '', date: '', time: '', name: '', email: '', phone: '', notes: '' }); setCurrentPage('home'); }}
+                className="bg-rose-600 text-white px-6 py-3 rounded-lg font-semibold hover:bg-rose-700 transition"
+              >
+                Back to Home
+              </button>
+            </div>
+          )}
+
+          {appointmentStep !== 4 && (
+            <div className="flex justify-between">
+              {appointmentStep > 1 ? (
+                <button
+                  type="button"
+                  onClick={handleBack}
+                  className="px-6 py-3 border border-rose-600 text-rose-600 rounded-lg hover:bg-rose-100 transition"
+                >
+                  Back
+                </button>
+              ) : <div />}
+              <button
+                type={appointmentStep === 3 ? 'submit' : 'button'}
+                onClick={appointmentStep !== 3 ? handleNext : undefined}
+                className="bg-rose-600 text-white px-6 py-3 rounded-lg font-semibold hover:bg-rose-700 transition"
+              >
+                {appointmentStep === 3 ? 'Confirm Appointment' : 'Next'}
+              </button>
+            </div>
+          )}
+        </form>
+      </div>
+    );
+  };
 
   const CartPage = () => (
     <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
@@ -652,6 +886,7 @@ export default function DeeceeHair() {
         {currentPage === 'product' && <ProductPage />}
         {currentPage === 'cart' && <CartPage />}
         {currentPage === 'contact' && <ContactPage />}
+        {currentPage === 'appointment' && <AppointmentPage />}
       </main>
       <footer className="bg-gray-900 text-white py-12">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
