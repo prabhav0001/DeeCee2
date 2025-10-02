@@ -39,7 +39,7 @@ const promoMessages = [
 ];
 
 export default function DeeceeHair() {
-  const [currentPage, setCurrentPage] = useState<'home' | 'shop' | 'product' | 'cart'>('home');
+  const [currentPage, setCurrentPage] = useState<'home' | 'shop' | 'product' | 'cart' | 'contact'>('home');
   const [selectedProduct, setSelectedProduct] = useState<Product | null>(null);
   const [selectedColor, setSelectedColor] = useState<string>('');
   const [selectedSize, setSelectedSize] = useState<string>('');
@@ -145,7 +145,7 @@ export default function DeeceeHair() {
               <button className="text-sm font-medium text-gray-700 hover:text-rose-600 transition">
                 Book Appointment
               </button>
-              <button className="text-sm font-medium text-gray-700 hover:text-rose-600 transition">
+              <button onClick={() => { setCurrentPage('contact'); }} className="text-sm font-medium text-gray-700 hover:text-rose-600 transition">
                 Contact Us
               </button>
             </nav>
@@ -376,6 +376,54 @@ export default function DeeceeHair() {
     );
   };
 
+  const ContactPage = () => (
+    <div className="max-w-3xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
+      <h2 className="text-3xl font-bold text-gray-900 mb-6 text-center">Contact Us</h2>
+      <p className="text-gray-700 mb-8 text-center">
+        We'd love to hear from you! Fill out the form below and our team will get in touch with you soon.
+      </p>
+
+      <form
+        onSubmit={(e) => {
+          e.preventDefault();
+          alert('Thank you for contacting us!');
+        }}
+        className="space-y-6"
+      >
+        <div>
+          <label className="block text-sm font-medium text-gray-700">Name</label>
+          <input
+            type="text"
+            required
+            className="w-full border border-gray-300 rounded-lg px-4 py-2 mt-1 focus:outline-none focus:ring-2 focus:ring-rose-500"
+          />
+        </div>
+        <div>
+          <label className="block text-sm font-medium text-gray-700">Email</label>
+          <input
+            type="email"
+            required
+            className="w-full border border-gray-300 rounded-lg px-4 py-2 mt-1 focus:outline-none focus:ring-2 focus:ring-rose-500"
+          />
+        </div>
+        <div>
+          <label className="block text-sm font-medium text-gray-700">Message</label>
+          <textarea
+            rows={4}
+            required
+            className="w-full border border-gray-300 rounded-lg px-4 py-2 mt-1 focus:outline-none focus:ring-2 focus:ring-rose-500"
+          />
+        </div>
+        <button
+          type="submit"
+          className="w-full bg-rose-600 text-white py-3 rounded-lg font-semibold hover:bg-rose-700 transition"
+        >
+          Send Message
+        </button>
+      </form>
+    </div>
+  );
+
   const CartPage = () => (
     <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
       <h2 className="text-3xl font-bold text-gray-900 mb-8">Your Cart</h2>
@@ -440,6 +488,7 @@ export default function DeeceeHair() {
         {currentPage === 'shop' && <ShopPage />}
         {currentPage === 'product' && <ProductPage />}
         {currentPage === 'cart' && <CartPage />}
+        {currentPage === 'contact' && <ContactPage />}
       </main>
       <footer className="bg-rose-50 py-8 mt-16">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center text-gray-700 text-sm">
