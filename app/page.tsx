@@ -1,7 +1,7 @@
 "use client"
 
 import React, { useState, useEffect } from 'react';
-import { Heart, User, Search, ShoppingCart, Menu, X, Star, Truck, Shield, CreditCard, ChevronLeft, ChevronRight } from 'lucide-react';
+import { Heart, User, Search, ShoppingCart, Menu, X, Star, Truck, Shield, CreditCard } from 'lucide-react';
 
 type Product = {
   id: number;
@@ -38,39 +38,6 @@ const promoMessages = [
   'Premium Quality Hair Extensions',
 ];
 
-const heroSlides = [
-  {
-    image: 'https://images.unsplash.com/photo-1519699047748-de8e457a634e?auto=format&fit=crop&w=1920&q=80',
-    title: 'Luxurious Hair',
-    subtitle: 'Extensions',
-    description: 'Transform your look with our premium collection'
-  },
-  {
-    image: 'https://images.unsplash.com/photo-1492106087820-71f1a00d2b11?auto=format&fit=crop&w=1920&q=80',
-    title: 'Natural Beauty',
-    subtitle: 'Redefined',
-    description: '100% human hair for the perfect blend'
-  },
-  {
-    image: 'https://images.unsplash.com/photo-1522335789203-aabd1fc54bc9?auto=format&fit=crop&w=1920&q=80',
-    title: 'Premium Quality',
-    subtitle: 'Guaranteed',
-    description: 'Silky smooth textures that last'
-  },
-  {
-    image: 'https://images.unsplash.com/photo-1508214751196-bcfd4ca60f91?auto=format&fit=crop&w=1920&q=80',
-    title: 'Your Style',
-    subtitle: 'Elevated',
-    description: 'From straight to curly, we have it all'
-  },
-  {
-    image: 'https://images.unsplash.com/photo-1487412720507-e7ab37603c6f?auto=format&fit=crop&w=1920&q=80',
-    title: 'Confidence',
-    subtitle: 'Unleashed',
-    description: 'Feel beautiful every single day'
-  }
-];
-
 export default function DeeceeHair() {
   const [currentPage, setCurrentPage] = useState<'home' | 'shop' | 'product' | 'cart' | 'contact'>('home');
   const [selectedProduct, setSelectedProduct] = useState<Product | null>(null);
@@ -81,7 +48,6 @@ export default function DeeceeHair() {
   const [searchOpen, setSearchOpen] = useState(false);
   const [filterCategory, setFilterCategory] = useState<string>('all');
   const [promoIndex, setPromoIndex] = useState(0);
-  const [currentSlide, setCurrentSlide] = useState(0);
 
   useEffect(() => {
     const interval = setInterval(() => {
@@ -89,25 +55,6 @@ export default function DeeceeHair() {
     }, 3000);
     return () => clearInterval(interval);
   }, []);
-
-  useEffect(() => {
-    const slideInterval = setInterval(() => {
-      setCurrentSlide((prev) => (prev + 1) % heroSlides.length);
-    }, 5000);
-    return () => clearInterval(slideInterval);
-  }, []);
-
-  const nextSlide = () => {
-    setCurrentSlide((prev) => (prev + 1) % heroSlides.length);
-  };
-
-  const prevSlide = () => {
-    setCurrentSlide((prev) => (prev - 1 + heroSlides.length) % heroSlides.length);
-  };
-
-  const goToSlide = (index: number) => {
-    setCurrentSlide(index);
-  };
 
   const addToCart = () => {
     if (selectedProduct && selectedColor && selectedSize) {
@@ -257,39 +204,24 @@ export default function DeeceeHair() {
 
   const HomePage = () => (
     <div>
-      {/* Hero Section with Slideshow */}
-      <section className="relative min-h-screen flex items-center justify-center overflow-hidden">
-        {/* Background Images */}
-        {heroSlides.map((slide, index) => (
-          <div
-            key={index}
-            className={`absolute inset-0 transition-opacity duration-1000 ${
-              index === currentSlide ? 'opacity-100' : 'opacity-0'
-            }`}
-            style={{
-              backgroundImage: `url('${slide.image}')`,
-              backgroundSize: 'cover',
-              backgroundPosition: 'center',
-            }}
-          />
-        ))}
-        
-        {/* Rose Gradient Overlay */}
-        <div className="absolute inset-0 bg-gradient-to-br from-rose-600/70 via-pink-600/70 to-rose-500/70"></div>
-        
-        {/* Content */}
+      {/* Hero Section with Background Image */}
+      <section 
+        className="relative min-h-screen flex items-center justify-center overflow-hidden"
+        style={{
+          backgroundImage: `url('https://images.unsplash.com/photo-1519699047748-de8e457a634e?auto=format&fit=crop&w=1920&q=80')`,
+          backgroundSize: 'cover',
+          backgroundPosition: 'center',
+        }}
+      >
+        <div className="absolute inset-0 bg-gradient-to-br from-rose-600/80 to-pink-600/80"></div>
         <div className="relative z-10 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
-          <div className="transform transition-all duration-700">
-            <h1 className="text-5xl lg:text-7xl font-bold text-white mb-6 tracking-tight">
-              {heroSlides[currentSlide].title}
-              <span className="block text-3xl lg:text-5xl mt-2 font-light">
-                {heroSlides[currentSlide].subtitle}
-              </span>
-            </h1>
-            <p className="text-lg lg:text-xl text-white/90 mb-8 max-w-2xl mx-auto">
-              {heroSlides[currentSlide].description}
-            </p>
-          </div>
+          <h1 className="text-5xl lg:text-7xl font-bold text-white mb-6 tracking-tight animate-fade-in">
+            Luxurious Hair
+            <span className="block text-3xl lg:text-5xl mt-2 font-light">Extensions</span>
+          </h1>
+          <p className="text-lg lg:text-xl text-white/90 mb-8 max-w-2xl mx-auto">
+            Transform your look with our premium collection of 100% human hair extensions. Quality you can feel, beauty you can see.
+          </p>
           <div className="flex flex-col sm:flex-row gap-4 justify-center">
             <button
               onClick={() => { setCurrentPage('shop'); setFilterCategory('all'); }}
@@ -303,35 +235,6 @@ export default function DeeceeHair() {
               Book Consultation
             </button>
           </div>
-        </div>
-        
-        {/* Navigation Arrows */}
-        <button
-          onClick={prevSlide}
-          className="absolute left-4 top-1/2 transform -translate-y-1/2 bg-white/20 backdrop-blur-sm text-white p-3 rounded-full hover:bg-white/30 transition z-20"
-        >
-          <ChevronLeft className="w-6 h-6" />
-        </button>
-        <button
-          onClick={nextSlide}
-          className="absolute right-4 top-1/2 transform -translate-y-1/2 bg-white/20 backdrop-blur-sm text-white p-3 rounded-full hover:bg-white/30 transition z-20"
-        >
-          <ChevronRight className="w-6 h-6" />
-        </button>
-        
-        {/* Dots Indicator */}
-        <div className="absolute bottom-8 left-1/2 transform -translate-x-1/2 flex space-x-2 z-20">
-          {heroSlides.map((_, index) => (
-            <button
-              key={index}
-              onClick={() => goToSlide(index)}
-              className={`w-3 h-3 rounded-full transition-all ${
-                index === currentSlide
-                  ? 'bg-white w-8'
-                  : 'bg-white/50 hover:bg-white/70'
-              }`}
-            />
-          ))}
         </div>
       </section>
 
