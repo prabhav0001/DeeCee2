@@ -189,8 +189,9 @@ export default function DeeceeHair(): React.ReactElement {
         <div className="flex items-center justify-between h-16">
           <div className="flex items-center">
             <button onClick={() => navigateTo("home")} className="flex items-center space-x-2">
-              <span className="text-xl sm:text-2xl font-bold text-rose-600">DEECEE</span>
-              <span className="text-xl sm:text-2xl font-light text-gray-800">HAIR</span>
+              <img src="/dc-logo.svg" alt="DEECEE" className="h-25 w-auto" />
+              {/* <span className="text-xl sm:text-2xl font-bold text-rose-600">DEECEE</span>
+              <span className="text-xl sm:text-2xl font-light text-gray-800">HAIR</span> */}
             </button>
             <nav className="hidden lg:flex space-x-6 ml-8">
               {["Shop", "Bestsellers", "New Arrivals"].map((item) => (
@@ -686,7 +687,7 @@ export default function DeeceeHair(): React.ReactElement {
         <div className="w-full px-4 sm:px-6 lg:px-8">
           <div className="grid grid-cols-2 md:grid-cols-4 gap-6 sm:gap-8">
             <div className="col-span-2 sm:col-span-1">
-              <h3 className="text-lg font-semibold mb-4">DEECEE HAIR</h3>
+              <img src="/wh-logo.svg" alt="DEECEE" className="h-30 w-auto" />
               <p className="text-gray-400 text-sm">Premium quality hair extensions for the modern woman.</p>
             </div>
             <div>
