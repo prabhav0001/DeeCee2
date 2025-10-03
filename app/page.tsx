@@ -13,6 +13,7 @@ type Product = {
   category: string;
   isBestseller?: boolean;
   isNew?: boolean;
+  isMans?: boolean;
 };
 
 type CartItem = {
@@ -50,6 +51,8 @@ const products: Product[] = [
   { id: 4, name: "Body Wave Premium", price: 3299, image: "https://images.unsplash.com/photo-1522335789203-aabd1fc54bc9?auto=format&fit=crop&w=400&q=80", colors: ["Black", "Brown", "Blonde", "Red"], sizes: ['18"', '22"', '26"'], category: "wavy", isNew: true },
   { id: 5, name: "Deep Wave Collection", price: 3799, image: "https://images.unsplash.com/photo-1508214751196-bcfd4ca60f91?auto=format&fit=crop&w=400&q=80", colors: ["Black", "Brown", "Ombre"], sizes: ['16"', '20"', '24"'], category: "wavy" },
   { id: 6, name: "Kinky Straight Wings", price: 3599, image: "https://images.unsplash.com/photo-1522335789203-aabd1fc54bc9?auto=format&fit=crop&w=400&q=80", colors: ["Black", "Dark Brown"], sizes: ['14"', '18"', '22"'], category: "straight" },
+  { id: 7, name: "Mens Premium Hair Toppers", price: 4999, image: "https://images.unsplash.com/photo-1519699047748-de8e457a634e?auto=format&fit=crop&w=400&q=80", colors: ["Black", "Brown", "Gray"], sizes: ["S", "M", "L"], category: "mans", isBestseller: true, isMans: true },
+  { id: 8, name: "Mens Hair Replacement System", price: 5999, image: "https://images.unsplash.com/photo-1519699047748-de8e457a634e?auto=format&fit=crop&w=400&q=80", colors: ["Black", "Brown", "Blonde"], sizes: ["S", "M", "L"], category: "mans", isNew: true, isMans: true },
 ];
 
 const promoMessages = [
@@ -130,6 +133,7 @@ const ProductCard = ({ product, onClick }: { product: Product; onClick: () => vo
     <div className="mt-2 flex flex-wrap gap-1">
       {product.isBestseller && <span className="inline-block px-2 py-1 text-xs font-semibold bg-rose-100 text-rose-700 rounded-full">Bestseller</span>}
       {product.isNew && <span className="inline-block px-2 py-1 text-xs font-semibold bg-green-100 text-green-700 rounded-full">New</span>}
+      {product.isMans && <span className="inline-block px-2 py-1 text-xs font-semibold bg-blue-100 text-blue-700 rounded-full">Mans</span>}
     </div>
   </div>
 );
@@ -267,6 +271,7 @@ export default function DeeceeHair(): React.ReactElement {
               {["Shop", "Bestsellers", "New Arrivals"].map((item) => (
                 <button key={item} onClick={() => navigateTo("shop")} className="text-sm font-medium text-gray-700 hover:text-rose-600 transition">{item}</button>
               ))}
+              <button onClick={() => { setFilterCategory("mans"); setCurrentPage("shop"); }} className="text-sm font-medium text-gray-700 hover:text-rose-600 transition">Mans Collection</button>
               <button className="text-sm font-medium text-gray-700 hover:text-rose-600 transition">Our Boutiques</button>
               <button onClick={() => navigateTo("appointment")} className="text-sm font-medium text-gray-700 hover:text-rose-600 transition">Book Appointment</button>
               <button onClick={() => navigateTo("contact")} className="text-sm font-medium text-gray-700 hover:text-rose-600 transition">Contact Us</button>
@@ -298,6 +303,7 @@ export default function DeeceeHair(): React.ReactElement {
                 {item}
               </button>
             ))}
+            <button onClick={() => { setFilterCategory("mans"); setCurrentPage("shop"); setMobileMenuOpen(false); }} className="text-sm font-medium text-gray-700 hover:text-rose-600 transition text-left">Mans Collection</button>
             <button className="text-sm font-medium text-gray-700 hover:text-rose-600 transition text-left">Our Boutiques</button>
             <button onClick={() => { navigateTo("appointment"); setMobileMenuOpen(false); }} className="text-sm font-medium text-gray-700 hover:text-rose-600 transition text-left">Book Appointment</button>
             <button onClick={() => { navigateTo("contact"); setMobileMenuOpen(false); }} className="text-sm font-medium text-gray-700 hover:text-rose-600 transition text-left">Contact Us</button>
@@ -380,6 +386,38 @@ export default function DeeceeHair(): React.ReactElement {
 
       <section className="py-12 sm:py-20 bg-gray-100">
         <div className="w-full px-4 sm:px-6 lg:px-8">
+          <div className="text-center mb-8 sm:mb-12">
+            <h2 className="text-3xl sm:text-4xl font-bold text-gray-900 mb-4">Mans Collection</h2>
+            <p className="text-gray-600 max-w-2xl mx-auto px-4">Premium hair solutions designed specifically for men</p>
+          </div>
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-6 sm:gap-8">
+            {products.filter(p => p.isMans).map((product) => (
+              <div key={product.id} className="group cursor-pointer" onClick={() => { setSelectedProduct(product); setSelectedColor(""); setSelectedSize(""); setCurrentPage("product"); }}>
+                <div className="relative overflow-hidden rounded-2xl shadow-lg">
+                  <img src={product.image} alt={product.name} className="w-full h-64 sm:h-80 object-cover group-hover:scale-110 transition duration-500" />
+                  <div className="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent"></div>
+                  <div className="absolute bottom-0 left-0 right-0 p-4 sm:p-6">
+                    <h3 className="text-xl sm:text-2xl font-bold text-white mb-2">{product.name}</h3>
+                    <p className="text-white text-lg font-semibold mb-2">₹{product.price}</p>
+                    <button className="text-white underline hover:no-underline text-sm sm:text-base">Shop Now →</button>
+                  </div>
+                </div>
+              </div>
+            ))}
+          </div>
+          <div className="text-center mt-8">
+            <button
+              onClick={() => { setFilterCategory("mans"); setCurrentPage("shop"); }}
+              className="bg-rose-600 text-white px-6 py-3 rounded-lg font-semibold hover:bg-rose-700 transition"
+            >
+              View All Mans Products
+            </button>
+          </div>
+        </div>
+      </section>
+
+      <section className="py-12 sm:py-20 bg-gray-100">
+        <div className="w-full px-4 sm:px-6 lg:px-8">
           <h2 className="text-3xl sm:text-4xl font-bold text-gray-900 mb-8 sm:mb-12 text-center">Style Inspiration & Reels</h2>
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 sm:gap-8">
             {reelsVideos.map((video) => (
@@ -400,7 +438,7 @@ export default function DeeceeHair(): React.ReactElement {
             ].map((testimonial, index) => (
               <div key={index} className="bg-white p-4 sm:p-6 rounded-xl shadow-md">
                 <div className="flex mb-4">{Array.from({ length: 5 }).map((_, i) => (<Star key={i} className="w-4 h-4 sm:w-5 sm:h-5 text-yellow-400 fill-current" />))}</div>
-                <p className="text-gray-700 mb-4 italic text-sm sm:text-base">\"{testimonial.review}\"</p>
+                <p className="text-gray-700 mb-4 italic text-sm sm:text-base">"{testimonial.review}"</p>
                 <p className="font-semibold text-gray-900 text-sm sm:text-base">- {testimonial.name}</p>
               </div>
             ))}
@@ -420,6 +458,7 @@ export default function DeeceeHair(): React.ReactElement {
         <FilterButton active={filterCategory === "straight"} onClick={() => setFilterCategory("straight")}>Straight</FilterButton>
         <FilterButton active={filterCategory === "wavy"} onClick={() => setFilterCategory("wavy")}>Wavy</FilterButton>
         <FilterButton active={filterCategory === "curly"} onClick={() => setFilterCategory("curly")}>Curly</FilterButton>
+        <FilterButton active={filterCategory === "mans"} onClick={() => setFilterCategory("mans")}>Mans</FilterButton>
       </div>
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 sm:gap-6 lg:gap-8">
         {filteredProducts.map((product) => (
