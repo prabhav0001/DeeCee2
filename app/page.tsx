@@ -53,11 +53,11 @@ const promoMessages = [
 ];
 
 const heroSlides = [
-  { image: "https://images.unsplash.com/photo-1519699047748-de8e457a634e?auto=format&fit=crop&w=1920&q=80", title: "Luxurious Hair", subtitle: "Extensions", description: "Transform your look with our premium collection" },
-  { image: "https://images.unsplash.com/photo-1492106087820-71f1a00d2b11?auto=format&fit=crop&w=1920&q=80", title: "Natural Beauty", subtitle: "Redefined", description: "100% human hair for the perfect blend" },
-  { image: "https://images.unsplash.com/photo-1522335789203-aabd1fc54bc9?auto=format&fit=crop&w=1920&q=80", title: "Premium Quality", subtitle: "Guaranteed", description: "Silky smooth textures that last" },
-  { image: "https://images.unsplash.com/photo-1508214751196-bcfd4ca60f91?auto=format&fit=crop&w=1920&q=80", title: "Your Style", subtitle: "Elevated", description: "From straight to curly, we have it all" },
-  { image: "https://images.unsplash.com/photo-1487412720507-e7ab37603c6f?auto=format&fit=crop&w=1920&q=80", title: "Confidence", subtitle: "Unleashed", description: "Feel beautiful every single day" },
+  { image: "/hero1.jpg", title: "Luxurious Hair", subtitle: "Extensions", description: "Transform your look with our premium collection" },
+  { image: "/hero2.jpg", title: "Natural Beauty", subtitle: "Redefined", description: "100% human hair for the perfect blend" },
+  { image: "/hero3.jpg", title: "Premium Quality", subtitle: "Guaranteed", description: "Silky smooth textures that last" },
+  { image: "/hero4.jpg", title: "Your Style", subtitle: "Elevated", description: "From straight to curly, we have it all" },
+  { image: "https://images.unsplash.com/photo-1492106087820-71f1a00d2b11?auto=format&fit=crop&w=1920&q=80", title: "Confidence", subtitle: "Unleashed", description: "Feel beautiful every single day" },
 ];
 
 const PromoSlider = () => {
@@ -189,9 +189,9 @@ export default function DeeceeHair(): React.ReactElement {
         <div className="flex items-center justify-between h-16">
           <div className="flex items-center">
             <button onClick={() => navigateTo("home")} className="flex items-center space-x-2">
-              <img src="/dc-logo.svg" alt="DEECEE" className="h-25 w-auto" />
-              {/* <span className="text-xl sm:text-2xl font-bold text-rose-600">DEECEE</span>
-              <span className="text-xl sm:text-2xl font-light text-gray-800">HAIR</span> */}
+              {/* <img src="/dc-logo.svg" alt="DEECEE" className="h-25 w-auto" /> */}
+              <span className="text-xl sm:text-2xl font-bold text-rose-600">DEECEE</span>
+              <span className="text-xl sm:text-2xl font-light text-gray-800">HAIR</span>
             </button>
             <nav className="hidden lg:flex space-x-6 ml-8">
               {["Shop", "Bestsellers", "New Arrivals"].map((item) => (
@@ -291,7 +291,7 @@ export default function DeeceeHair(): React.ReactElement {
             {[
               { type: "Straight", image: "https://images.unsplash.com/photo-1492106087820-71f1a00d2b11?auto=format&fit=crop&w=400&q=80" },
               { type: "Wavy", image: "https://images.unsplash.com/photo-1519699047748-de8e457a634e?auto=format&fit=crop&w=400&q=80" },
-              { type: "Curly", image: "https://images.unsplash.com/photo-1508214751196-bcfd4ca60f91?auto=format&fit=crop&w=400&q=80" },
+              { type: "Curly", image: "/hero3.jpg" },
             ].map((item) => (
               <div key={item.type} className="group cursor-pointer" onClick={() => { setFilterCategory(item.type.toLowerCase()); setCurrentPage("shop"); }}>
                 <div className="relative overflow-hidden rounded-2xl shadow-lg">
