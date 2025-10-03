@@ -1,7 +1,7 @@
 "use client"
 
 import React, { useEffect, useMemo, useState, useRef, useCallback } from "react";
-import { Heart, User, Search, ShoppingCart, Menu, X, Star, Truck, Shield, CreditCard, ChevronLeft, ChevronRight, Phone, Mail, MapPin, Clock, Calendar, CheckCircle2, Play, Pause, Volume2, VolumeX, Sparkles, Gift, Package, Award } from "lucide-react";
+import { Heart, User, Search, ShoppingCart, Menu, X, Star, Truck, Shield, CreditCard, ChevronLeft, ChevronRight, Phone, Mail, MapPin, Clock, Calendar, CheckCircle2, Play, Pause, Volume2, VolumeX, Gift, Package, Award } from "lucide-react";
 
 type Product = {
   id: number;
@@ -40,7 +40,6 @@ type Page = "home" | "shop" | "product" | "cart" | "contact" | "appointment";
 type ReelVideo = {
   id: number;
   src: string;
-  thumbnail: string;
   description: string;
 };
 
@@ -71,10 +70,10 @@ const heroSlides = [
 ];
 
 const reelsVideos: ReelVideo[] = [
-  { id: 1, src: "/videos/reel1.mp4", thumbnail: "https://images.unsplash.com/photo-1508214751196-bcfd4ca60f91?auto=format&fit=crop&w=400&q=80", description: "Silky Straight Transformation" },
-  { id: 2, src: "/videos/reel2.mp4", thumbnail: "https://images.unsplash.com/photo-1522335789203-aabd1fc54bc9?auto=format&fit=crop&w=400&q=80", description: "Wavy Hair Styling Tips" },
-  { id: 3, src: "/videos/reel3.mp4", thumbnail: "https://images.unsplash.com/photo-1508214751196-bcfd4ca60f91?auto=format&fit=crop&w=400&q=80", description: "Curly Hair Care Routine" },
-  { id: 4, src: "/videos/reel1.mp4", thumbnail: "https://images.unsplash.com/photo-1522335789203-aabd1fc54bc9?auto=format&fit=crop&w=400&q=80", description: "Deep Wave Extensions Look" },
+  { id: 1, src: "/videos/reel1.mp4", description: "Silky Straight Transformation" },
+  { id: 2, src: "/videos/reel2.mp4", description: "Wavy Hair Styling Tips" },
+  { id: 3, src: "/videos/reel3.mp4", description: "Curly Hair Care Routine" },
+  { id: 4, src: "/videos/reel1.mp4", description: "Deep Wave Extensions Look" },
 ];
 
 const PromoSlider = () => {
@@ -181,11 +180,10 @@ const VideoReelCard = ({ video }: { video: ReelVideo }) => {
   }, [isMuted]);
 
   return (
-    <div className="relative w-full h-[32rem] rounded-2xl overflow-hidden shadow-lg bg-gray-100 group">
+    <div className="relative w-full h-[32rem] rounded-2xl overflow-hidden shadow-lg bg-gray-900 group">
       <video
         ref={videoRef}
         src={video.src}
-        poster={video.thumbnail}
         loop
         muted={isMuted}
         autoPlay
