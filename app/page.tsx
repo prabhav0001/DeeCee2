@@ -424,21 +424,21 @@ export default function DeeceeHair(): React.ReactElement {
           <div className="lg:col-span-1 bg-white rounded-xl border border-gray-200 p-4 sm:p-6">
             <h3 className="font-semibold text-gray-900 mb-4">Get in touch</h3>
             <div className="space-y-4 text-sm">
-              <a href="tel:+919999999999" className="flex items-center gap-3 text-gray-700 hover:text-rose-600">
+              <a href="tel:+916376482804" className="flex items-center gap-3 text-gray-700 hover:text-rose-600">
                 <span className="p-2 rounded-full bg-rose-50 flex-shrink-0"><Phone className="w-4 h-4 text-rose-600" /></span>
-                <span className="break-all">+91 99999 99999</span>
+                <span className="break-all">+91 63764 82804</span>
               </a>
               <a href="mailto:support@deeceehair.com" className="flex items-center gap-3 text-gray-700 hover:text-rose-600">
                 <span className="p-2 rounded-full bg-rose-50 flex-shrink-0"><Mail className="w-4 h-4 text-rose-600" /></span>
-                <span className="break-all">support@deeceehair.com</span>
+                <span className="break-all">sumiteximjjn@gmail.com</span>
               </a>
               <div className="flex items-start gap-3 text-gray-700">
                 <span className="p-2 rounded-full bg-rose-50 flex-shrink-0"><MapPin className="w-4 h-4 text-rose-600" /></span>
-                <div>123 Luxe Avenue, Andheri West<div className="text-gray-500">Mumbai, Maharashtra</div></div>
+                <div>Swastik Tower, Joshiyo Ka Gatta.<div className="text-gray-500">Jhunjhunu, Rajasthan</div></div>
               </div>
               <div className="flex items-center gap-3 text-gray-700">
                 <span className="p-2 rounded-full bg-rose-50 flex-shrink-0"><Clock className="w-4 h-4 text-rose-600" /></span>
-                <span>Mon-Sat: 10:00 AM - 7:00 PM</span>
+                <span>Mon-Sat: 9:00 AM - 5:00 PM</span>
               </div>
             </div>
             <div className="mt-6">
