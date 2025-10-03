@@ -172,7 +172,7 @@ const VideoReelCard = ({ video }: { video: ReelVideo }) => {
   };
 
   return (
-    <div className="relative w-full h-80 rounded-xl overflow-hidden shadow-lg bg-gray-100 group">
+    <div className="relative w-full h-130 rounded-xl overflow-hidden shadow-lg bg-gray-100 group">
       <video
         ref={videoRef}
         src={video.src}
