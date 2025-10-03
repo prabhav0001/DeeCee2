@@ -1,7 +1,7 @@
 "use client"
 
-import React, { useEffect, useMemo, useState } from "react";
-import { Heart, User, Search, ShoppingCart, Menu, X, Star, Truck, Shield, CreditCard, ChevronLeft, ChevronRight, Phone, Mail, MapPin, Clock, Calendar, CheckCircle2 } from "lucide-react";
+import React, { useEffect, useMemo, useState, useRef } from "react";
+import { Heart, User, Search, ShoppingCart, Menu, X, Star, Truck, Shield, CreditCard, ChevronLeft, ChevronRight, Phone, Mail, MapPin, Clock, Calendar, CheckCircle2, Play, Pause, Volume2, VolumeX } from "lucide-react";
 
 type Product = {
   id: number;
@@ -36,6 +36,13 @@ type Appointment = {
 
 type Page = "home" | "shop" | "product" | "cart" | "contact" | "appointment";
 
+type ReelVideo = {
+  id: number;
+  src: string;
+  thumbnail: string;
+  description: string;
+};
+
 const products: Product[] = [
   { id: 1, name: "Silky Straight Extensions", price: 2999, image: "https://images.unsplash.com/photo-1508214751196-bcfd4ca60f91?auto=format&fit=crop&w=400&q=80", colors: ["Black", "Brown", "Blonde", "Auburn"], sizes: ['14"', '18"', '22"', '26"'], category: "straight", isBestseller: true },
   { id: 2, name: "Wavy Luxe Hair", price: 3499, image: "https://images.unsplash.com/photo-1522335789203-aabd1fc54bc9?auto=format&fit=crop&w=400&q=80", colors: ["Black", "Brown", "Honey Blonde"], sizes: ['16"', '20"', '24"'], category: "wavy", isNew: true },
@@ -58,6 +65,13 @@ const heroSlides = [
   { image: "/hero3.jpg", title: "Premium Quality", subtitle: "Guaranteed", description: "Silky smooth textures that last" },
   { image: "/hero4.jpg", title: "Your Style", subtitle: "Elevated", description: "From straight to curly, we have it all" },
   { image: "https://images.unsplash.com/photo-1492106087820-71f1a00d2b11?auto=format&fit=crop&w=1920&q=80", title: "Confidence", subtitle: "Unleashed", description: "Feel beautiful every single day" },
+];
+
+const reelsVideos: ReelVideo[] = [
+  { id: 1, src: "/videos/reel1.mp4", thumbnail: "https://images.unsplash.com/photo-1508214751196-bcfd4ca60f91?auto=format&fit=crop&w=400&q=80", description: "Silky Straight Transformation" },
+  { id: 2, src: "/videos/reel2.mp4", thumbnail: "https://images.unsplash.com/photo-1522335789203-aabd1fc54bc9?auto=format&fit=crop&w=400&q=80", description: "Wavy Hair Styling Tips" },
+  { id: 3, src: "/videos/reel3.mp4", thumbnail: "https://images.unsplash.com/photo-1508214751196-bcfd4ca60f91?auto=format&fit=crop&w=400&q=80", description: "Curly Hair Care Routine" },
+  { id: 4, src: "/videos/reel1.mp4", thumbnail: "https://images.unsplash.com/photo-1522335789203-aabd1fc54bc9?auto=format&fit=crop&w=400&q=80", description: "Deep Wave Extensions Look" },
 ];
 
 const PromoSlider = () => {
@@ -134,6 +148,63 @@ const FormInput = ({ label, type = "text", value, onChange, error, placeholder }
   </div>
 );
 
+const VideoReelCard = ({ video }: { video: ReelVideo }) => {
+  const videoRef = useRef<HTMLVideoElement>(null);
+  const [isPlaying, setIsPlaying] = useState(true);
+  const [isMuted, setIsMuted] = useState(true);
+
+  const togglePlay = () => {
+    if (videoRef.current) {
+      if (isPlaying) {
+        videoRef.current.pause();
+      } else {
+        videoRef.current.play();
+      }
+      setIsPlaying(!isPlaying);
+    }
+  };
+
+  const toggleMute = () => {
+    if (videoRef.current) {
+      videoRef.current.muted = !isMuted;
+      setIsMuted(!isMuted);
+    }
+  };
+
+  return (
+    <div className="relative w-full h-80 rounded-xl overflow-hidden shadow-lg bg-gray-100 group">
+      <video
+        ref={videoRef}
+        src={video.src}
+        poster={video.thumbnail}
+        loop
+        muted={isMuted}
+        autoPlay
+        playsInline
+        className="w-full h-full object-cover"
+        onClick={togglePlay}
+      />
+      <div className="absolute inset-0 bg-black/20 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity duration-300">
+        <button
+          onClick={(e) => { e.stopPropagation(); togglePlay(); }}
+          className="p-3 rounded-full bg-white/30 backdrop-blur-sm text-white hover:bg-white/50 transition mr-2"
+        >
+          {isPlaying ? <Pause className="w-6 h-6" /> : <Play className="w-6 h-6" />}
+        </button>
+        <button
+          onClick={(e) => { e.stopPropagation(); toggleMute(); }}
+          className="p-3 rounded-full bg-white/30 backdrop-blur-sm text-white hover:bg-white/50 transition"
+        >
+          {isMuted ? <VolumeX className="w-6 h-6" /> : <Volume2 className="w-6 h-6" />}
+        </button>
+      </div>
+      <div className="absolute bottom-0 left-0 right-0 p-4 bg-gradient-to-t from-black/60 to-transparent text-white text-sm font-medium">
+        {video.description}
+      </div>
+    </div>
+  );
+};
+
 export default function DeeceeHair(): React.ReactElement {
   const [currentPage, setCurrentPage] = useState<Page>("home");
   const [selectedProduct, setSelectedProduct] = useState<Product | null>(null);
@@ -189,7 +260,6 @@ export default function DeeceeHair(): React.ReactElement {
         <div className="flex items-center justify-between h-16">
           <div className="flex items-center">
             <button onClick={() => navigateTo("home")} className="flex items-center space-x-2">
-              {/* <img src="/dc-logo.svg" alt="DEECEE" className="h-25 w-auto" /> */}
               <span className="text-xl sm:text-2xl font-bold text-rose-600">DEECEE</span>
               <span className="text-xl sm:text-2xl font-light text-gray-800">HAIR</span>
             </button>
@@ -303,6 +373,17 @@ export default function DeeceeHair(): React.ReactElement {
                   </div>
                 </div>
               </div>
+            ))}
+          </div>
+        </div>
+      </section>
+
+      <section className="py-12 sm:py-20 bg-gray-100">
+        <div className="w-full px-4 sm:px-6 lg:px-8">
+          <h2 className="text-3xl sm:text-4xl font-bold text-gray-900 mb-8 sm:mb-12 text-center">Style Inspiration & Reels</h2>
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 sm:gap-8">
+            {reelsVideos.map((video) => (
+              <VideoReelCard key={video.id} video={video} />
             ))}
           </div>
         </div>
@@ -687,8 +768,9 @@ export default function DeeceeHair(): React.ReactElement {
         <div className="w-full px-4 sm:px-6 lg:px-8">
           <div className="grid grid-cols-2 md:grid-cols-4 gap-6 sm:gap-8">
             <div className="col-span-2 sm:col-span-1">
-              <img src="/wh-logo.svg" alt="DEECEE" className="h-30 w-auto" />
-              <p className="text-gray-400 text-sm">Premium quality hair extensions for the modern woman.</p>
+              <span className="text-xl sm:text-2xl font-bold text-rose-600">DEECEE</span>
+              <span className="text-xl sm:text-2xl font-light text-white"> HAIR</span>
+              <p className="text-gray-400 text-sm mt-2">Premium quality hair extensions for the modern woman.</p>
             </div>
             <div>
               <h4 className="font-semibold mb-4 text-sm sm:text-base">Quick Links</h4>
