@@ -1,7 +1,7 @@
 "use client"
 
 import React, { useEffect, useMemo, useState, useRef, useCallback } from "react";
-import { Heart, User, Search, ShoppingCart, Menu, X, Star, Truck, Shield, CreditCard, ChevronLeft, ChevronRight, Phone, Mail, MapPin, Clock, Calendar, Play, Pause, Volume2, VolumeX, Sparkles, Gift, Package } from "lucide-react";
+import { Heart, User, Search, ShoppingCart, Menu, X, Star, Truck, Shield, CreditCard, ChevronLeft, ChevronRight, Calendar, Play, Pause, Volume2, VolumeX, Sparkles, Gift, Package } from "lucide-react";
 import ShopPage from './shop';
 import ProductPage from './product';
 import CartPage from './cart';
@@ -11,7 +11,7 @@ import TermsPage from './terms';
 import ProfilePage from './profile';
 import LoginPage from './LoginPage';
 import SignupPage from './SignupPage';
-import { useAuth } from './AuthContext';
+import { AuthProvider, useAuth } from './AuthContext';
 
 type Product = {
   id: number;
@@ -207,7 +207,7 @@ const VideoReelCard = ({ video }: { video: ReelVideo }) => {
   );
 };
 
-export default function DeeceeHair(): React.ReactElement {
+function DeeceeHairApp(): React.ReactElement {
   const { isAuthenticated } = useAuth();
   const [currentPage, setCurrentPage] = useState<Page>("home");
   const [selectedProduct, setSelectedProduct] = useState<Product | null>(null);
@@ -616,5 +616,14 @@ export default function DeeceeHair(): React.ReactElement {
         </div>
       </footer>
     </div>
+  );
+}
+
+// AuthProvider
+export default function DeeceeHair(): React.ReactElement {
+  return (
+    <AuthProvider>
+      <DeeceeHairApp />
+    </AuthProvider>
   );
 }
