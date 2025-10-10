@@ -243,7 +243,9 @@ function DeeceeHairApp(): React.ReactElement {
 
   const addToCart = useCallback(() => {
     if (!selectedProduct || !selectedColor || !selectedSize) {
-      alert("Please select color and size");
+      if (typeof window !== 'undefined') {
+        alert("Please select color and size");
+      }
       return;
     }
 
@@ -257,7 +259,10 @@ function DeeceeHairApp(): React.ReactElement {
         return [...prevCart, { product: selectedProduct, color: selectedColor, size: selectedSize, quantity: 1 }];
       }
     });
-    alert("Added to cart!");
+
+    if (typeof window !== 'undefined') {
+      alert("Added to cart!");
+    }
   }, [selectedProduct, selectedColor, selectedSize]);
 
   const updateQuantity = useCallback((index: number, delta: number) => {

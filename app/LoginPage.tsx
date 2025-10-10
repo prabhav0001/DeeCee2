@@ -11,7 +11,7 @@ type LoginPageProps = {
   onNeedsVerification: () => void;
 };
 
-export default function LoginPage({ onClose, onSwitchToLogin, onLoginSuccess, onNeedsVerification }: LoginPageProps) {
+export default function LoginPage({ onClose, onSwitchToSignup, onLoginSuccess, onNeedsVerification }: LoginPageProps) {
   const { login } = useAuth();
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');

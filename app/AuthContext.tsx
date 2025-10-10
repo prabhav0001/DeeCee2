@@ -43,16 +43,33 @@ type AuthProviderProps = {
   children: ReactNode;
 };
 
+// Helper function to get consistent date format
+const getJoinedDate = (): string => {
+  const date = new Date();
+  const year = date.getFullYear();
+  const month = date.toLocaleString('en-US', { month: 'long' });
+  return `${month} ${year}`;
+};
+
 export const AuthProvider = ({ children }: AuthProviderProps) => {
   const [user, setUser] = useState<User | null>(null);
   const [isAuthenticated, setIsAuthenticated] = useState(false);
   const [pendingVerification, setPendingVerification] = useState<{ email: string; phone: string; password: string; name: string } | null>(null);
+  const [isClient, setIsClient] = useState(false);
 
   // Simulated OTP storage (in production, this would be on backend)
   const [emailOTP, setEmailOTP] = useState<string>('');
   const [mobileOTP, setMobileOTP] = useState<string>('');
 
+  // Set client-side flag
   useEffect(() => {
+    setIsClient(true);
+  }, []);
+
+  // Load user from localStorage on mount (only on client)
+  useEffect(() => {
+    if (!isClient) return;
+
     const storedUser = localStorage.getItem('deecee_user');
     if (storedUser) {
       try {
@@ -64,7 +81,7 @@ export const AuthProvider = ({ children }: AuthProviderProps) => {
         localStorage.removeItem('deecee_user');
       }
     }
-  }, []);
+  }, [isClient]);
 
   const generateOTP = (): string => {
     return Math.floor(100000 + Math.random() * 900000).toString();
@@ -75,7 +92,9 @@ export const AuthProvider = ({ children }: AuthProviderProps) => {
     setEmailOTP(otp);
     console.log(`📧 Email OTP sent to ${email}: ${otp}`);
     // In production: Call backend API to send email
-    alert(`Email OTP sent to ${email}: ${otp}\n(This is a demo, in production this would be sent via email)`);
+    if (typeof window !== 'undefined') {
+      alert(`Email OTP sent to ${email}: ${otp}\n(This is a demo, in production this would be sent via email)`);
+    }
     return otp;
   };
 
@@ -84,12 +103,16 @@ export const AuthProvider = ({ children }: AuthProviderProps) => {
     setMobileOTP(otp);
     console.log(`📱 Mobile OTP sent to ${phone}: ${otp}`);
     // In production: Call backend API to send SMS
-    alert(`Mobile OTP sent to ${phone}: ${otp}\n(This is a demo, in production this would be sent via SMS)`);
+    if (typeof window !== 'undefined') {
+      alert(`Mobile OTP sent to ${phone}: ${otp}\n(This is a demo, in production this would be sent via SMS)`);
+    }
     return otp;
   };
 
   const login = async (email: string, password: string): Promise<{ success: boolean; needsVerification?: boolean; message?: string }> => {
     try {
+      if (typeof window === 'undefined') return { success: false, message: 'Client-side only' };
+
       const storedUsers = localStorage.getItem('deecee_users');
       const users = storedUsers ? JSON.parse(storedUsers) : [];
 
@@ -152,6 +175,8 @@ export const AuthProvider = ({ children }: AuthProviderProps) => {
     password: string
   ): Promise<boolean> => {
     try {
+      if (typeof window === 'undefined') return false;
+
       const storedUsers = localStorage.getItem('deecee_users');
       const users = storedUsers ? JSON.parse(storedUsers) : [];
 
@@ -175,7 +200,7 @@ export const AuthProvider = ({ children }: AuthProviderProps) => {
   };
 
   const completeSignup = () => {
-    if (!pendingVerification) return;
+    if (!pendingVerification || typeof window === 'undefined') return;
 
     const storedUsers = localStorage.getItem('deecee_users');
     const users = storedUsers ? JSON.parse(storedUsers) : [];
@@ -186,10 +211,7 @@ export const AuthProvider = ({ children }: AuthProviderProps) => {
       email: pendingVerification.email,
       phone: pendingVerification.phone,
       password: pendingVerification.password,
-      joinedDate: new Date().toLocaleDateString('en-US', {
-        month: 'long',
-        year: 'numeric',
-      }),
+      joinedDate: getJoinedDate(),
       isEmailVerified: true,
       isMobileVerified: true,
     };
@@ -218,7 +240,7 @@ export const AuthProvider = ({ children }: AuthProviderProps) => {
   const verifyEmail = async (otp: string): Promise<boolean> => {
     if (otp === emailOTP) {
       // Update user verification status if already exists
-      if (pendingVerification) {
+      if (pendingVerification && typeof window !== 'undefined') {
         const storedUsers = localStorage.getItem('deecee_users');
         const users = storedUsers ? JSON.parse(storedUsers) : [];
         const userIndex = users.findIndex((u: any) => u.email === pendingVerification.email);
@@ -236,7 +258,7 @@ export const AuthProvider = ({ children }: AuthProviderProps) => {
   const verifyMobile = async (otp: string): Promise<boolean> => {
     if (otp === mobileOTP) {
       // Update user verification status if already exists
-      if (pendingVerification) {
+      if (pendingVerification && typeof window !== 'undefined') {
         const storedUsers = localStorage.getItem('deecee_users');
         const users = storedUsers ? JSON.parse(storedUsers) : [];
         const userIndex = users.findIndex((u: any) => u.email === pendingVerification.email);
@@ -270,11 +292,13 @@ export const AuthProvider = ({ children }: AuthProviderProps) => {
   const logout = () => {
     setUser(null);
     setIsAuthenticated(false);
-    localStorage.removeItem('deecee_user');
+    if (typeof window !== 'undefined') {
+      localStorage.removeItem('deecee_user');
+    }
   };
 
   const updateUser = (userData: Partial<User>) => {
-    if (user) {
+    if (user && typeof window !== 'undefined') {
       const updatedUser = { ...user, ...userData };
       setUser(updatedUser);
       localStorage.setItem('deecee_user', JSON.stringify(updatedUser));
