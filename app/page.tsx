@@ -2,6 +2,9 @@
 
 import React, { useEffect, useMemo, useState, useRef, useCallback } from "react";
 import { Heart, User, Search, ShoppingCart, Menu, X, Star, Truck, Shield, CreditCard, ChevronLeft, ChevronRight, Phone, Mail, MapPin, Clock, Calendar, CheckCircle2, Play, Pause, Volume2, VolumeX, Sparkles, Gift, Package, FileText } from "lucide-react";
+import ShopPage from './shop';
+import ProductPage from './product';
+import CartPage from './cart';
 import ContactPage from './contact';
 import AppointmentPage from './appointment';
 import TermsPage from './terms';
@@ -498,114 +501,6 @@ export default function DeeceeHair(): React.ReactElement {
       </section>
     </div>
   ), [currentSlide, navigateTo]);
-
-  const ShopPage = useCallback(() => (
-    <div className="w-full px-4 sm:px-6 lg:px-8 py-8 sm:py-12">
-      <h2 className="text-2xl sm:text-3xl font-bold text-gray-900 mb-6 sm:mb-8">
-        Shop {filterCategory !== "all" ? `- ${filterCategory.charAt(0).toUpperCase() + filterCategory.slice(1)}` : ""}
-      </h2>
-      <div className="mb-6 flex flex-wrap gap-3 sm:gap-4">
-        <FilterButton active={filterCategory === "all"} onClick={() => setFilterCategory("all")}>All</FilterButton>
-        <FilterButton active={filterCategory === "straight"} onClick={() => setFilterCategory("straight")}>Straight</FilterButton>
-        <FilterButton active={filterCategory === "wavy"} onClick={() => setFilterCategory("wavy")}>Wavy</FilterButton>
-        <FilterButton active={filterCategory === "curly"} onClick={() => setFilterCategory("curly")}>Curly</FilterButton>
-        <FilterButton active={filterCategory === "mans"} onClick={() => setFilterCategory("mans")}>Mans</FilterButton>
-      </div>
-      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 sm:gap-8 lg:gap-10">
-        {filteredProducts.map((product) => (
-          <ProductCard key={product.id} product={product} onClick={() => { setSelectedProduct(product); setSelectedColor(""); setSelectedSize(""); setCurrentPage("product"); }} />
-        ))}
-      </div>
-    </div>
-  ), [filterCategory, filteredProducts]);
-
-  const ProductPage = useCallback(() => {
-    if (!selectedProduct) return null;
-
-    return (
-      <div className="w-full px-4 sm:px-6 lg:px-8 py-8 sm:py-12">
-        <button onClick={() => setCurrentPage("shop")} className="mb-6 text-rose-600 hover:underline focus:outline-none focus:ring-2 focus:ring-rose-600 rounded">
-          ← Back to Shop
-        </button>
-        <div className="flex flex-col md:flex-row gap-8 sm:gap-10">
-          <img src={selectedProduct.image} alt={selectedProduct.name} className="w-full md:w-1/2 rounded-2xl object-cover h-64 sm:h-auto shadow-md" />
-          <div className="flex flex-col flex-1">
-            <h1 className="text-2xl sm:text-3xl font-bold text-gray-900 mb-6 truncate">{selectedProduct.name}</h1>
-            <p className="text-rose-600 text-2xl font-extrabold mb-8">₹{selectedProduct.price.toLocaleString()}</p>
-            <div className="mb-6">
-              <h3 className="font-semibold text-gray-700 mb-3">Select Color</h3>
-              <div className="flex flex-wrap gap-3">
-                {selectedProduct.colors.map((color) => (
-                  <button key={color} onClick={() => setSelectedColor(color)} className={`px-4 py-2 border rounded-full text-sm font-semibold transition-all duration-300 ${selectedColor === color ? "bg-rose-600 text-white border-rose-600 shadow-lg" : "border-gray-300 text-gray-700 hover:bg-rose-100"}`}>
-                    {color}
-                  </button>
-                ))}
-              </div>
-            </div>
-            <div className="mb-8">
-              <h3 className="font-semibold text-gray-700 mb-3">Select Size</h3>
-              <div className="flex flex-wrap gap-3">
-                {selectedProduct.sizes.map((size) => (
-                  <button key={size} onClick={() => setSelectedSize(size)} className={`px-4 py-2 border rounded-full text-sm font-semibold transition-all duration-300 ${selectedSize === size ? "bg-rose-600 text-white border-rose-600 shadow-lg" : "border-gray-300 text-gray-700 hover:bg-rose-100"}`}>
-                    {size}
-                  </button>
-                ))}
-              </div>
-            </div>
-            <button onClick={addToCart} className="bg-rose-600 text-white px-8 py-3 rounded-2xl font-semibold hover:bg-rose-700 transition shadow-lg w-full md:w-auto">
-              Add to Cart
-            </button>
-          </div>
-        </div>
-      </div>
-    );
-  }, [selectedProduct, selectedColor, selectedSize, addToCart]);
-
-  const CartPage = useCallback(() => (
-    <div className="w-full px-4 sm:px-6 lg:px-8 py-8 sm:py-12">
-      <h2 className="text-2xl sm:text-3xl font-bold text-gray-900 mb-6 sm:mb-8">Your Cart</h2>
-      {cart.length === 0 ? (
-        <div className="text-center py-12">
-          <p className="text-gray-700 mb-6">Your cart is empty.</p>
-          <button onClick={() => navigateTo("shop")} className="bg-rose-600 text-white px-6 py-3 rounded-2xl font-semibold hover:bg-rose-700 transition shadow-lg">
-            Continue Shopping
-          </button>
-        </div>
-      ) : (
-        <div className="space-y-6 sm:space-y-8">
-          {cart.map((item, index) => (
-            <div key={index} className="flex flex-col sm:flex-row items-start sm:items-center border border-gray-200 rounded-2xl p-6 shadow-sm">
-              <img src={item.product.image} alt={item.product.name} className="w-full sm:w-28 h-36 sm:h-28 object-cover rounded-xl mb-4 sm:mb-0 sm:mr-6 shadow-md" />
-              <div className="flex-1 w-full">
-                <h3 className="text-lg font-semibold text-gray-900 truncate">{item.product.name}</h3>
-                <p className="text-gray-700 text-sm">Color: {item.color}</p>
-                <p className="text-gray-700 text-sm">Size: {item.size}</p>
-                <p className="text-rose-600 font-semibold text-lg">₹{item.product.price.toLocaleString()}</p>
-              </div>
-              <div className="flex items-center justify-between w-full sm:w-auto mt-6 sm:mt-0">
-                <div className="flex items-center space-x-3">
-                  <button onClick={() => updateQuantity(index, -1)} className="px-3 py-1 border border-gray-300 rounded-xl hover:bg-gray-100 transition">
-                    -
-                  </button>
-                  <span className="px-4 font-semibold">{item.quantity}</span>
-                  <button onClick={() => updateQuantity(index, 1)} className="px-3 py-1 border border-gray-300 rounded-xl hover:bg-gray-100 transition">
-                    +
-                  </button>
-                </div>
-                <button onClick={() => removeFromCart(index)} className="ml-6 text-red-600 hover:underline text-sm font-semibold">
-                  Remove
-                </button>
-              </div>
-            </div>
-          ))}
-          <div className="text-right text-xl font-semibold text-gray-900">Total: ₹{getTotalPrice().toLocaleString()}</div>
-          <button onClick={() => alert("Checkout functionality not implemented.")} className="w-full sm:w-auto bg-rose-600 text-white px-8 py-3 rounded-2xl font-semibold hover:bg-rose-700 transition shadow-lg">
-            Proceed to Checkout
-          </button>
-        </div>
-      )}
-    </div>
-  ), [cart, getTotalPrice, navigateTo, removeFromCart, updateQuantity]);
 
   return (
     <div className="min-h-screen bg-white text-gray-900 font-sans overflow-x-hidden">
