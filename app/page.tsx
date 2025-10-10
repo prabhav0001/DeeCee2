@@ -1,7 +1,7 @@
 "use client"
 
 import React, { useEffect, useMemo, useState, useRef, useCallback } from "react";
-import { Heart, User, Search, ShoppingCart, Menu, X, Star, Truck, Shield, CreditCard, ChevronLeft, ChevronRight, Phone, Mail, MapPin, Clock, Calendar, CheckCircle2, Play, Pause, Volume2, VolumeX, Sparkles, Gift, Package, FileText } from "lucide-react";
+import { Heart, User, Search, ShoppingCart, Menu, X, Star, Truck, Shield, CreditCard, ChevronLeft, ChevronRight, Phone, Mail, MapPin, Clock, Calendar, Play, Pause, Volume2, VolumeX, Sparkles, Gift, Package } from "lucide-react";
 import ShopPage from './shop';
 import ProductPage from './product';
 import CartPage from './cart';
@@ -136,36 +136,6 @@ const FeatureCard = ({ icon: Icon, title, description }: { icon: any; title: str
   </div>
 );
 
-const ProductCard = ({ product, onClick }: { product: Product; onClick: () => void }) => (
-  <div onClick={onClick} className="border border-gray-200 rounded-2xl p-4 cursor-pointer hover:shadow-2xl transition-all duration-300 transform hover:-translate-y-2 bg-white group">
-    <div className="relative overflow-hidden rounded-xl mb-4">
-      <img src={product.image} alt={product.name} className="w-full h-48 object-cover transform group-hover:scale-110 transition-transform duration-500" />
-      <div className="absolute inset-0 bg-gradient-to-t from-black/40 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
-    </div>
-    <h3 className="text-base sm:text-lg font-semibold text-gray-900 mb-2 line-clamp-1">{product.name}</h3>
-    <p className="text-rose-600 font-bold text-lg">₹{product.price.toLocaleString()}</p>
-    <div className="mt-3 flex flex-wrap gap-2">
-      {product.isBestseller && <span className="inline-block px-3 py-1 text-xs font-semibold bg-gradient-to-r from-rose-100 to-rose-50 text-rose-700 rounded-full">Bestseller</span>}
-      {product.isNew && <span className="inline-block px-3 py-1 text-xs font-semibold bg-gradient-to-r from-green-100 to-green-50 text-green-700 rounded-full">New</span>}
-      {product.isMans && <span className="inline-block px-3 py-1 text-xs font-semibold bg-gradient-to-r from-blue-100 to-blue-50 text-blue-700 rounded-full">Mans</span>}
-    </div>
-  </div>
-);
-
-const FilterButton = ({ active, onClick, children }: { active: boolean; onClick: () => void; children: React.ReactNode }) => (
-  <button onClick={onClick} className={`px-4 sm:px-6 py-2 sm:py-3 rounded-full border text-sm font-medium transition-all duration-300 transform hover:scale-105 ${active ? "bg-gradient-to-r from-rose-600 to-rose-500 text-white border-rose-600 shadow-lg" : "border-gray-300 text-gray-700 hover:bg-rose-50 hover:border-rose-300"}`}>
-    {children}
-  </button>
-);
-
-const FormInput = ({ label, type = "text", value, onChange, error, placeholder }: { label: string; type?: string; value: string; onChange: (e: React.ChangeEvent<HTMLInputElement>) => void; error?: string; placeholder?: string }) => (
-  <div className="w-full">
-    <label className="block text-sm font-semibold text-gray-700 mb-2">{label}</label>
-    <input type={type} value={value} onChange={onChange} placeholder={placeholder} className="w-full border border-gray-300 rounded-xl px-4 py-3 focus:outline-none focus:ring-2 focus:ring-rose-500 focus:border-transparent transition-all" />
-    {error && <p className="text-red-600 text-xs mt-2 flex items-center gap-1"><X className="w-3 h-3" />{error}</p>}
-  </div>
-);
-
 const VideoReelCard = ({ video }: { video: ReelVideo }) => {
   const videoRef = useRef<HTMLVideoElement>(null);
   const [isPlaying, setIsPlaying] = useState(true);
@@ -283,10 +253,6 @@ export default function DeeceeHair(): React.ReactElement {
     setCart((prevCart) => prevCart.filter((_, i) => i !== index));
   }, []);
 
-  const getTotalPrice = useCallback(() => cart.reduce((sum, item) => sum + item.product.price * item.quantity, 0), [cart]);
-
-  const filteredProducts = useMemo(() => filterCategory === "all" ? products : products.filter((p) => p.category === filterCategory), [filterCategory]);
-
   const Header = useCallback(() => (
     <header className="bg-white border-b border-gray-200 sticky top-0 z-50 shadow-md backdrop-blur-sm bg-white/90">
       <div className="w-full px-4 sm:px-6 lg:px-8">
@@ -361,7 +327,7 @@ export default function DeeceeHair(): React.ReactElement {
         </div>
       )}
     </header>
-  ), [cart.length, currentPage, filterCategory, mobileMenuOpen, navigateTo, searchOpen]);
+  ), [cart.length, mobileMenuOpen, navigateTo, searchOpen]);
 
   const HomePage = useCallback(() => (
     <div className="w-full overflow-x-hidden">
@@ -508,11 +474,46 @@ export default function DeeceeHair(): React.ReactElement {
       <Header />
       <main className="w-full overflow-x-hidden">
         {currentPage === "home" && <HomePage />}
-        {currentPage === "shop" && <ShopPage />}
-        {currentPage === "product" && <ProductPage />}
-        {currentPage === "cart" && <CartPage />}
+        {currentPage === "shop" && (
+          <ShopPage
+            products={products}
+            filterCategory={filterCategory}
+            setFilterCategory={setFilterCategory}
+            onProductClick={(product) => {
+              setSelectedProduct(product);
+              setSelectedColor("");
+              setSelectedSize("");
+              setCurrentPage("product");
+            }}
+          />
+        )}
+        {currentPage === "product" && selectedProduct && (
+          <ProductPage
+            product={selectedProduct}
+            selectedColor={selectedColor}
+            setSelectedColor={setSelectedColor}
+            selectedSize={selectedSize}
+            setSelectedSize={setSelectedSize}
+            onAddToCart={addToCart}
+            onBackToShop={() => setCurrentPage("shop")}
+          />
+        )}
+        {currentPage === "cart" && (
+          <CartPage
+            cart={cart}
+            onUpdateQuantity={updateQuantity}
+            onRemoveFromCart={removeFromCart}
+            onContinueShopping={() => navigateTo("shop")}
+          />
+        )}
         {currentPage === "contact" && <ContactPage />}
-        {currentPage === "appointment" && <AppointmentPage appointments={appointments} setAppointments={setAppointments} onNavigateHome={() => navigateTo("home")}/>}
+        {currentPage === "appointment" && (
+          <AppointmentPage
+            appointments={appointments}
+            setAppointments={setAppointments}
+            onNavigateHome={() => navigateTo("home")}
+          />
+        )}
         {currentPage === "terms" && <TermsPage />}
       </main>
       <footer className="bg-gray-900 text-white py-8 sm:py-12 w-full">
