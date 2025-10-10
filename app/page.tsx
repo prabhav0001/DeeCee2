@@ -9,6 +9,9 @@ import ContactPage from './contact';
 import AppointmentPage from './appointment';
 import TermsPage from './terms';
 import ProfilePage from './profile';
+import LoginPage from './LoginPage';
+import SignupPage from './SignupPage';
+import { useAuth } from './AuthContext';
 
 type Product = {
   id: number;
@@ -205,6 +208,7 @@ const VideoReelCard = ({ video }: { video: ReelVideo }) => {
 };
 
 export default function DeeceeHair(): React.ReactElement {
+  const { isAuthenticated } = useAuth();
   const [currentPage, setCurrentPage] = useState<Page>("home");
   const [selectedProduct, setSelectedProduct] = useState<Product | null>(null);
   const [selectedColor, setSelectedColor] = useState("");
@@ -215,6 +219,8 @@ export default function DeeceeHair(): React.ReactElement {
   const [filterCategory, setFilterCategory] = useState("all");
   const [currentSlide, setCurrentSlide] = useState(0);
   const [appointments, setAppointments] = useState<Appointment[]>([]);
+  const [showLogin, setShowLogin] = useState(false);
+  const [showSignup, setShowSignup] = useState(false);
 
   useEffect(() => {
     const interval = setInterval(() => setCurrentSlide((prev) => (prev + 1) % heroSlides.length), 5000);
@@ -222,10 +228,16 @@ export default function DeeceeHair(): React.ReactElement {
   }, []);
 
   const navigateTo = useCallback((page: Page, category = "all") => {
+    // Check if trying to access profile without login
+    if (page === "profile" && !isAuthenticated) {
+      setShowLogin(true);
+      return;
+    }
+
     setCurrentPage(page);
     setFilterCategory(category);
     setMobileMenuOpen(false);
-  }, []);
+  }, [isAuthenticated]);
 
   const addToCart = useCallback(() => {
     if (!selectedProduct || !selectedColor || !selectedSize) {
@@ -286,7 +298,16 @@ export default function DeeceeHair(): React.ReactElement {
           <div className="flex items-center space-x-2 sm:space-x-4">
             <div className="hidden sm:flex items-center space-x-2">
               <IconButton icon={Heart} />
-              <IconButton icon={User} onClick={() => navigateTo("profile")} />
+              <IconButton
+                icon={User}
+                onClick={() => {
+                  if (isAuthenticated) {
+                    navigateTo("profile");
+                  } else {
+                    setShowLogin(true);
+                  }
+                }}
+              />
             </div>
             <IconButton icon={Search} onClick={() => setSearchOpen((v) => !v)} />
             <IconButton icon={ShoppingCart} onClick={() => navigateTo("cart")} badge={cart.length} />
@@ -304,7 +325,14 @@ export default function DeeceeHair(): React.ReactElement {
       {mobileMenuOpen && (
         <div className="lg:hidden bg-white border-t border-gray-200 py-4 px-4">
           <nav className="flex flex-col space-y-3">
-            <button onClick={() => { navigateTo("profile"); setMobileMenuOpen(false); }} className="text-sm font-medium text-gray-700 hover:text-rose-600 transition text-left focus:outline-none focus:ring-2 focus:ring-rose-600 rounded">
+            <button onClick={() => {
+              if (isAuthenticated) {
+                navigateTo("profile");
+              } else {
+                setShowLogin(true);
+              }
+              setMobileMenuOpen(false);
+            }} className="text-sm font-medium text-gray-700 hover:text-rose-600 transition text-left focus:outline-none focus:ring-2 focus:ring-rose-600 rounded">
               My Profile
             </button>
             {["Shop", "Bestsellers", "New Arrivals"].map((item) => (
@@ -331,7 +359,7 @@ export default function DeeceeHair(): React.ReactElement {
         </div>
       )}
     </header>
-  ), [cart.length, mobileMenuOpen, navigateTo, searchOpen]);
+  ), [cart.length, mobileMenuOpen, navigateTo, searchOpen, isAuthenticated]);
 
   const HomePage = useCallback(() => (
     <div className="w-full overflow-x-hidden">
@@ -519,8 +547,39 @@ export default function DeeceeHair(): React.ReactElement {
           />
         )}
         {currentPage === "terms" && <TermsPage />}
-        {currentPage === "profile" && <ProfilePage />}
+        {currentPage === "profile" && <ProfilePage onNavigateToLogin={() => setShowLogin(true)} />}
       </main>
+
+      {/* Login Modal */}
+      {showLogin && (
+        <LoginPage
+          onClose={() => setShowLogin(false)}
+          onSwitchToSignup={() => {
+            setShowLogin(false);
+            setShowSignup(true);
+          }}
+          onLoginSuccess={() => {
+            setShowLogin(false);
+            setCurrentPage("profile");
+          }}
+        />
+      )}
+
+      {/* Signup Modal */}
+      {showSignup && (
+        <SignupPage
+          onClose={() => setShowSignup(false)}
+          onSwitchToLogin={() => {
+            setShowSignup(false);
+            setShowLogin(true);
+          }}
+          onSignupSuccess={() => {
+            setShowSignup(false);
+            setCurrentPage("profile");
+          }}
+        />
+      )}
+
       <footer className="bg-gray-900 text-white py-8 sm:py-12 w-full">
         <div className="w-full px-4 sm:px-6 lg:px-8">
           <div className="grid grid-cols-2 md:grid-cols-4 gap-6 sm:gap-8">

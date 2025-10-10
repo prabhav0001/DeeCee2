@@ -1,7 +1,8 @@
 "use client"
 
-import React, { useState, useMemo } from "react";
-import { User, Mail, Phone, MapPin, Package, Heart, Settings, Lock, Edit2, Save, X, ShoppingBag, Calendar, CheckCircle2, Truck, CreditCard } from "lucide-react";
+import React, { useState, useMemo, useEffect } from "react";
+import { User, Mail, Phone, MapPin, Package, Heart, Settings, Lock, Edit2, Save, X, ShoppingBag, Calendar, CheckCircle2, Truck, CreditCard, LogOut } from "lucide-react";
+import { useAuth } from './AuthContext';
 
 type FormInputProps = {
   label: string;
@@ -49,30 +50,41 @@ type Address = {
   isDefault: boolean;
 };
 
-type UserProfile = {
-  name: string;
-  email: string;
-  phone: string;
-  avatar?: string;
-  joinedDate: string;
-};
-
 type ProfileTab = "profile" | "orders" | "addresses" | "security" | "wishlist";
 
-export default function ProfilePage(): React.ReactElement {
+type ProfilePageProps = {
+  onNavigateToLogin: () => void;
+};
+
+export default function ProfilePage({ onNavigateToLogin }: ProfilePageProps): React.ReactElement {
+  const { user, isAuthenticated, logout, updateUser } = useAuth();
   const [activeTab, setActiveTab] = useState<ProfileTab>("profile");
   const [isEditing, setIsEditing] = useState(false);
   const [showSuccess, setShowSuccess] = useState(false);
 
-  // User Profile State
-  const [userProfile, setUserProfile] = useState<UserProfile>({
-    name: "Priya Sharma",
-    email: "priya.sharma@example.com",
-    phone: "9876543210",
-    joinedDate: "January 2024"
+  // Redirect to login if not authenticated
+  useEffect(() => {
+    if (!isAuthenticated) {
+      onNavigateToLogin();
+    }
+  }, [isAuthenticated, onNavigateToLogin]);
+
+  const [editProfile, setEditProfile] = useState({
+    name: user?.name || '',
+    email: user?.email || '',
+    phone: user?.phone || '',
   });
 
-  const [editProfile, setEditProfile] = useState<UserProfile>(userProfile);
+  // Update editProfile when user changes
+  useEffect(() => {
+    if (user) {
+      setEditProfile({
+        name: user.name,
+        email: user.email,
+        phone: user.phone,
+      });
+    }
+  }, [user]);
 
   // Orders State
   const [orders] = useState<Order[]>([
@@ -85,8 +97,8 @@ export default function ProfilePage(): React.ReactElement {
   const [addresses, setAddresses] = useState<Address[]>([
     {
       id: "ADD001",
-      name: "Priya Sharma",
-      phone: "9876543210",
+      name: user?.name || "User",
+      phone: user?.phone || "",
       addressLine1: "123, MG Road",
       addressLine2: "Near City Mall",
       city: "Mumbai",
@@ -96,8 +108,8 @@ export default function ProfilePage(): React.ReactElement {
     },
     {
       id: "ADD002",
-      name: "Priya Sharma",
-      phone: "9876543210",
+      name: user?.name || "User",
+      phone: user?.phone || "",
       addressLine1: "456, Park Street",
       city: "Delhi",
       state: "Delhi",
@@ -137,7 +149,7 @@ export default function ProfilePage(): React.ReactElement {
 
   const handleSaveProfile = () => {
     if (Object.keys(formErrors).length === 0) {
-      setUserProfile(editProfile);
+      updateUser(editProfile);
       setIsEditing(false);
       setShowSuccess(true);
       setTimeout(() => setShowSuccess(false), 3000);
@@ -145,7 +157,13 @@ export default function ProfilePage(): React.ReactElement {
   };
 
   const handleCancelEdit = () => {
-    setEditProfile(userProfile);
+    if (user) {
+      setEditProfile({
+        name: user.name,
+        email: user.email,
+        phone: user.phone,
+      });
+    }
     setIsEditing(false);
   };
 
@@ -164,6 +182,11 @@ export default function ProfilePage(): React.ReactElement {
 
   const deleteAddress = (id: string) => {
     setAddresses(addresses.filter(addr => addr.id !== id));
+  };
+
+  const handleLogout = () => {
+    logout();
+    onNavigateToLogin();
   };
 
   const getStatusColor = (status: Order["status"]) => {
@@ -190,6 +213,10 @@ export default function ProfilePage(): React.ReactElement {
     </button>
   );
 
+  if (!user || !isAuthenticated) {
+    return <div>Loading...</div>;
+  }
+
   return (
     <div className="w-full px-4 sm:px-6 lg:px-8 py-8 sm:py-12 bg-gray-50 min-h-screen">
       <div className="max-w-7xl mx-auto">
@@ -210,9 +237,9 @@ export default function ProfilePage(): React.ReactElement {
                 <div className="w-20 h-20 bg-gradient-to-br from-rose-100 to-rose-50 rounded-full flex items-center justify-center mx-auto mb-3">
                   <User className="w-10 h-10 text-rose-600" />
                 </div>
-                <h3 className="font-semibold text-gray-900">{userProfile.name}</h3>
-                <p className="text-sm text-gray-600">{userProfile.email}</p>
-                <p className="text-xs text-gray-500 mt-2">Member since {userProfile.joinedDate}</p>
+                <h3 className="font-semibold text-gray-900">{user.name}</h3>
+                <p className="text-sm text-gray-600 truncate">{user.email}</p>
+                <p className="text-xs text-gray-500 mt-2">Member since {user.joinedDate}</p>
               </div>
               <div className="space-y-2">
                 <TabButton tab="profile" icon={User} label="Profile" />
@@ -220,6 +247,15 @@ export default function ProfilePage(): React.ReactElement {
                 <TabButton tab="addresses" icon={MapPin} label="Addresses" />
                 <TabButton tab="security" icon={Lock} label="Security" />
                 <TabButton tab="wishlist" icon={Heart} label="Wishlist" />
+
+                {/* Logout Button */}
+                <button
+                  onClick={handleLogout}
+                  className="flex items-center gap-3 px-4 py-3 rounded-xl transition-all duration-300 w-full text-left text-red-600 hover:bg-red-50 mt-4 border-t border-gray-200 pt-4"
+                >
+                  <LogOut className="w-5 h-5" />
+                  <span className="font-medium">Logout</span>
+                </button>
               </div>
             </div>
           </div>
@@ -263,7 +299,7 @@ export default function ProfilePage(): React.ReactElement {
                   <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                     <FormInput
                       label="Full Name"
-                      value={isEditing ? editProfile.name : userProfile.name}
+                      value={isEditing ? editProfile.name : user.name}
                       onChange={(e) => setEditProfile({ ...editProfile, name: e.target.value })}
                       error={isEditing ? formErrors.name : undefined}
                       disabled={!isEditing}
@@ -271,7 +307,7 @@ export default function ProfilePage(): React.ReactElement {
                     <FormInput
                       label="Email"
                       type="email"
-                      value={isEditing ? editProfile.email : userProfile.email}
+                      value={isEditing ? editProfile.email : user.email}
                       onChange={(e) => setEditProfile({ ...editProfile, email: e.target.value })}
                       error={isEditing ? formErrors.email : undefined}
                       disabled={!isEditing}
@@ -279,14 +315,14 @@ export default function ProfilePage(): React.ReactElement {
                     <FormInput
                       label="Phone"
                       type="tel"
-                      value={isEditing ? editProfile.phone : userProfile.phone}
+                      value={isEditing ? editProfile.phone : user.phone}
                       onChange={(e) => setEditProfile({ ...editProfile, phone: e.target.value })}
                       error={isEditing ? formErrors.phone : undefined}
                       disabled={!isEditing}
                     />
                     <FormInput
                       label="Member Since"
-                      value={userProfile.joinedDate}
+                      value={user.joinedDate}
                       onChange={() => {}}
                       disabled={true}
                     />
