@@ -8,6 +8,7 @@ import CartPage from './cart';
 import ContactPage from './contact';
 import AppointmentPage from './appointment';
 import TermsPage from './terms';
+import ProfilePage from './profile';
 
 type Product = {
   id: number;
@@ -41,7 +42,7 @@ type Appointment = {
   notes?: string;
 };
 
-type Page = "home" | "shop" | "product" | "cart" | "contact" | "appointment" | "terms";
+type Page = "home" | "shop" | "product" | "cart" | "contact" | "appointment" | "terms" | "profile";
 
 type ReelVideo = {
   id: number;
@@ -285,7 +286,7 @@ export default function DeeceeHair(): React.ReactElement {
           <div className="flex items-center space-x-2 sm:space-x-4">
             <div className="hidden sm:flex items-center space-x-2">
               <IconButton icon={Heart} />
-              <IconButton icon={User} />
+              <IconButton icon={User} onClick={() => navigateTo("profile")} />
             </div>
             <IconButton icon={Search} onClick={() => setSearchOpen((v) => !v)} />
             <IconButton icon={ShoppingCart} onClick={() => navigateTo("cart")} badge={cart.length} />
@@ -303,6 +304,9 @@ export default function DeeceeHair(): React.ReactElement {
       {mobileMenuOpen && (
         <div className="lg:hidden bg-white border-t border-gray-200 py-4 px-4">
           <nav className="flex flex-col space-y-3">
+            <button onClick={() => { navigateTo("profile"); setMobileMenuOpen(false); }} className="text-sm font-medium text-gray-700 hover:text-rose-600 transition text-left focus:outline-none focus:ring-2 focus:ring-rose-600 rounded">
+              My Profile
+            </button>
             {["Shop", "Bestsellers", "New Arrivals"].map((item) => (
               <button key={item} onClick={() => { navigateTo("shop"); setMobileMenuOpen(false); }} className="text-sm font-medium text-gray-700 hover:text-rose-600 transition text-left focus:outline-none focus:ring-2 focus:ring-rose-600 rounded">
                 {item}
@@ -515,6 +519,7 @@ export default function DeeceeHair(): React.ReactElement {
           />
         )}
         {currentPage === "terms" && <TermsPage />}
+        {currentPage === "profile" && <ProfilePage />}
       </main>
       <footer className="bg-gray-900 text-white py-8 sm:py-12 w-full">
         <div className="w-full px-4 sm:px-6 lg:px-8">
