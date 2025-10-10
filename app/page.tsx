@@ -1,7 +1,7 @@
 "use client"
 
 import React, { useEffect, useMemo, useState, useRef, useCallback } from "react";
-import { Heart, User, Search, ShoppingCart, Menu, X, Star, Truck, Shield, CreditCard, ChevronLeft, ChevronRight, Phone, Mail, MapPin, Clock, Calendar, CheckCircle2, Play, Pause, Volume2, VolumeX, Sparkles, Gift, Package } from "lucide-react";
+import { Heart, User, Search, ShoppingCart, Menu, X, Star, Truck, Shield, CreditCard, ChevronLeft, ChevronRight, Phone, Mail, MapPin, Clock, Calendar, CheckCircle2, Play, Pause, Volume2, VolumeX, Sparkles, Gift, Package, FileText } from "lucide-react";
 
 type Product = {
   id: number;
@@ -35,7 +35,7 @@ type Appointment = {
   notes?: string;
 };
 
-type Page = "home" | "shop" | "product" | "cart" | "contact" | "appointment";
+type Page = "home" | "shop" | "product" | "cart" | "contact" | "appointment" | "terms";
 
 type ReelVideo = {
   id: number;
@@ -348,6 +348,9 @@ export default function DeeceeHair(): React.ReactElement {
             <button onClick={() => { navigateTo("contact"); setMobileMenuOpen(false); }} className="text-sm font-medium text-gray-700 hover:text-rose-600 transition text-left focus:outline-none focus:ring-2 focus:ring-rose-600 rounded">
               Contact Us
             </button>
+            <button onClick={() => { navigateTo("terms"); setMobileMenuOpen(false); }} className="text-sm font-medium text-gray-700 hover:text-rose-600 transition text-left focus:outline-none focus:ring-2 focus:ring-rose-600 rounded">
+              Terms & Conditions
+            </button>
           </nav>
         </div>
       )}
@@ -483,7 +486,7 @@ export default function DeeceeHair(): React.ReactElement {
             ].map((testimonial, index) => (
               <div key={index} className="bg-white p-4 sm:p-6 rounded-2xl shadow-md hover:shadow-lg transition-shadow duration-300">
                 <div className="flex mb-4">{Array.from({ length: 5 }).map((_, i) => (<Star key={i} className="w-4 h-4 sm:w-5 sm:h-5 text-yellow-400 fill-current" />))}</div>
-                <p className="text-gray-700 mb-4 italic text-sm sm:text-base">"{testimonial.review}"</p>
+                <p className="text-gray-700 mb-4 italic text-sm sm:text-base">\"{testimonial.review}\"</p>
                 <p className="font-semibold text-gray-900 text-sm sm:text-base">- {testimonial.name}</p>
               </div>
             ))}
@@ -858,6 +861,106 @@ export default function DeeceeHair(): React.ReactElement {
     </div>
   ), [cart, getTotalPrice, navigateTo, removeFromCart, updateQuantity]);
 
+  const TermsPage = useCallback(() => (
+    <div className="w-full px-4 sm:px-6 lg:px-8 py-8 sm:py-12 max-w-4xl mx-auto">
+      <div className="bg-white rounded-2xl border border-gray-200 p-6 sm:p-8 shadow-sm">
+        <div className="flex items-center gap-3 mb-6">
+          <FileText className="w-8 h-8 text-rose-600" />
+          <h1 className="text-2xl sm:text-3xl font-bold text-gray-900">Terms & Conditions</h1>
+        </div>
+        <p className="text-gray-600 mb-8 text-sm sm:text-base">Last updated: {new Date().toLocaleDateString('en-US', { year: 'numeric', month: 'long', day: 'numeric' })}</p>
+
+        <div className="space-y-8">
+          <section>
+            <h2 className="text-xl font-semibold text-gray-900 mb-4">1. General Information</h2>
+            <p className="text-gray-700 mb-3 text-sm sm:text-base">These Terms & Conditions govern your use of the DEECEE HAIR website and the purchase of products from our platform. By accessing our website and making a purchase, you agree to be bound by these terms.</p>
+            <p className="text-gray-700 text-sm sm:text-base">DEECEE HAIR reserves the right to modify these terms at any time. Changes will be effective immediately upon posting on the website.</p>
+          </section>
+
+          <section>
+            <h2 className="text-xl font-semibold text-gray-900 mb-4">2. Products & Services</h2>
+            <p className="text-gray-700 mb-3 text-sm sm:text-base">We specialize in premium quality human hair extensions and related products. All products are described as accurately as possible on our website.</p>
+            <p className="text-gray-700 mb-3 text-sm sm:text-base">We make every effort to display the colors of our products accurately. However, the actual colors you see may vary depending on your monitor settings.</p>
+            <p className="text-gray-700 text-sm sm:text-base">Product availability is subject to change without notice. We reserve the right to limit quantities and discontinue products at our discretion.</p>
+          </section>
+
+          <section>
+            <h2 className="text-xl font-semibold text-gray-900 mb-4">3. Ordering & Payment</h2>
+            <p className="text-gray-700 mb-3 text-sm sm:text-base">All orders are subject to product availability and confirmation of the order price. We reserve the right to refuse or cancel any order for any reason.</p>
+            <p className="text-gray-700 mb-3 text-sm sm:text-base">Prices are displayed in Indian Rupees (₹) and are inclusive of applicable taxes unless otherwise stated.</p>
+            <p className="text-gray-700 mb-3 text-sm sm:text-base">We accept the following payment methods:</p>
+            <ul className="list-disc list-inside text-gray-700 space-y-1 mb-3 text-sm sm:text-base ml-4">
+              <li>Credit/Debit Cards</li>
+              <li>Net Banking</li>
+              <li>UPI</li>
+              <li>Cash on Delivery (COD)</li>
+            </ul>
+            <p className="text-gray-700 text-sm sm:text-base">For COD orders, full payment is required at the time of delivery. We reserve the right to refuse COD orders at our discretion.</p>
+          </section>
+
+          <section>
+            <h2 className="text-xl font-semibold text-gray-900 mb-4">4. Shipping & Delivery</h2>
+            <p className="text-gray-700 mb-3 text-sm sm:text-base">We offer free shipping on orders above ₹5000 within India. For orders below this amount, standard shipping charges apply.</p>
+            <p className="text-gray-700 mb-3 text-sm sm:text-base">Estimated delivery time is 5-7 business days within major cities and 7-10 business days for other locations.</p>
+            <p className="text-gray-700 mb-3 text-sm sm:text-base">We are not responsible for delays in delivery caused by circumstances beyond our control, including but not limited to natural disasters, transportation delays, or customs issues.</p>
+            <p className="text-gray-700 text-sm sm:text-base">Risk of loss and title for all products pass to you upon delivery to the shipping carrier.</p>
+          </section>
+
+          <section>
+            <h2 className="text-xl font-semibold text-gray-900 mb-4">5. Returns & Refunds</h2>
+            <p className="text-gray-700 mb-3 text-sm sm:text-base">We want you to be completely satisfied with your purchase. If you're not satisfied, you may return the product within 7 days of delivery.</p>
+            <p className="text-gray-700 mb-3 text-sm sm:text-base">To be eligible for a return, products must be unused, in the same condition as received, and in the original packaging.</p>
+            <p className="text-gray-700 mb-3 text-sm sm:text-base">Custom or specially ordered products cannot be returned unless they arrive damaged or defective.</p>
+            <p className="text-gray-700 mb-3 text-sm sm:text-base">Refunds will be processed within 7-10 business days after we receive the returned product. Shipping charges are non-refundable.</p>
+            <p className="text-gray-700 text-sm sm:text-base">Please contact our customer service team at support@deeceehair.com to initiate a return.</p>
+          </section>
+
+          <section>
+            <h2 className="text-xl font-semibold text-gray-900 mb-4">6. Privacy & Data Protection</h2>
+            <p className="text-gray-700 mb-3 text-sm sm:text-base">We are committed to protecting your privacy. Your personal information will be used solely for processing orders and providing customer service.</p>
+            <p className="text-gray-700 mb-3 text-sm sm:text-base">We do not sell, trade, or rent your personal information to third parties. We may share information with trusted service providers only as necessary to complete your order.</p>
+            <p className="text-gray-700 text-sm sm:text-base">For detailed information about how we collect, use, and protect your data, please refer to our Privacy Policy.</p>
+          </section>
+
+          <section>
+            <h2 className="text-xl font-semibold text-gray-900 mb-4">7. Intellectual Property</h2>
+            <p className="text-gray-700 mb-3 text-sm sm:text-base">All content on the DEECEE HAIR website, including but not limited to text, graphics, logos, images, and software, is the property of DEECEE HAIR and protected by intellectual property laws.</p>
+            <p className="text-gray-700 mb-3 text-sm sm:text-base">You may not use, reproduce, modify, or distribute any content from our website without prior written permission from DEECEE HAIR.</p>
+            <p className="text-gray-700 text-sm sm:text-base">The DEECEE HAIR name, logo, and all related trademarks are the exclusive property of DEECEE HAIR.</p>
+          </section>
+
+          <section>
+            <h2 className="text-xl font-semibold text-gray-900 mb-4">8. Limitation of Liability</h2>
+            <p className="text-gray-700 mb-3 text-sm sm:text-base">DEECEE HAIR shall not be liable for any direct, indirect, incidental, special, or consequential damages arising out of or in connection with your use of our website or products.</p>
+            <p className="text-gray-700 mb-3 text-sm sm:text-base">Our total liability to you for any cause of action shall not exceed the amount you paid for the product(s) in question.</p>
+            <p className="text-gray-700 text-sm sm:text-base">Some jurisdictions do not allow the exclusion or limitation of liability for consequential damages, so the above limitation may not apply to you.</p>
+          </section>
+
+          <section>
+            <h2 className="text-xl font-semibold text-gray-900 mb-4">9. Governing Law & Dispute Resolution</h2>
+            <p className="text-gray-700 mb-3 text-sm sm:text-base">These Terms & Conditions shall be governed by and construed in accordance with the laws of India.</p>
+            <p className="text-gray-700 mb-3 text-sm sm:text-base">Any disputes arising from these terms or your use of our website shall be subject to the exclusive jurisdiction of the courts in Jhunjhunu, Rajasthan.</p>
+            <p className="text-gray-700 text-sm sm:text-base">We encourage you to contact us directly at support@deeceehair.com to resolve any issues before pursuing legal action.</p>
+          </section>
+
+          <section>
+            <h2 className="text-xl font-semibold text-gray-900 mb-4">10. Contact Information</h2>
+            <p className="text-gray-700 mb-3 text-sm sm:text-base">If you have any questions about these Terms & Conditions, please contact us:</p>
+            <div className="bg-gray-50 rounded-xl p-4 space-y-2 text-sm sm:text-base">
+              <p className="text-gray-700"><span className="font-semibold">Email:</span> sumiteximjjn@gmail.com</p>
+              <p className="text-gray-700"><span className="font-semibold">Phone:</span> +91 63764 82804</p>
+              <p className="text-gray-700"><span className="font-semibold">Address:</span> Swastik Tower, Joshiyo Ka Gatta, Jhunjhunu, Rajasthan</p>
+            </div>
+          </section>
+        </div>
+
+        <div className="mt-8 pt-6 border-t border-gray-200">
+          <p className="text-gray-600 text-sm sm:text-base italic">By using the DEECEE HAIR website and purchasing our products, you acknowledge that you have read, understood, and agree to be bound by these Terms & Conditions.</p>
+        </div>
+      </div>
+    </div>
+  ), []);
+
   return (
     <div className="min-h-screen bg-white text-gray-900 font-sans overflow-x-hidden">
       <PromoSlider />
@@ -869,6 +972,7 @@ export default function DeeceeHair(): React.ReactElement {
         {currentPage === "cart" && <CartPage />}
         {currentPage === "contact" && <ContactPage />}
         {currentPage === "appointment" && <AppointmentPage />}
+        {currentPage === "terms" && <TermsPage />}
       </main>
       <footer className="bg-gray-900 text-white py-8 sm:py-12 w-full">
         <div className="w-full px-4 sm:px-6 lg:px-8">
@@ -895,11 +999,10 @@ export default function DeeceeHair(): React.ReactElement {
               </ul>
             </div>
             <div className="col-span-2 sm:col-span-1">
-              <h4 className="font-semibold mb-4 text-sm sm:text-base">Connect</h4>
+              <h4 className="font-semibold mb-4 text-sm sm:text-base">Legal</h4>
               <ul className="space-y-2 text-xs sm:text-sm text-gray-400">
-                <li><button className="hover:text-white transition focus:outline-none">Instagram</button></li>
-                <li><button className="hover:text-white transition focus:outline-none">Facebook</button></li>
-                <li><button className="hover:text-white transition focus:outline-none">YouTube</button></li>
+                <li><button onClick={() => navigateTo("terms")} className="hover:text-white transition focus:outline-none">Terms & Conditions</button></li>
+                <li><button className="hover:text-white transition focus:outline-none">Privacy Policy</button></li>
               </ul>
             </div>
           </div>
