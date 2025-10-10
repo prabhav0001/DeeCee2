@@ -8,9 +8,10 @@ type LoginPageProps = {
   onClose: () => void;
   onSwitchToSignup: () => void;
   onLoginSuccess: () => void;
+  onNeedsVerification: () => void;
 };
 
-export default function LoginPage({ onClose, onSwitchToSignup, onLoginSuccess }: LoginPageProps) {
+export default function LoginPage({ onClose, onSwitchToLogin, onLoginSuccess, onNeedsVerification }: LoginPageProps) {
   const { login } = useAuth();
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
@@ -29,15 +30,17 @@ export default function LoginPage({ onClose, onSwitchToSignup, onLoginSuccess }:
       return;
     }
 
-    const success = await login(email, password);
-
-    if (success) {
-      onLoginSuccess();
-    } else {
-      setError('Invalid email or password');
-    }
-
+    const result = await login(email, password);
     setIsLoading(false);
+
+    if (result.success) {
+      onLoginSuccess();
+    } else if (result.needsVerification) {
+      onClose();
+      onNeedsVerification();
+    } else {
+      setError(result.message || 'Invalid email or password');
+    }
   };
 
   return (
@@ -131,7 +134,7 @@ export default function LoginPage({ onClose, onSwitchToSignup, onLoginSuccess }:
 
         <div className="mt-6 pt-6 border-t border-gray-200">
           <p className="text-xs text-gray-500 text-center">
-            Demo: Use any email & password you've registered with
+            📧 Email & 📱 Mobile verification required for new accounts
           </p>
         </div>
       </div>

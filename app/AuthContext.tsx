@@ -9,15 +9,24 @@ type User = {
   phone: string;
   avatar?: string;
   joinedDate: string;
+  isEmailVerified: boolean;
+  isMobileVerified: boolean;
 };
 
 type AuthContextType = {
   user: User | null;
   isAuthenticated: boolean;
-  login: (email: string, password: string) => Promise<boolean>;
+  pendingVerification: { email: string; phone: string; password: string; name: string } | null;
+  login: (email: string, password: string) => Promise<{ success: boolean; needsVerification?: boolean; message?: string }>;
   signup: (name: string, email: string, phone: string, password: string) => Promise<boolean>;
   logout: () => void;
   updateUser: (userData: Partial<User>) => void;
+  verifyEmail: (otp: string) => Promise<boolean>;
+  verifyMobile: (otp: string) => Promise<boolean>;
+  resendEmailOTP: () => Promise<boolean>;
+  resendMobileOTP: () => Promise<boolean>;
+  setPendingVerification: (data: { email: string; phone: string; password: string; name: string } | null) => void;
+  completeSignup: () => void;
 };
 
 const AuthContext = createContext<AuthContextType | undefined>(undefined);
@@ -37,8 +46,12 @@ type AuthProviderProps = {
 export const AuthProvider = ({ children }: AuthProviderProps) => {
   const [user, setUser] = useState<User | null>(null);
   const [isAuthenticated, setIsAuthenticated] = useState(false);
+  const [pendingVerification, setPendingVerification] = useState<{ email: string; phone: string; password: string; name: string } | null>(null);
 
-  // Load user from localStorage on mount
+  // Simulated OTP storage (in production, this would be on backend)
+  const [emailOTP, setEmailOTP] = useState<string>('');
+  const [mobileOTP, setMobileOTP] = useState<string>('');
+
   useEffect(() => {
     const storedUser = localStorage.getItem('deecee_user');
     if (storedUser) {
@@ -53,36 +66,82 @@ export const AuthProvider = ({ children }: AuthProviderProps) => {
     }
   }, []);
 
-  const login = async (email: string, password: string): Promise<boolean> => {
+  const generateOTP = (): string => {
+    return Math.floor(100000 + Math.random() * 900000).toString();
+  };
+
+  const sendEmailOTP = (email: string): string => {
+    const otp = generateOTP();
+    setEmailOTP(otp);
+    console.log(`📧 Email OTP sent to ${email}: ${otp}`);
+    // In production: Call backend API to send email
+    alert(`Email OTP sent to ${email}: ${otp}\n(This is a demo, in production this would be sent via email)`);
+    return otp;
+  };
+
+  const sendMobileOTP = (phone: string): string => {
+    const otp = generateOTP();
+    setMobileOTP(otp);
+    console.log(`📱 Mobile OTP sent to ${phone}: ${otp}`);
+    // In production: Call backend API to send SMS
+    alert(`Mobile OTP sent to ${phone}: ${otp}\n(This is a demo, in production this would be sent via SMS)`);
+    return otp;
+  };
+
+  const login = async (email: string, password: string): Promise<{ success: boolean; needsVerification?: boolean; message?: string }> => {
     try {
-      // Get stored users
       const storedUsers = localStorage.getItem('deecee_users');
       const users = storedUsers ? JSON.parse(storedUsers) : [];
 
-      // Find user with matching credentials
       const foundUser = users.find(
         (u: any) => u.email === email && u.password === password
       );
 
       if (foundUser) {
+        // Check if user is verified
+        if (!foundUser.isEmailVerified || !foundUser.isMobileVerified) {
+          setPendingVerification({
+            email: foundUser.email,
+            phone: foundUser.phone,
+            password: foundUser.password,
+            name: foundUser.name
+          });
+
+          // Send OTPs
+          if (!foundUser.isEmailVerified) {
+            sendEmailOTP(foundUser.email);
+          }
+          if (!foundUser.isMobileVerified) {
+            sendMobileOTP(foundUser.phone);
+          }
+
+          return {
+            success: false,
+            needsVerification: true,
+            message: 'Please verify your email and mobile number'
+          };
+        }
+
         const userData: User = {
           id: foundUser.id,
           name: foundUser.name,
           email: foundUser.email,
           phone: foundUser.phone,
           joinedDate: foundUser.joinedDate,
+          isEmailVerified: foundUser.isEmailVerified,
+          isMobileVerified: foundUser.isMobileVerified,
         };
 
         setUser(userData);
         setIsAuthenticated(true);
         localStorage.setItem('deecee_user', JSON.stringify(userData));
-        return true;
+        return { success: true };
       } else {
-        return false;
+        return { success: false, message: 'Invalid email or password' };
       }
     } catch (error) {
       console.error('Login error:', error);
-      return false;
+      return { success: false, message: 'An error occurred during login' };
     }
   };
 
@@ -93,51 +152,119 @@ export const AuthProvider = ({ children }: AuthProviderProps) => {
     password: string
   ): Promise<boolean> => {
     try {
-      // Get existing users
       const storedUsers = localStorage.getItem('deecee_users');
       const users = storedUsers ? JSON.parse(storedUsers) : [];
 
-      // Check if email already exists
       const emailExists = users.some((u: any) => u.email === email);
       if (emailExists) {
         return false;
       }
 
-      // Create new user
-      const newUser = {
-        id: `user_${Date.now()}`,
-        name,
-        email,
-        phone,
-        password, // In production, hash this!
-        joinedDate: new Date().toLocaleDateString('en-US', {
-          month: 'long',
-          year: 'numeric',
-        }),
-      };
+      // Set pending verification data
+      setPendingVerification({ email, phone, password, name });
 
-      // Save to localStorage
-      users.push(newUser);
-      localStorage.setItem('deecee_users', JSON.stringify(users));
-
-      // Auto login after signup
-      const userData: User = {
-        id: newUser.id,
-        name: newUser.name,
-        email: newUser.email,
-        phone: newUser.phone,
-        joinedDate: newUser.joinedDate,
-      };
-
-      setUser(userData);
-      setIsAuthenticated(true);
-      localStorage.setItem('deecee_user', JSON.stringify(userData));
+      // Generate and send OTPs
+      sendEmailOTP(email);
+      sendMobileOTP(phone);
 
       return true;
     } catch (error) {
       console.error('Signup error:', error);
       return false;
     }
+  };
+
+  const completeSignup = () => {
+    if (!pendingVerification) return;
+
+    const storedUsers = localStorage.getItem('deecee_users');
+    const users = storedUsers ? JSON.parse(storedUsers) : [];
+
+    const newUser = {
+      id: `user_${Date.now()}`,
+      name: pendingVerification.name,
+      email: pendingVerification.email,
+      phone: pendingVerification.phone,
+      password: pendingVerification.password,
+      joinedDate: new Date().toLocaleDateString('en-US', {
+        month: 'long',
+        year: 'numeric',
+      }),
+      isEmailVerified: true,
+      isMobileVerified: true,
+    };
+
+    users.push(newUser);
+    localStorage.setItem('deecee_users', JSON.stringify(users));
+
+    const userData: User = {
+      id: newUser.id,
+      name: newUser.name,
+      email: newUser.email,
+      phone: newUser.phone,
+      joinedDate: newUser.joinedDate,
+      isEmailVerified: true,
+      isMobileVerified: true,
+    };
+
+    setUser(userData);
+    setIsAuthenticated(true);
+    localStorage.setItem('deecee_user', JSON.stringify(userData));
+    setPendingVerification(null);
+    setEmailOTP('');
+    setMobileOTP('');
+  };
+
+  const verifyEmail = async (otp: string): Promise<boolean> => {
+    if (otp === emailOTP) {
+      // Update user verification status if already exists
+      if (pendingVerification) {
+        const storedUsers = localStorage.getItem('deecee_users');
+        const users = storedUsers ? JSON.parse(storedUsers) : [];
+        const userIndex = users.findIndex((u: any) => u.email === pendingVerification.email);
+
+        if (userIndex !== -1) {
+          users[userIndex].isEmailVerified = true;
+          localStorage.setItem('deecee_users', JSON.stringify(users));
+        }
+      }
+      return true;
+    }
+    return false;
+  };
+
+  const verifyMobile = async (otp: string): Promise<boolean> => {
+    if (otp === mobileOTP) {
+      // Update user verification status if already exists
+      if (pendingVerification) {
+        const storedUsers = localStorage.getItem('deecee_users');
+        const users = storedUsers ? JSON.parse(storedUsers) : [];
+        const userIndex = users.findIndex((u: any) => u.email === pendingVerification.email);
+
+        if (userIndex !== -1) {
+          users[userIndex].isMobileVerified = true;
+          localStorage.setItem('deecee_users', JSON.stringify(users));
+        }
+      }
+      return true;
+    }
+    return false;
+  };
+
+  const resendEmailOTP = async (): Promise<boolean> => {
+    if (pendingVerification) {
+      sendEmailOTP(pendingVerification.email);
+      return true;
+    }
+    return false;
+  };
+
+  const resendMobileOTP = async (): Promise<boolean> => {
+    if (pendingVerification) {
+      sendMobileOTP(pendingVerification.phone);
+      return true;
+    }
+    return false;
   };
 
   const logout = () => {
@@ -159,10 +286,17 @@ export const AuthProvider = ({ children }: AuthProviderProps) => {
       value={{
         user,
         isAuthenticated,
+        pendingVerification,
         login,
         signup,
         logout,
         updateUser,
+        verifyEmail,
+        verifyMobile,
+        resendEmailOTP,
+        resendMobileOTP,
+        setPendingVerification,
+        completeSignup,
       }}
     >
       {children}

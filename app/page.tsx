@@ -11,6 +11,7 @@ import TermsPage from './terms';
 import ProfilePage from './profile';
 import LoginPage from './LoginPage';
 import SignupPage from './SignupPage';
+import VerificationPage from './VerificationPage';
 import { AuthProvider, useAuth } from './AuthContext';
 
 type Product = {
@@ -221,6 +222,7 @@ function DeeceeHairApp(): React.ReactElement {
   const [appointments, setAppointments] = useState<Appointment[]>([]);
   const [showLogin, setShowLogin] = useState(false);
   const [showSignup, setShowSignup] = useState(false);
+  const [showVerification, setShowVerification] = useState(false);
 
   useEffect(() => {
     const interval = setInterval(() => setCurrentSlide((prev) => (prev + 1) % heroSlides.length), 5000);
@@ -562,6 +564,9 @@ function DeeceeHairApp(): React.ReactElement {
             setShowLogin(false);
             setCurrentPage("profile");
           }}
+          onNeedsVerification={() => {
+            setShowVerification(true);
+          }}
         />
       )}
 
@@ -575,6 +580,17 @@ function DeeceeHairApp(): React.ReactElement {
           }}
           onSignupSuccess={() => {
             setShowSignup(false);
+            setShowVerification(true);
+          }}
+        />
+      )}
+
+      {/* Verification Modal */}
+      {showVerification && (
+        <VerificationPage
+          onClose={() => setShowVerification(false)}
+          onVerificationSuccess={() => {
+            setShowVerification(false);
             setCurrentPage("profile");
           }}
         />

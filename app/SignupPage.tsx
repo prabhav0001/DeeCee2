@@ -68,13 +68,13 @@ export default function SignupPage({ onClose, onSwitchToLogin, onSignupSuccess }
       formData.password
     );
 
+    setIsLoading(false);
+
     if (success) {
-      onSignupSuccess();
+      onSignupSuccess(); // This will open verification page
     } else {
       setError('Email already exists. Please use a different email.');
     }
-
-    setIsLoading(false);
   };
 
   return (
@@ -189,7 +189,7 @@ export default function SignupPage({ onClose, onSwitchToLogin, onSignupSuccess }
             disabled={isLoading}
             className="w-full bg-rose-600 text-white py-3 rounded-xl font-semibold hover:bg-rose-700 transition shadow-lg disabled:opacity-50 disabled:cursor-not-allowed"
           >
-            {isLoading ? 'Creating Account...' : 'Sign Up'}
+            {isLoading ? 'Creating Account...' : 'Sign Up & Verify'}
           </button>
         </form>
 
@@ -201,6 +201,12 @@ export default function SignupPage({ onClose, onSwitchToLogin, onSignupSuccess }
           >
             Login
           </button>
+        </div>
+
+        <div className="mt-6 pt-6 border-t border-gray-200">
+          <p className="text-xs text-gray-500 text-center">
+            📧 Email & 📱 Mobile verification required after signup
+          </p>
         </div>
       </div>
     </div>
