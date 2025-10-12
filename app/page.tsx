@@ -9,6 +9,7 @@ import CartPage from './cart';
 import ContactPage from './contact';
 import AppointmentPage from './appointment';
 import TermsPage from './terms';
+import PrivacyPolicyPage from './PrivacyPolicy';
 import ProfilePage from './profile';
 import LoginPage from './LoginPage';
 import SignupPage from './SignupPage';
@@ -47,7 +48,7 @@ type Appointment = {
   notes?: string;
 };
 
-type Page = "home" | "shop" | "product" | "cart" | "contact" | "appointment" | "terms" | "profile";
+type Page = "home" | "shop" | "product" | "cart" | "contact" | "appointment" | "terms" | "privacy" | "profile";
 
 type ReelVideo = {
   id: number;
@@ -240,6 +241,7 @@ function DeeceeHairApp(): React.ReactElement {
       '/appointment': 'appointment',
       '/product': 'product',
       '/terms': 'terms',
+      '/privacy': 'privacy',
       '/profile': 'profile'
     };
 
@@ -258,6 +260,7 @@ function DeeceeHairApp(): React.ReactElement {
         '/appointment': 'appointment',
         '/product': 'product',
         '/terms': 'terms',
+        '/privacy': 'privacy',
         '/profile': 'profile'
       };
 
@@ -289,6 +292,7 @@ function DeeceeHairApp(): React.ReactElement {
       appointment: '/appointment',
       product: '/product',
       terms: '/terms',
+      privacy: '/privacy',
       profile: '/profile'
     };
 
@@ -418,6 +422,9 @@ function DeeceeHairApp(): React.ReactElement {
             </button>
             <button onClick={() => { navigateTo("terms"); setMobileMenuOpen(false); }} className="text-sm font-medium text-gray-700 hover:text-rose-600 transition text-left focus:outline-none focus:ring-2 focus:ring-rose-600 rounded">
               Terms & Conditions
+            </button>
+            <button onClick={() => { navigateTo("privacy"); setMobileMenuOpen(false); }} className="text-sm font-medium text-gray-700 hover:text-rose-600 transition text-left focus:outline-none focus:ring-2 focus:ring-rose-600 rounded">
+              Privacy Policy
             </button>
           </nav>
         </div>
@@ -611,6 +618,7 @@ function DeeceeHairApp(): React.ReactElement {
           />
         )}
         {currentPage === "terms" && <TermsPage />}
+        {currentPage === "privacy" && <PrivacyPolicyPage />}
         {currentPage === "profile" && <ProfilePage onNavigateToLogin={() => setShowLogin(true)} />}
       </main>
 
@@ -686,7 +694,7 @@ function DeeceeHairApp(): React.ReactElement {
               <h4 className="font-semibold mb-4 text-sm sm:text-base">Legal</h4>
               <ul className="space-y-2 text-xs sm:text-sm text-gray-400">
                 <li><button onClick={() => navigateTo("terms")} className="hover:text-white transition focus:outline-none">Terms & Conditions</button></li>
-                <li><button className="hover:text-white transition focus:outline-none">Privacy Policy</button></li>
+                <li><button onClick={() => navigateTo("privacy")} className="hover:text-white transition focus:outline-none">Privacy Policy</button></li>
               </ul>
             </div>
           </div>
