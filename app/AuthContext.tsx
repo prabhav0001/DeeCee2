@@ -1,17 +1,7 @@
 "use client"
 
 import React, { createContext, useContext, useState, useEffect, ReactNode } from 'react';
-
-type User = {
-  id: string;
-  name: string;
-  email: string;
-  phone: string;
-  avatar?: string;
-  joinedDate: string;
-  isEmailVerified: boolean;
-  isMobileVerified: boolean;
-};
+import { User } from './types';
 
 type AuthContextType = {
   user: User | null;

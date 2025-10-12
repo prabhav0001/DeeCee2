@@ -3,6 +3,7 @@
 import React, { useState } from 'react';
 import { Mail, Lock, Eye, EyeOff, LogIn, X } from 'lucide-react';
 import { useAuth } from './AuthContext';
+import { EMAIL_REGEX } from './types';
 
 type LoginPageProps = {
   onClose: () => void;
@@ -26,6 +27,12 @@ export default function LoginPage({ onClose, onSwitchToSignup, onLoginSuccess, o
 
     if (!email || !password) {
       setError('Please fill in all fields');
+      setIsLoading(false);
+      return;
+    }
+
+    if (!EMAIL_REGEX.test(email)) {
+      setError('Please enter a valid email');
       setIsLoading(false);
       return;
     }

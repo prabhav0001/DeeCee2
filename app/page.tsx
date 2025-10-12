@@ -2,7 +2,7 @@
 
 import React, { useEffect, useMemo, useState, useRef, useCallback } from "react";
 // Router functionality handled with native History API
-import { Heart, User, Search, ShoppingCart, Menu, X, Star, Truck, Shield, CreditCard, ChevronLeft, ChevronRight, Phone, Mail, MapPin, Clock, Calendar, CheckCircle2, FileText, Package, Gift, Sparkles, Pause, Play, VolumeX, Volume2 } from "lucide-react";
+import { Heart, User, Search, ShoppingCart, Menu, X, Star, Truck, Shield, CreditCard, ChevronLeft, ChevronRight, Calendar, Package, Gift, Sparkles, Pause, Play, VolumeX, Volume2 } from "lucide-react";
 import ShopPage from './shop';
 import ProductPage from './product';
 import CartPage from './cart';
@@ -16,46 +16,9 @@ import LoginPage from './LoginPage';
 import SignupPage from './SignupPage';
 import VerificationPage from './VerificationPage';
 import { AuthProvider, useAuth } from './AuthContext';
-
-type Product = {
-  id: number;
-  name: string;
-  price: number;
-  image: string;
-  colors: string[];
-  sizes: string[];
-  category: string;
-  isBestseller?: boolean;
-  isNew?: boolean;
-  isMans?: boolean;
-};
-
-type CartItem = {
-  product: Product;
-  color: string;
-  size: string;
-  quantity: number;
-};
-
-type Appointment = {
-  id: string;
-  service: string;
-  location: string;
-  date: string;
-  time: string;
-  name: string;
-  email: string;
-  phone: string;
-  notes?: string;
-};
-
-type Page = "home" | "shop" | "product" | "cart" | "contact" | "appointment" | "terms" | "privacy" | "about" | "profile";
-
-type ReelVideo = {
-  id: number;
-  src: string;
-  description: string;
-};
+import { Product, CartItem, Appointment, Page, ReelVideo } from './types';
+import { IconButton } from './components';
+import { FeatureCard, PromoSlider } from './ui-components';
 
 const products: Product[] = [
   { id: 1, name: "Silky Straight Extensions", price: 2999, image: "https://images.unsplash.com/photo-1508214751196-bcfd4ca60f91?auto=format&fit=crop&w=400&q=80", colors: ["Black", "Brown", "Blonde", "Auburn"], sizes: ['14"', '18"', '22"', '26"'], category: "straight", isBestseller: true },
@@ -90,59 +53,7 @@ const reelsVideos: ReelVideo[] = [
   { id: 4, src: "https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/ForBiggerEscapes.mp4", description: "Deep Wave Extensions Look" },
 ];
 
-const PromoSlider = () => {
-  const trackMessages = useMemo(() => {
-    const arr: typeof promoMessages = [];
-    for (let i = 0; i < 3; i++) arr.push(...promoMessages);
-    return arr;
-  }, []);
 
-  return (
-    <div className="bg-gradient-to-r from-rose-600 via-rose-500 to-rose-600 py-3 overflow-hidden relative w-full">
-      <div className="relative overflow-hidden w-full">
-        <div className="flex animate-marquee whitespace-nowrap">
-          {trackMessages.map((msg, idx) => {
-            const Icon = msg.icon;
-            return (
-              <span key={idx} className="text-xs sm:text-sm font-medium text-white mx-6 sm:mx-10 inline-flex items-center gap-2">
-                <Icon className="w-4 h-4" />
-                {msg.text}
-              </span>
-            );
-          })}
-        </div>
-      </div>
-      <style jsx>{`
-        @keyframes marquee {
-          0% { transform: translateX(0); }
-          100% { transform: translateX(-33.333%); }
-        }
-        .animate-marquee {
-          animation: marquee 30s linear infinite;
-        }
-      `}</style>
-    </div>
-  );
-};
-
-const IconButton = ({ icon: Icon, onClick, badge }: { icon: any; onClick?: () => void; badge?: number }) => (
-  <button onClick={onClick} className="p-2 text-gray-700 hover:text-rose-600 transition-all duration-300 relative group">
-    <Icon className="w-5 h-5 transform group-hover:scale-110 transition-transform" />
-    {badge !== undefined && badge > 0 && (
-      <span className="absolute -top-1 -right-1 bg-rose-600 text-white text-xs rounded-full w-5 h-5 flex items-center justify-center font-semibold animate-pulse">{badge}</span>
-    )}
-  </button>
-);
-
-const FeatureCard = ({ icon: Icon, title, description }: { icon: any; title: string; description: string }) => (
-  <div className="text-center px-4 group">
-    <div className="bg-gradient-to-br from-rose-100 to-rose-50 w-16 h-16 rounded-2xl flex items-center justify-center mx-auto mb-4 transform group-hover:scale-110 group-hover:rotate-3 transition-all duration-300 shadow-md">
-      <Icon className="w-8 h-8 text-rose-600" />
-    </div>
-    <h3 className="font-semibold text-gray-900 mb-2 text-sm sm:text-base">{title}</h3>
-    <p className="text-xs sm:text-sm text-gray-600">{description}</p>
-  </div>
-);
 
 const VideoReelCard = ({ video }: { video: ReelVideo }) => {
   const videoRef = useRef<HTMLVideoElement>(null);
@@ -583,7 +494,7 @@ function DeeceeHairApp(): React.ReactElement {
 
   return (
     <div className="min-h-screen bg-white text-gray-900 font-sans overflow-x-hidden">
-      <PromoSlider />
+      <PromoSlider messages={promoMessages} />
       <Header />
       <main className="w-full overflow-x-hidden">
         {currentPage === "home" && <HomePage />}

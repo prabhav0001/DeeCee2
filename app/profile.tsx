@@ -1,56 +1,11 @@
 "use client"
 
-import React, { useState, useMemo, useEffect } from "react";
-import { User, Mail, Phone, MapPin, Package, Heart, Settings, Lock, Edit2, Save, X, ShoppingBag, Calendar, CheckCircle2, Truck, CreditCard, LogOut } from "lucide-react";
+import React, { useState, useEffect, useMemo } from "react";
+import { User, Mail, Phone, MapPin, Package, Heart, Lock, Edit2, Save, X, ShoppingBag, Calendar, CheckCircle2, Truck, CreditCard, LogOut } from "lucide-react";
 import { useAuth } from './AuthContext';
-
-type FormInputProps = {
-  label: string;
-  type?: string;
-  value: string;
-  onChange: (e: React.ChangeEvent<HTMLInputElement>) => void;
-  error?: string;
-  placeholder?: string;
-  disabled?: boolean;
-};
-
-const FormInput = ({ label, type = "text", value, onChange, error, placeholder, disabled = false }: FormInputProps) => (
-  <div className="w-full">
-    <label className="block text-sm font-semibold text-gray-700 mb-2">{label}</label>
-    <input
-      type={type}
-      value={value}
-      onChange={onChange}
-      placeholder={placeholder}
-      disabled={disabled}
-      className={`w-full border border-gray-300 rounded-xl px-4 py-3 focus:outline-none focus:ring-2 focus:ring-rose-500 focus:border-transparent transition-all ${disabled ? 'bg-gray-100 cursor-not-allowed' : ''}`}
-    />
-    {error && <p className="text-red-600 text-xs mt-2 flex items-center gap-1"><X className="w-3 h-3" />{error}</p>}
-  </div>
-);
-
-type Order = {
-  id: string;
-  date: string;
-  total: number;
-  status: "Processing" | "Shipped" | "Delivered" | "Cancelled";
-  items: number;
-  trackingId?: string;
-};
-
-type Address = {
-  id: string;
-  name: string;
-  phone: string;
-  addressLine1: string;
-  addressLine2?: string;
-  city: string;
-  state: string;
-  pincode: string;
-  isDefault: boolean;
-};
-
-type ProfileTab = "profile" | "orders" | "addresses" | "security" | "wishlist";
+import { Order, Address, ProfileTab } from "./types";
+import { FormInput } from "./components";
+import { useFormValidation } from "./hooks";
 
 type ProfilePageProps = {
   onNavigateToLogin: () => void;
@@ -131,13 +86,7 @@ export default function ProfilePage({ onNavigateToLogin }: ProfilePageProps): Re
     { id: 2, name: "Wavy Luxe Hair", price: 3499, image: "https://images.unsplash.com/photo-1522335789203-aabd1fc54bc9?auto=format&fit=crop&w=400&q=80" },
   ]);
 
-  const formErrors = useMemo(() => {
-    const e: Record<string, string> = {};
-    if (!editProfile.name.trim()) e.name = "Please enter your name";
-    if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(editProfile.email)) e.email = "Enter a valid email";
-    if (!/^\d{10}$/.test(editProfile.phone.replace(/\D/g, ""))) e.phone = "Enter a 10-digit phone number";
-    return e;
-  }, [editProfile]);
+  const formErrors = useFormValidation(editProfile);
 
   const passwordErrors = useMemo(() => {
     const e: Record<string, string> = {};

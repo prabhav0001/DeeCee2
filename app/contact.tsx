@@ -1,30 +1,9 @@
 "use client"
 
-import React, { useState, useMemo, useCallback } from "react";
+import React, { useState, useCallback } from "react";
 import { Phone, Mail, MapPin, Clock, CheckCircle2, X } from "lucide-react";
-
-type FormInputProps = {
-  label: string;
-  type?: string;
-  value: string;
-  onChange: (e: React.ChangeEvent<HTMLInputElement>) => void;
-  error?: string;
-  placeholder?: string;
-};
-
-const FormInput = ({ label, type = "text", value, onChange, error, placeholder }: FormInputProps) => (
-  <div className="w-full">
-    <label className="block text-sm font-semibold text-gray-700 mb-2">{label}</label>
-    <input
-      type={type}
-      value={value}
-      onChange={onChange}
-      placeholder={placeholder}
-      className="w-full border border-gray-300 rounded-xl px-4 py-3 focus:outline-none focus:ring-2 focus:ring-rose-500 focus:border-transparent transition-all"
-    />
-    {error && <p className="text-red-600 text-xs mt-2 flex items-center gap-1"><X className="w-3 h-3" />{error}</p>}
-  </div>
-);
+import { FormInput } from "./components";
+import { useContactValidation } from "./hooks";
 
 export default function ContactPage(): React.ReactElement {
   const [name, setName] = useState("");
@@ -35,15 +14,7 @@ export default function ContactPage(): React.ReactElement {
   const [consent, setConsent] = useState(false);
   const [submitted, setSubmitted] = useState(false);
 
-  const errors = useMemo(() => {
-    const e: Record<string, string> = {};
-    if (!name.trim()) e.name = "Please enter your name";
-    if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) e.email = "Enter a valid email";
-    if (!/^\d{10}$/.test(phone.replace(/\D/g, ""))) e.phone = "Enter a 10-digit phone number";
-    if (message.trim().length < 10) e.message = "Message should be at least 10 characters";
-    if (!consent) e.consent = "Please accept to be contacted";
-    return e;
-  }, [name, email, phone, message, consent]);
+  const errors = useContactValidation(name, email, phone, message, consent);
 
   const handleSubmit = useCallback((e: React.FormEvent) => {
     e.preventDefault();

@@ -1,42 +1,10 @@
 "use client"
 
 import React, { useState, useMemo, useCallback } from "react";
-import { Calendar, CheckCircle2, X } from "lucide-react";
-
-type Appointment = {
-  id: string;
-  service: string;
-  location: string;
-  date: string;
-  time: string;
-  name: string;
-  email: string;
-  phone: string;
-  notes?: string;
-};
-
-type FormInputProps = {
-  label: string;
-  type?: string;
-  value: string;
-  onChange: (e: React.ChangeEvent<HTMLInputElement>) => void;
-  error?: string;
-  placeholder?: string;
-};
-
-const FormInput = ({ label, type = "text", value, onChange, error, placeholder }: FormInputProps) => (
-  <div className="w-full">
-    <label className="block text-sm font-semibold text-gray-700 mb-2">{label}</label>
-    <input
-      type={type}
-      value={value}
-      onChange={onChange}
-      placeholder={placeholder}
-      className="w-full border border-gray-300 rounded-xl px-4 py-3 focus:outline-none focus:ring-2 focus:ring-rose-500 focus:border-transparent transition-all"
-    />
-    {error && <p className="text-red-600 text-xs mt-2 flex items-center gap-1"><X className="w-3 h-3" />{error}</p>}
-  </div>
-);
+import { Calendar, CheckCircle2 } from "lucide-react";
+import { Appointment } from "./types";
+import { FormInput } from "./components";
+import { useFormValidation } from "./hooks";
 
 type AppointmentPageProps = {
   appointments: Appointment[];
@@ -74,15 +42,13 @@ export default function AppointmentPage({ appointments, setAppointments, onNavig
 
   const available = useMemo(() => baseSlots.map((t, i) => ({ time: t, disabled: systemBlocked.has(i) || bookedSlots.has(t) })), [baseSlots, systemBlocked, bookedSlots]);
 
+  const baseErrors = useFormValidation({ name, email, phone });
   const formErrors = useMemo(() => {
-    const e: Record<string, string> = {};
-    if (!name.trim()) e.name = "Please enter your name";
-    if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) e.email = "Enter a valid email";
-    if (!/^\d{10}$/.test(phone.replace(/\D/g, ""))) e.phone = "Enter a 10-digit phone number";
-    if (!date) e.date = "Select a date";
-    if (!selectedTime) e.time = "Select a time slot";
-    return e;
-  }, [name, email, phone, date, selectedTime]);
+    const errors = { ...baseErrors };
+    if (!date) errors.date = "Select a date";
+    if (!selectedTime) errors.time = "Select a time slot";
+    return errors;
+  }, [baseErrors, date, selectedTime]);
 
   const handleConfirm = useCallback((e: React.FormEvent) => {
     e.preventDefault();

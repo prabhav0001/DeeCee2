@@ -1,26 +1,7 @@
 "use client"
 
 import React from "react";
-
-type Product = {
-  id: number;
-  name: string;
-  price: number;
-  image: string;
-  colors: string[];
-  sizes: string[];
-  category: string;
-  isBestseller?: boolean;
-  isNew?: boolean;
-  isMans?: boolean;
-};
-
-type CartItem = {
-  product: Product;
-  color: string;
-  size: string;
-  quantity: number;
-};
+import { CartItem } from "./types";
 
 type CartPageProps = {
   cart: CartItem[];

@@ -1,38 +1,10 @@
 "use client"
 
 import React from "react";
+import { Product } from "./types";
+import { FilterButton } from "./components";
 
-type Product = {
-  id: number;
-  name: string;
-  price: number;
-  image: string;
-  colors: string[];
-  sizes: string[];
-  category: string;
-  isBestseller?: boolean;
-  isNew?: boolean;
-  isMans?: boolean;
-};
-
-type FilterButtonProps = {
-  active: boolean;
-  onClick: () => void;
-  children: React.ReactNode;
-};
-
-const FilterButton = ({ active, onClick, children }: FilterButtonProps) => (
-  <button onClick={onClick} className={`px-4 sm:px-6 py-2 sm:py-3 rounded-full border text-sm font-medium transition-all duration-300 transform hover:scale-105 ${active ? "bg-gradient-to-r from-rose-600 to-rose-500 text-white border-rose-600 shadow-lg" : "border-gray-300 text-gray-700 hover:bg-rose-50 hover:border-rose-300"}`}>
-    {children}
-  </button>
-);
-
-type ProductCardProps = {
-  product: Product;
-  onClick: () => void;
-};
-
-const ProductCard = ({ product, onClick }: ProductCardProps) => (
+const ProductCard = ({ product, onClick }: { product: Product; onClick: () => void }) => (
   <div onClick={onClick} className="border border-gray-200 rounded-2xl p-4 cursor-pointer hover:shadow-2xl transition-all duration-300 transform hover:-translate-y-2 bg-white group">
     <div className="relative overflow-hidden rounded-xl mb-4">
       <img src={product.image} alt={product.name} className="w-full h-48 object-cover transform group-hover:scale-110 transition-transform duration-500" />

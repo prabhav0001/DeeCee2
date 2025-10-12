@@ -3,6 +3,7 @@
 import React, { useState } from 'react';
 import { Mail, Lock, Eye, EyeOff, UserPlus, X, User, Phone } from 'lucide-react';
 import { useAuth } from './AuthContext';
+import { useAuthValidation } from './hooks';
 
 type SignupPageProps = {
   onClose: () => void;
@@ -27,25 +28,18 @@ export default function SignupPage({ onClose, onSwitchToLogin, onSignupSuccess }
     setFormData({ ...formData, [e.target.name]: e.target.value });
   };
 
+  const formErrors = useAuthValidation(
+    formData.name,
+    formData.email,
+    formData.phone,
+    formData.password,
+    formData.confirmPassword
+  );
+
   const validateForm = () => {
-    if (!formData.name.trim()) {
-      setError('Please enter your name');
-      return false;
-    }
-    if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(formData.email)) {
-      setError('Please enter a valid email');
-      return false;
-    }
-    if (!/^\d{10}$/.test(formData.phone.replace(/\D/g, ''))) {
-      setError('Please enter a valid 10-digit phone number');
-      return false;
-    }
-    if (formData.password.length < 6) {
-      setError('Password must be at least 6 characters');
-      return false;
-    }
-    if (formData.password !== formData.confirmPassword) {
-      setError('Passwords do not match');
+    const errors = Object.values(formErrors);
+    if (errors.length > 0) {
+      setError(errors[0]);
       return false;
     }
     return true;
