@@ -1,7 +1,8 @@
 "use client"
 
 import React, { useEffect, useMemo, useState, useRef, useCallback } from "react";
-import { Heart, User, Search, ShoppingCart, Menu, X, Star, Truck, Shield, CreditCard, ChevronLeft, ChevronRight, Calendar, Play, Pause, Volume2, VolumeX, Sparkles, Gift, Package } from "lucide-react";
+// Router functionality handled with native History API
+import { Heart, User, Search, ShoppingCart, Menu, X, Star, Truck, Shield, CreditCard, ChevronLeft, ChevronRight, Phone, Mail, MapPin, Clock, Calendar, CheckCircle2, FileText, Package, Gift, Sparkles, Pause, Play, VolumeX, Volume2 } from "lucide-react";
 import ShopPage from './shop';
 import ProductPage from './product';
 import CartPage from './cart';
@@ -229,6 +230,45 @@ function DeeceeHairApp(): React.ReactElement {
     return () => clearInterval(interval);
   }, []);
 
+  // Sync current page with URL pathname on mount and pathname changes
+  useEffect(() => {
+    const routeToPage: Record<string, Page> = {
+      '/': 'home',
+      '/shop': 'shop',
+      '/cart': 'cart',
+      '/contact': 'contact',
+      '/appointment': 'appointment',
+      '/product': 'product',
+      '/terms': 'terms',
+      '/profile': 'profile'
+    };
+
+    const page = routeToPage[window.location.pathname] || 'home';
+    setCurrentPage(page);
+  }, []);
+
+  // Handle browser back/forward buttons
+  useEffect(() => {
+    const handlePopState = () => {
+      const routeToPage: Record<string, Page> = {
+        '/': 'home',
+        '/shop': 'shop',
+        '/cart': 'cart',
+        '/contact': 'contact',
+        '/appointment': 'appointment',
+        '/product': 'product',
+        '/terms': 'terms',
+        '/profile': 'profile'
+      };
+
+      const page = routeToPage[window.location.pathname] || 'home';
+      setCurrentPage(page);
+    };
+
+    window.addEventListener('popstate', handlePopState);
+    return () => window.removeEventListener('popstate', handlePopState);
+  }, []);
+
   const navigateTo = useCallback((page: Page, category = "all") => {
     // Check if trying to access profile without login
     if (page === "profile" && !isAuthenticated) {
@@ -239,6 +279,23 @@ function DeeceeHairApp(): React.ReactElement {
     setCurrentPage(page);
     setFilterCategory(category);
     setMobileMenuOpen(false);
+
+    // Update URL based on page without navigation
+    const pageRoutes: Record<Page, string> = {
+      home: '/',
+      shop: '/shop',
+      cart: '/cart',
+      contact: '/contact',
+      appointment: '/appointment',
+      product: '/product',
+      terms: '/terms',
+      profile: '/profile'
+    };
+
+    // Use history API to update URL without triggering navigation
+    if (typeof window !== 'undefined') {
+      window.history.pushState({}, '', pageRoutes[page]);
+    }
   }, [isAuthenticated]);
 
   const addToCart = useCallback(() => {
