@@ -1,8 +1,8 @@
 "use client"
 
 import React from "react";
-import { Product } from "./types";
-import { FilterButton } from "./components";
+import { Product } from "@/app/types";
+import { FilterButton } from "@/app/components/common";
 
 const ProductCard = ({ product, onClick }: { product: Product; onClick: () => void }) => (
   <div onClick={onClick} className="border border-gray-200 rounded-2xl p-4 cursor-pointer hover:shadow-2xl transition-all duration-300 transform hover:-translate-y-2 bg-white group">

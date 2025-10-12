@@ -2,9 +2,9 @@
 
 import React, { useState, useMemo, useCallback } from "react";
 import { Calendar, CheckCircle2 } from "lucide-react";
-import { Appointment } from "./types";
-import { FormInput } from "./components";
-import { useFormValidation } from "./hooks";
+import { Appointment } from "@/app/types";
+import { FormInput } from "@/app/components/common";
+import { useFormValidation } from "@/app/hooks/use-form-validation";
 
 type AppointmentPageProps = {
   appointments: Appointment[];

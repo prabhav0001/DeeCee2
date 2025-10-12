@@ -2,10 +2,10 @@
 
 import React, { useState, useEffect, useMemo } from "react";
 import { User, Mail, Phone, MapPin, Package, Heart, Lock, Edit2, Save, X, ShoppingBag, Calendar, CheckCircle2, Truck, CreditCard, LogOut } from "lucide-react";
-import { useAuth } from './AuthContext';
-import { Order, Address, ProfileTab } from "./types";
-import { FormInput } from "./components";
-import { useFormValidation } from "./hooks";
+import { useAuth } from '@/app/contexts/AuthContext';
+import { Order, Address, ProfileTab } from "@/app/types";
+import { FormInput } from "@/app/components/common";
+import { useFormValidation } from "@/app/hooks/use-form-validation";
 
 type ProfilePageProps = {
   onNavigateToLogin: () => void;

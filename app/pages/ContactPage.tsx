@@ -2,8 +2,8 @@
 
 import React, { useState, useCallback } from "react";
 import { Phone, Mail, MapPin, Clock, CheckCircle2, X } from "lucide-react";
-import { FormInput } from "./components";
-import { useContactValidation } from "./hooks";
+import { FormInput } from "@/app/components/common";
+import { useContactValidation } from "@/app/hooks/use-form-validation";
 
 export default function ContactPage(): React.ReactElement {
   const [name, setName] = useState("");

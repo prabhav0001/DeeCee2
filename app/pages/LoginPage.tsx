@@ -2,8 +2,8 @@
 
 import React, { useState } from 'react';
 import { Mail, Lock, Eye, EyeOff, LogIn, X } from 'lucide-react';
-import { useAuth } from './AuthContext';
-import { EMAIL_REGEX } from './types';
+import { useAuth } from '@/app/contexts/AuthContext';
+import { EMAIL_REGEX } from '@/app/types';
 
 type LoginPageProps = {
   onClose: () => void;

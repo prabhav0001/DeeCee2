@@ -1,7 +1,7 @@
 "use client"
 
 import React from "react";
-import { Product } from "./types";
+import { Product } from "@/app/types";
 
 type ProductPageProps = {
   product: Product;

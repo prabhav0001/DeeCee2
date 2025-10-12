@@ -2,8 +2,8 @@
 
 import React, { useState } from 'react';
 import { Mail, Lock, Eye, EyeOff, UserPlus, X, User, Phone } from 'lucide-react';
-import { useAuth } from './AuthContext';
-import { useAuthValidation } from './hooks';
+import { useAuth } from '@/app/contexts/AuthContext';
+import { useAuthValidation } from '@/app/hooks/use-form-validation';
 
 type SignupPageProps = {
   onClose: () => void;

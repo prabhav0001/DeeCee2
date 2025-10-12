@@ -2,7 +2,7 @@
 
 import React, { useState, useEffect } from 'react';
 import { Mail, Smartphone, CheckCircle2, X, RefreshCw } from 'lucide-react';
-import { useAuth } from './AuthContext';
+import { useAuth } from '@/app/contexts/AuthContext';
 
 type VerificationPageProps = {
   onClose: () => void;
