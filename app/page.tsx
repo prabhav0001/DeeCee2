@@ -10,6 +10,7 @@ import ContactPage from './contact';
 import AppointmentPage from './appointment';
 import TermsPage from './terms';
 import PrivacyPolicyPage from './PrivacyPolicy';
+import AboutUsPage from './AboutUs';
 import ProfilePage from './profile';
 import LoginPage from './LoginPage';
 import SignupPage from './SignupPage';
@@ -48,7 +49,7 @@ type Appointment = {
   notes?: string;
 };
 
-type Page = "home" | "shop" | "product" | "cart" | "contact" | "appointment" | "terms" | "privacy" | "profile";
+type Page = "home" | "shop" | "product" | "cart" | "contact" | "appointment" | "terms" | "privacy" | "about" | "profile";
 
 type ReelVideo = {
   id: number;
@@ -242,6 +243,7 @@ function DeeceeHairApp(): React.ReactElement {
       '/product': 'product',
       '/terms': 'terms',
       '/privacy': 'privacy',
+      '/about': 'about',
       '/profile': 'profile'
     };
 
@@ -261,6 +263,7 @@ function DeeceeHairApp(): React.ReactElement {
         '/product': 'product',
         '/terms': 'terms',
         '/privacy': 'privacy',
+        '/about': 'about',
         '/profile': 'profile'
       };
 
@@ -293,6 +296,7 @@ function DeeceeHairApp(): React.ReactElement {
       product: '/product',
       terms: '/terms',
       privacy: '/privacy',
+      about: '/about',
       profile: '/profile'
     };
 
@@ -358,6 +362,9 @@ function DeeceeHairApp(): React.ReactElement {
               <button onClick={() => navigateTo("appointment")} className="text-sm font-medium text-gray-700 hover:text-rose-600 transition focus:outline-none focus:ring-2 focus:ring-rose-600 rounded">
                 Book Appointment
               </button>
+              <button onClick={() => navigateTo("about")} className="text-sm font-medium text-gray-700 hover:text-rose-600 transition focus:outline-none focus:ring-2 focus:ring-rose-600 rounded">
+                About Us
+              </button>
               <button onClick={() => navigateTo("contact")} className="text-sm font-medium text-gray-700 hover:text-rose-600 transition focus:outline-none focus:ring-2 focus:ring-rose-600 rounded">
                 Contact Us
               </button>
@@ -416,6 +423,9 @@ function DeeceeHairApp(): React.ReactElement {
             </button>
             <button onClick={() => { navigateTo("appointment"); setMobileMenuOpen(false); }} className="text-sm font-medium text-gray-700 hover:text-rose-600 transition text-left focus:outline-none focus:ring-2 focus:ring-rose-600 rounded">
               Book Appointment
+            </button>
+            <button onClick={() => { navigateTo("about"); setMobileMenuOpen(false); }} className="text-sm font-medium text-gray-700 hover:text-rose-600 transition text-left focus:outline-none focus:ring-2 focus:ring-rose-600 rounded">
+              About Us
             </button>
             <button onClick={() => { navigateTo("contact"); setMobileMenuOpen(false); }} className="text-sm font-medium text-gray-700 hover:text-rose-600 transition text-left focus:outline-none focus:ring-2 focus:ring-rose-600 rounded">
               Contact Us
@@ -619,6 +629,7 @@ function DeeceeHairApp(): React.ReactElement {
         )}
         {currentPage === "terms" && <TermsPage />}
         {currentPage === "privacy" && <PrivacyPolicyPage />}
+        {currentPage === "about" && <AboutUsPage />}
         {currentPage === "profile" && <ProfilePage onNavigateToLogin={() => setShowLogin(true)} />}
       </main>
 
@@ -677,7 +688,7 @@ function DeeceeHairApp(): React.ReactElement {
             <div>
               <h4 className="font-semibold mb-4 text-sm sm:text-base">Quick Links</h4>
               <ul className="space-y-2 text-xs sm:text-sm text-gray-400">
-                <li><button className="hover:text-white transition focus:outline-none">About Us</button></li>
+                <li><button onClick={() => navigateTo("about")} className="hover:text-white transition focus:outline-none">About Us</button></li>
                 <li><button onClick={() => navigateTo("shop")} className="hover:text-white transition focus:outline-none">Shop</button></li>
                 <li><button onClick={() => navigateTo("contact")} className="hover:text-white transition focus:outline-none">Contact</button></li>
               </ul>
