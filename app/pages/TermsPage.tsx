@@ -9,7 +9,7 @@ export default function TermsPage(): React.ReactElement {
       <div className="bg-white rounded-2xl border border-gray-200 p-6 sm:p-8 shadow-sm">
         <div className="flex items-center gap-3 mb-6">
           <FileText className="w-8 h-8 text-rose-600" />
-          <h1 className="text-2xl sm:text-3xl font-bold text-gray-900">Terms & Conditions</h1>
+          <h1 className="text-2xl sm:text-3xl font-bold text-gray-900">Privacy</h1>
         </div>
         <p className="text-gray-600 mb-8 text-sm sm:text-base">Last updated: {new Date().toLocaleDateString('en-US', { year: 'numeric', month: 'long', day: 'numeric' })}</p>
 
