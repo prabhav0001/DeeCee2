@@ -8,19 +8,19 @@ export default function AboutUsPage(): React.ReactElement {
     {
       name: "Sumit Kumar",
       role: "Founder & CEO",
-      image: "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?auto=format&fit=crop&w=300&q=80",
+      image: "https://raw.githubusercontent.com/prabhav0001/deecee-src/refs/heads/main/founder.jpeg",
       description: "With over 10 years of experience in the hair industry"
     },
     {
-      name: "Priya Sharma",
-      role: "Head of Design",
-      image: "https://images.unsplash.com/photo-1494790108377-be9c29b29330?auto=format&fit=crop&w=300&q=80",
+      name: "Sonpal Kumawat",
+      role: "Head of Sales",
+      image: "https://raw.githubusercontent.com/prabhav0001/deecee-src/refs/heads/main/head_of_sales.png",
       description: "Expert in hair styling and product development"
     },
     {
-      name: "Rahul Verma",
-      role: "Operations Manager",
-      image: "https://images.unsplash.com/photo-1500648767791-00dcc994a43e?auto=format&fit=crop&w=300&q=80",
+      name: "Sahdev Kumar",
+      role: "Marketing Manager",
+      image: "https://raw.githubusercontent.com/prabhav0001/deecee-src/refs/heads/main/marketing_manager.jpeg",
       description: "Ensuring smooth operations and customer satisfaction"
     }
   ];
