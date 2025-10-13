@@ -2,7 +2,7 @@
 
 import React, { useEffect, useMemo, useState, useRef, useCallback } from "react";
 // Router functionality handled with native History API
-import { Heart, User, Search, ShoppingCart, Menu, X, Star, Truck, Shield, CreditCard, ChevronLeft, ChevronRight, Calendar, Pause, Play, VolumeX, Volume2, Sparkles, Instagram, Facebook, Youtube, Mail } from "lucide-react";
+import { Heart, User, Search, ShoppingCart, Menu, X, Star, Truck, Shield, CreditCard, ChevronLeft, ChevronRight, Calendar, Pause, Play, VolumeX, Volume2, Sparkles, Instagram, Facebook, Youtube, Mail, MessageCircle } from "lucide-react";
 import ShopPage from './pages/ShopPage';
 import ProductPage from './pages/ProductPage';
 import CartPage from './pages/CartPage';
@@ -771,25 +771,41 @@ function DeeceeHairApp(): React.ReactElement {
               </h4>
               <ul className="space-y-3 text-sm sm:text-base text-gray-300">
                 <li>
-                  <button onClick={() => navigateTo("about")} className="hover:text-rose-500 hover:translate-x-1 transition-all duration-200 focus:outline-none inline-flex items-center group">
+                  <button
+                    onClick={() => navigateTo("about")}
+                    className="hover:text-rose-500 hover:translate-x-1 transition-all duration-200 focus:outline-none inline-flex items-center group py-1 active:text-rose-600"
+                    type="button"
+                  >
                     <span className="w-0 group-hover:w-2 h-0.5 bg-rose-600 mr-0 group-hover:mr-2 transition-all duration-200"></span>
                     About Us
                   </button>
                 </li>
                 <li>
-                  <button onClick={() => navigateTo("shop")} className="hover:text-rose-500 hover:translate-x-1 transition-all duration-200 focus:outline-none inline-flex items-center group">
+                  <button
+                    onClick={() => navigateTo("shop")}
+                    className="hover:text-rose-500 hover:translate-x-1 transition-all duration-200 focus:outline-none inline-flex items-center group py-1 active:text-rose-600"
+                    type="button"
+                  >
                     <span className="w-0 group-hover:w-2 h-0.5 bg-rose-600 mr-0 group-hover:mr-2 transition-all duration-200"></span>
                     Shop
                   </button>
                 </li>
                 <li>
-                  <button onClick={() => navigateTo("bestsellers")} className="hover:text-rose-500 hover:translate-x-1 transition-all duration-200 focus:outline-none inline-flex items-center group">
+                  <button
+                    onClick={() => navigateTo("bestsellers")}
+                    className="hover:text-rose-500 hover:translate-x-1 transition-all duration-200 focus:outline-none inline-flex items-center group py-1 active:text-rose-600"
+                    type="button"
+                  >
                     <span className="w-0 group-hover:w-2 h-0.5 bg-rose-600 mr-0 group-hover:mr-2 transition-all duration-200"></span>
                     Bestsellers
                   </button>
                 </li>
                 <li>
-                  <button onClick={() => navigateTo("contact")} className="hover:text-rose-500 hover:translate-x-1 transition-all duration-200 focus:outline-none inline-flex items-center group">
+                  <button
+                    onClick={() => navigateTo("contact")}
+                    className="hover:text-rose-500 hover:translate-x-1 transition-all duration-200 focus:outline-none inline-flex items-center group py-1 active:text-rose-600"
+                    type="button"
+                  >
                     <span className="w-0 group-hover:w-2 h-0.5 bg-rose-600 mr-0 group-hover:mr-2 transition-all duration-200"></span>
                     Contact
                   </button>
@@ -805,19 +821,31 @@ function DeeceeHairApp(): React.ReactElement {
               </h4>
               <ul className="space-y-3 text-sm sm:text-base text-gray-300">
                 <li>
-                  <button onClick={() => navigateTo("terms")} className="hover:text-rose-500 hover:translate-x-1 transition-all duration-200 focus:outline-none inline-flex items-center group">
+                  <button
+                    onClick={() => navigateTo("terms")}
+                    className="hover:text-rose-500 hover:translate-x-1 transition-all duration-200 focus:outline-none inline-flex items-center group py-1 active:text-rose-600"
+                    type="button"
+                  >
                     <span className="w-0 group-hover:w-2 h-0.5 bg-rose-600 mr-0 group-hover:mr-2 transition-all duration-200"></span>
                     Terms & Conditions
                   </button>
                 </li>
                 <li>
-                  <button onClick={() => navigateTo("privacy")} className="hover:text-rose-500 hover:translate-x-1 transition-all duration-200 focus:outline-none inline-flex items-center group">
+                  <button
+                    onClick={() => navigateTo("privacy")}
+                    className="hover:text-rose-500 hover:translate-x-1 transition-all duration-200 focus:outline-none inline-flex items-center group py-1 active:text-rose-600"
+                    type="button"
+                  >
                     <span className="w-0 group-hover:w-2 h-0.5 bg-rose-600 mr-0 group-hover:mr-2 transition-all duration-200"></span>
                     Privacy Policy
                   </button>
                 </li>
                 <li>
-                  <button onClick={() => navigateTo("appointment")} className="hover:text-rose-500 hover:translate-x-1 transition-all duration-200 focus:outline-none inline-flex items-center group">
+                  <button
+                    onClick={() => navigateTo("appointment")}
+                    className="hover:text-rose-500 hover:translate-x-1 transition-all duration-200 focus:outline-none inline-flex items-center group py-1 active:text-rose-600"
+                    type="button"
+                  >
                     <span className="w-0 group-hover:w-2 h-0.5 bg-rose-600 mr-0 group-hover:mr-2 transition-all duration-200"></span>
                     Book Appointment
                   </button>
@@ -846,6 +874,17 @@ function DeeceeHairApp(): React.ReactElement {
           </div>
         </div>
       </footer>
+
+      {/* Floating WhatsApp Button */}
+      <a
+        href="https://wa.me/919876543210"
+        target="_blank"
+        rel="noopener noreferrer"
+        className="fixed bottom-6 right-6 z-50 w-14 h-14 bg-[#25D366] hover:bg-[#20BA5A] rounded-full flex items-center justify-center shadow-lg hover:shadow-xl transition-all duration-300 hover:scale-110 active:scale-95 group animate-bounce hover:animate-none"
+        aria-label="Contact us on WhatsApp"
+      >
+        <MessageCircle className="w-7 h-7 text-white group-hover:rotate-12 transition-transform" />
+      </a>
     </div>
   );
 }
