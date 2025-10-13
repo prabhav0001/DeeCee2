@@ -13,7 +13,6 @@ import PrivacyPolicyPage from './pages/PrivacyPolicyPage';
 import AboutUsPage from './pages/AboutUsPage';
 import ProfilePage from './pages/ProfilePage';
 import BestsellersPage from './pages/BestsellersPage';
-import NewArrivalsPage from './pages/NewArrivalsPage';
 import LoginPage from './pages/LoginPage';
 import SignupPage from './pages/SignupPage';
 import VerificationPage from './pages/VerificationPage';
@@ -191,8 +190,7 @@ function DeeceeHairApp(): React.ReactElement {
       privacy: '/privacy',
       about: '/about',
       profile: '/profile',
-      bestsellers: '/bestsellers',
-      newarrivals: '/newarrivals'
+      bestsellers: '/bestsellers'
     };
 
     // Use history API to update URL without triggering navigation
@@ -247,13 +245,6 @@ function DeeceeHairApp(): React.ReactElement {
             </button>
             <nav className="hidden lg:flex space-x-6 ml-8">
               <button
-                onClick={() => navigateTo("shop")}
-                className="text-sm font-medium text-gray-700 hover:text-rose-600 transition-all duration-200 focus:outline-none focus:ring-2 focus:ring-rose-600 rounded px-3 py-2 relative group hover:scale-105 active:scale-95"
-              >
-                Shop
-                <span className="absolute bottom-0 left-0 w-0 h-0.5 bg-rose-600 group-hover:w-full transition-all duration-300"></span>
-              </button>
-              <button
                 onClick={() => navigateTo("bestsellers")}
                 className="text-sm font-medium text-gray-700 hover:text-rose-600 transition-all duration-200 focus:outline-none focus:ring-2 focus:ring-rose-600 rounded px-3 py-2 relative group hover:scale-105 active:scale-95"
               >
@@ -261,17 +252,17 @@ function DeeceeHairApp(): React.ReactElement {
                 <span className="absolute bottom-0 left-0 w-0 h-0.5 bg-rose-600 group-hover:w-full transition-all duration-300"></span>
               </button>
               <button
-                onClick={() => navigateTo("newarrivals")}
+                onClick={() => navigateTo("shop")}
                 className="text-sm font-medium text-gray-700 hover:text-rose-600 transition-all duration-200 focus:outline-none focus:ring-2 focus:ring-rose-600 rounded px-3 py-2 relative group hover:scale-105 active:scale-95"
               >
-                New Arrivals
+                Shop for Women
                 <span className="absolute bottom-0 left-0 w-0 h-0.5 bg-rose-600 group-hover:w-full transition-all duration-300"></span>
               </button>
               <button
                 onClick={() => { setFilterCategory("mans"); setCurrentPage("shop"); }}
                 className="text-sm font-medium text-gray-700 hover:text-rose-600 transition-all duration-200 focus:outline-none focus:ring-2 focus:ring-rose-600 rounded px-3 py-2 relative group hover:scale-105 active:scale-95"
               >
-                Mans Collection
+                Shop for Men
                 <span className="absolute bottom-0 left-0 w-0 h-0.5 bg-rose-600 group-hover:w-full transition-all duration-300"></span>
               </button>
               <button
@@ -340,17 +331,14 @@ function DeeceeHairApp(): React.ReactElement {
             }} className="text-sm font-medium text-gray-700 hover:text-rose-600 hover:bg-rose-50 transition-all duration-200 text-left focus:outline-none focus:ring-2 focus:ring-rose-600 rounded-lg px-4 py-3 active:scale-95 transform">
               My Profile
             </button>
-            <button onClick={() => { navigateTo("shop"); setMobileMenuOpen(false); }} className="text-sm font-medium text-gray-700 hover:text-rose-600 hover:bg-rose-50 transition-all duration-200 text-left focus:outline-none focus:ring-2 focus:ring-rose-600 rounded-lg px-4 py-3 active:scale-95 transform">
-              Shop
-            </button>
             <button onClick={() => { navigateTo("bestsellers"); setMobileMenuOpen(false); }} className="text-sm font-medium text-gray-700 hover:text-rose-600 hover:bg-rose-50 transition-all duration-200 text-left focus:outline-none focus:ring-2 focus:ring-rose-600 rounded-lg px-4 py-3 active:scale-95 transform">
               Bestsellers
             </button>
-            <button onClick={() => { navigateTo("newarrivals"); setMobileMenuOpen(false); }} className="text-sm font-medium text-gray-700 hover:text-rose-600 hover:bg-rose-50 transition-all duration-200 text-left focus:outline-none focus:ring-2 focus:ring-rose-600 rounded-lg px-4 py-3 active:scale-95 transform">
-              New Arrivals
+            <button onClick={() => { navigateTo("shop"); setMobileMenuOpen(false); }} className="text-sm font-medium text-gray-700 hover:text-rose-600 hover:bg-rose-50 transition-all duration-200 text-left focus:outline-none focus:ring-2 focus:ring-rose-600 rounded-lg px-4 py-3 active:scale-95 transform">
+              Shop for Women
             </button>
             <button onClick={() => { setFilterCategory("mans"); setCurrentPage("shop"); setMobileMenuOpen(false); }} className="text-sm font-medium text-gray-700 hover:text-rose-600 hover:bg-rose-50 transition-all duration-200 text-left focus:outline-none focus:ring-2 focus:ring-rose-600 rounded-lg px-4 py-3 active:scale-95 transform">
-              Mans Collection
+              Shop for Men
             </button>
             <button onClick={() => { navigateTo("appointment"); setMobileMenuOpen(false); }} className="text-sm font-medium text-gray-700 hover:text-rose-600 hover:bg-rose-50 transition-all duration-200 text-left focus:outline-none focus:ring-2 focus:ring-rose-600 rounded-lg px-4 py-3 active:scale-95 transform">
               Book Appointment
@@ -470,14 +458,6 @@ function DeeceeHairApp(): React.ReactElement {
                 </div>
               </div>
             ))}
-          </div>
-          <div className="text-center mt-8">
-            <button
-              onClick={() => navigateTo("newarrivals")}
-              className="bg-rose-600 text-white px-6 py-3 rounded-lg font-semibold hover:bg-rose-700 transition"
-            >
-              View All New Arrivals
-            </button>
           </div>
         </div>
       </section>
@@ -638,18 +618,6 @@ function DeeceeHairApp(): React.ReactElement {
         {currentPage === "profile" && <ProfilePage onNavigateToLogin={() => setShowLogin(true)} />}
         {currentPage === "bestsellers" && (
           <BestsellersPage
-            products={products}
-            onProductClick={(product) => {
-              setSelectedProduct(product);
-              setSelectedColor("");
-              setSelectedSize("");
-              setCurrentPage("product");
-            }}
-            onBackToHome={() => navigateTo("home")}
-          />
-        )}
-        {currentPage === "newarrivals" && (
-          <NewArrivalsPage
             products={products}
             onProductClick={(product) => {
               setSelectedProduct(product);
@@ -883,8 +851,8 @@ function DeeceeHairApp(): React.ReactElement {
         className="fixed bottom-6 right-6 z-50 w-16 h-16 bg-[#25D366] hover:bg-[#128C7E] rounded-full flex items-center justify-center shadow-2xl hover:shadow-[0_0_30px_rgba(37,211,102,0.6)] transition-all duration-300 hover:scale-110 active:scale-95 group animate-bounce hover:animate-none"
         aria-label="Contact us on WhatsApp"
       >
-        <svg 
-          viewBox="0 0 24 24" 
+        <svg
+          viewBox="0 0 24 24"
           className="w-9 h-9 fill-white group-hover:scale-110 transition-transform"
           xmlns="http://www.w3.org/2000/svg"
         >

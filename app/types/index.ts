@@ -33,7 +33,7 @@ export type Appointment = {
   notes?: string;
 };
 
-export type Page = "home" | "shop" | "product" | "cart" | "contact" | "appointment" | "terms" | "privacy" | "about" | "profile" | "bestsellers" | "newarrivals";
+export type Page = "home" | "shop" | "product" | "cart" | "contact" | "appointment" | "terms" | "privacy" | "about" | "profile" | "bestsellers";
 
 export type ReelVideo = {
   id: number;
