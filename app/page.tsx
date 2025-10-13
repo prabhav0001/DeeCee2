@@ -549,7 +549,7 @@ function DeeceeHairApp(): React.ReactElement {
 
       <footer className="bg-gray-900 text-white py-8 sm:py-12 w-full">
         <div className="w-full px-4 sm:px-6 lg:px-8">
-          <div className="grid grid-cols-2 md:grid-cols-4 gap-6 sm:gap-8">
+          <div className="grid grid-cols-2 md:grid-cols-3 gap-6 sm:gap-8">
             <div className="col-span-2 sm:col-span-1">
               <span className="text-xl sm:text-2xl font-bold text-rose-600 select-none">DEECEE</span>
               <span className="text-xl sm:text-2xl font-light text-white select-none"> HAIR</span>
@@ -561,14 +561,6 @@ function DeeceeHairApp(): React.ReactElement {
                 <li><button onClick={() => navigateTo("about")} className="hover:text-white transition focus:outline-none">About Us</button></li>
                 <li><button onClick={() => navigateTo("shop")} className="hover:text-white transition focus:outline-none">Shop</button></li>
                 <li><button onClick={() => navigateTo("contact")} className="hover:text-white transition focus:outline-none">Contact</button></li>
-              </ul>
-            </div>
-            <div>
-              <h4 className="font-semibold mb-4 text-sm sm:text-base">Customer Service</h4>
-              <ul className="space-y-2 text-xs sm:text-sm text-gray-400">
-                <li><button className="hover:text-white transition focus:outline-none">Shipping Info</button></li>
-                <li><button className="hover:text-white transition focus:outline-none">Returns</button></li>
-                <li><button className="hover:text-white transition focus:outline-none">FAQ</button></li>
               </ul>
             </div>
             <div className="col-span-2 sm:col-span-1">
