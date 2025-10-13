@@ -412,17 +412,6 @@ function DeeceeHairApp(): React.ReactElement {
         </div>
       </section>
 
-      <section className="py-12 sm:py-16 bg-white">
-        <div className="w-full px-4 sm:px-6 lg:px-8">
-          <div className="grid grid-cols-2 md:grid-cols-4 gap-6 sm:gap-8">
-            <FeatureCard icon={Truck} title="Free Shipping" description="On orders above ₹5000" />
-            <FeatureCard icon={Shield} title="100% Authentic" description="Premium quality guaranteed" />
-            <FeatureCard icon={CreditCard} title="COD Available" description="Cash on delivery option" />
-            <FeatureCard icon={Star} title="5% Off" description="On your first order" />
-          </div>
-        </div>
-      </section>
-
       <section className="py-12 sm:py-20 bg-white">
         <div className="w-full px-4 sm:px-6 lg:px-8">
           <div className="text-center mb-8 sm:mb-12">
