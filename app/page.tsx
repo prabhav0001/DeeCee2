@@ -2,7 +2,7 @@
 
 import React, { useEffect, useMemo, useState, useRef, useCallback } from "react";
 // Router functionality handled with native History API
-import { Heart, User, Search, ShoppingCart, Menu, X, Star, Truck, Shield, CreditCard, ChevronLeft, ChevronRight, Calendar, Pause, Play, VolumeX, Volume2 } from "lucide-react";
+import { Heart, User, Search, ShoppingCart, Menu, X, Star, Truck, Shield, CreditCard, ChevronLeft, ChevronRight, Calendar, Pause, Play, VolumeX, Volume2, Sparkles } from "lucide-react";
 import ShopPage from './pages/ShopPage';
 import ProductPage from './pages/ProductPage';
 import CartPage from './pages/CartPage';
@@ -12,6 +12,8 @@ import TermsPage from './pages/TermsPage';
 import PrivacyPolicyPage from './pages/PrivacyPolicyPage';
 import AboutUsPage from './pages/AboutUsPage';
 import ProfilePage from './pages/ProfilePage';
+import BestsellersPage from './pages/BestsellersPage';
+import NewArrivalsPage from './pages/NewArrivalsPage';
 import LoginPage from './pages/LoginPage';
 import SignupPage from './pages/SignupPage';
 import VerificationPage from './pages/VerificationPage';
@@ -173,7 +175,9 @@ function DeeceeHairApp(): React.ReactElement {
       terms: '/terms',
       privacy: '/privacy',
       about: '/about',
-      profile: '/profile'
+      profile: '/profile',
+      bestsellers: '/bestsellers',
+      newarrivals: '/newarrivals'
     };
 
     // Use history API to update URL without triggering navigation
@@ -224,11 +228,15 @@ function DeeceeHairApp(): React.ReactElement {
               <span className="text-xl sm:text-2xl font-light text-gray-800 select-none">HAIR</span>
             </button>
             <nav className="hidden lg:flex space-x-6 ml-8">
-              {["Shop", "Bestsellers", "New Arrivals"].map((item) => (
-                <button key={item} onClick={() => navigateTo("shop")} className="text-sm font-medium text-gray-700 hover:text-rose-600 transition focus:outline-none focus:ring-2 focus:ring-rose-600 rounded">
-                  {item}
-                </button>
-              ))}
+              <button onClick={() => navigateTo("shop")} className="text-sm font-medium text-gray-700 hover:text-rose-600 transition focus:outline-none focus:ring-2 focus:ring-rose-600 rounded">
+                Shop
+              </button>
+              <button onClick={() => navigateTo("bestsellers")} className="text-sm font-medium text-gray-700 hover:text-rose-600 transition focus:outline-none focus:ring-2 focus:ring-rose-600 rounded">
+                Bestsellers
+              </button>
+              <button onClick={() => navigateTo("newarrivals")} className="text-sm font-medium text-gray-700 hover:text-rose-600 transition focus:outline-none focus:ring-2 focus:ring-rose-600 rounded">
+                New Arrivals
+              </button>
               <button onClick={() => { setFilterCategory("mans"); setCurrentPage("shop"); }} className="text-sm font-medium text-gray-700 hover:text-rose-600 transition focus:outline-none focus:ring-2 focus:ring-rose-600 rounded">
                 Mans Collection
               </button>
@@ -283,11 +291,15 @@ function DeeceeHairApp(): React.ReactElement {
             }} className="text-sm font-medium text-gray-700 hover:text-rose-600 transition text-left focus:outline-none focus:ring-2 focus:ring-rose-600 rounded">
               My Profile
             </button>
-            {["Shop", "Bestsellers", "New Arrivals"].map((item) => (
-              <button key={item} onClick={() => { navigateTo("shop"); setMobileMenuOpen(false); }} className="text-sm font-medium text-gray-700 hover:text-rose-600 transition text-left focus:outline-none focus:ring-2 focus:ring-rose-600 rounded">
-                {item}
-              </button>
-            ))}
+            <button onClick={() => { navigateTo("shop"); setMobileMenuOpen(false); }} className="text-sm font-medium text-gray-700 hover:text-rose-600 transition text-left focus:outline-none focus:ring-2 focus:ring-rose-600 rounded">
+              Shop
+            </button>
+            <button onClick={() => { navigateTo("bestsellers"); setMobileMenuOpen(false); }} className="text-sm font-medium text-gray-700 hover:text-rose-600 transition text-left focus:outline-none focus:ring-2 focus:ring-rose-600 rounded">
+              Bestsellers
+            </button>
+            <button onClick={() => { navigateTo("newarrivals"); setMobileMenuOpen(false); }} className="text-sm font-medium text-gray-700 hover:text-rose-600 transition text-left focus:outline-none focus:ring-2 focus:ring-rose-600 rounded">
+              New Arrivals
+            </button>
             <button onClick={() => { setFilterCategory("mans"); setCurrentPage("shop"); setMobileMenuOpen(false); }} className="text-sm font-medium text-gray-700 hover:text-rose-600 transition text-left focus:outline-none focus:ring-2 focus:ring-rose-600 rounded">
               Mans Collection
             </button>
@@ -358,6 +370,76 @@ function DeeceeHairApp(): React.ReactElement {
             <FeatureCard icon={Shield} title="100% Authentic" description="Premium quality guaranteed" />
             <FeatureCard icon={CreditCard} title="COD Available" description="Cash on delivery option" />
             <FeatureCard icon={Star} title="5% Off" description="On your first order" />
+          </div>
+        </div>
+      </section>
+
+      <section className="py-12 sm:py-20 bg-white">
+        <div className="w-full px-4 sm:px-6 lg:px-8">
+          <div className="text-center mb-8 sm:mb-12">
+            <h2 className="text-3xl sm:text-4xl font-bold text-gray-900 mb-4">Bestsellers</h2>
+            <p className="text-gray-600 max-w-2xl mx-auto px-4">Our most loved products, trusted by thousands of customers</p>
+          </div>
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-6 sm:gap-8">
+            {products.filter(p => p.isBestseller).map((product) => (
+              <div key={product.id} className="group cursor-pointer rounded-2xl shadow-lg overflow-hidden bg-white hover:shadow-2xl transition-all duration-300" onClick={() => { setSelectedProduct(product); setSelectedColor(""); setSelectedSize(""); setCurrentPage("product"); }}>
+                <div className="relative overflow-hidden">
+                  <img src={product.image} alt={product.name} className="w-full h-64 sm:h-80 object-cover group-hover:scale-110 transition-transform duration-500" />
+                  <div className="absolute top-4 right-4 bg-rose-600 text-white px-3 py-1 rounded-full text-xs font-semibold flex items-center gap-1">
+                    <Star className="w-3 h-3 fill-current" /> Bestseller
+                  </div>
+                  <div className="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent"></div>
+                  <div className="absolute bottom-0 left-0 right-0 p-4 sm:p-6">
+                    <h3 className="text-xl sm:text-2xl font-bold text-white mb-2 truncate">{product.name}</h3>
+                    <p className="text-white text-lg font-semibold mb-2">₹{product.price.toLocaleString()}</p>
+                    <button className="text-white underline hover:no-underline text-sm sm:text-base">Shop Now →</button>
+                  </div>
+                </div>
+              </div>
+            ))}
+          </div>
+          <div className="text-center mt-8">
+            <button
+              onClick={() => navigateTo("bestsellers")}
+              className="bg-rose-600 text-white px-6 py-3 rounded-lg font-semibold hover:bg-rose-700 transition"
+            >
+              View All Bestsellers
+            </button>
+          </div>
+        </div>
+      </section>
+
+      <section className="py-12 sm:py-20 bg-gray-50">
+        <div className="w-full px-4 sm:px-6 lg:px-8">
+          <div className="text-center mb-8 sm:mb-12">
+            <h2 className="text-3xl sm:text-4xl font-bold text-gray-900 mb-4">New Arrivals</h2>
+            <p className="text-gray-600 max-w-2xl mx-auto px-4">Discover our latest collection of premium hair extensions</p>
+          </div>
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-6 sm:gap-8">
+            {products.filter(p => p.isNew).map((product) => (
+              <div key={product.id} className="group cursor-pointer rounded-2xl shadow-lg overflow-hidden bg-white hover:shadow-2xl transition-all duration-300" onClick={() => { setSelectedProduct(product); setSelectedColor(""); setSelectedSize(""); setCurrentPage("product"); }}>
+                <div className="relative overflow-hidden">
+                  <img src={product.image} alt={product.name} className="w-full h-64 sm:h-80 object-cover group-hover:scale-110 transition-transform duration-500" />
+                  <div className="absolute top-4 right-4 bg-green-600 text-white px-3 py-1 rounded-full text-xs font-semibold flex items-center gap-1">
+                    <Sparkles className="w-3 h-3 fill-current" /> New
+                  </div>
+                  <div className="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent"></div>
+                  <div className="absolute bottom-0 left-0 right-0 p-4 sm:p-6">
+                    <h3 className="text-xl sm:text-2xl font-bold text-white mb-2 truncate">{product.name}</h3>
+                    <p className="text-white text-lg font-semibold mb-2">₹{product.price.toLocaleString()}</p>
+                    <button className="text-white underline hover:no-underline text-sm sm:text-base">Shop Now →</button>
+                  </div>
+                </div>
+              </div>
+            ))}
+          </div>
+          <div className="text-center mt-8">
+            <button
+              onClick={() => navigateTo("newarrivals")}
+              className="bg-rose-600 text-white px-6 py-3 rounded-lg font-semibold hover:bg-rose-700 transition"
+            >
+              View All New Arrivals
+            </button>
           </div>
         </div>
       </section>
@@ -501,6 +583,30 @@ function DeeceeHairApp(): React.ReactElement {
         {currentPage === "privacy" && <PrivacyPolicyPage />}
         {currentPage === "about" && <AboutUsPage />}
         {currentPage === "profile" && <ProfilePage onNavigateToLogin={() => setShowLogin(true)} />}
+        {currentPage === "bestsellers" && (
+          <BestsellersPage
+            products={products}
+            onProductClick={(product) => {
+              setSelectedProduct(product);
+              setSelectedColor("");
+              setSelectedSize("");
+              setCurrentPage("product");
+            }}
+            onBackToHome={() => navigateTo("home")}
+          />
+        )}
+        {currentPage === "newarrivals" && (
+          <NewArrivalsPage
+            products={products}
+            onProductClick={(product) => {
+              setSelectedProduct(product);
+              setSelectedColor("");
+              setSelectedSize("");
+              setCurrentPage("product");
+            }}
+            onBackToHome={() => navigateTo("home")}
+          />
+        )}
       </main>
 
       {/* Login Modal */}
