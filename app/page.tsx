@@ -1,8 +1,8 @@
 "use client"
 
-import React, { useEffect, useMemo, useState, useRef, useCallback } from "react";
+import React, { useEffect, useState, useRef, useCallback } from "react";
 // Router functionality handled with native History API
-import { Heart, User, Search, ShoppingCart, Menu, X, Star, Truck, Shield, CreditCard, ChevronLeft, ChevronRight, Calendar, Pause, Play, VolumeX, Volume2, Sparkles, Instagram, Facebook, Youtube, Mail, MessageCircle, Globe } from "lucide-react";
+import { Heart, User, Search, ShoppingCart, Menu, X, Star, Truck, Shield, ChevronLeft, ChevronRight, Calendar, Pause, Play, VolumeX, Volume2, Sparkles, Instagram, Facebook, Youtube, Mail, MessageCircle, Globe } from "lucide-react";
 import ShopPage from './pages/ShopPage';
 import ProductPage from './pages/ProductPage';
 import CartPage from './pages/CartPage';
@@ -18,7 +18,7 @@ import SignupPage from './pages/SignupPage';
 import VerificationPage from './pages/VerificationPage';
 import { AuthProvider, useAuth } from './contexts/AuthContext';
 import { Product, CartItem, Appointment, Page, ReelVideo } from './types';
-import { IconButton, FeatureCard, PromoSlider } from './components/common';
+import { IconButton, PromoSlider } from './components/common';
 import { products, promoMessages, heroSlides, reelsVideos } from './constants/products';
 
 const VideoReelCard = ({ video }: { video: ReelVideo }) => {
@@ -144,42 +144,45 @@ function DeeceeHairApp(): React.ReactElement {
     return () => window.removeEventListener('scroll', handleScroll);
   }, []);
 
-  // Sync current page with URL pathname on mount and pathname changes
-  useEffect(() => {
-    const routeToPage: Record<string, Page> = {
-      '/': 'home',
-      '/shop': 'shop',
-      '/cart': 'cart',
-      '/contact': 'contact',
-      '/appointment': 'appointment',
-      '/product': 'product',
-      '/terms': 'terms',
-      '/privacy': 'privacy',
-      '/about': 'about',
-      '/profile': 'profile'
-    };
+  // Route mapping constants
+  const ROUTE_TO_PAGE: Record<string, Page> = {
+    '/': 'home',
+    '/shop': 'shop',
+    '/cart': 'cart',
+    '/contact': 'contact',
+    '/appointment': 'appointment',
+    '/product': 'product',
+    '/terms': 'terms',
+    '/privacy': 'privacy',
+    '/about': 'about',
+    '/profile': 'profile',
+    '/bestsellers': 'bestsellers'
+  };
 
-    const page = routeToPage[window.location.pathname] || 'home';
+  const PAGE_TO_ROUTE: Record<Page, string> = {
+    home: '/',
+    shop: '/shop',
+    cart: '/cart',
+    contact: '/contact',
+    appointment: '/appointment',
+    product: '/product',
+    terms: '/terms',
+    privacy: '/privacy',
+    about: '/about',
+    profile: '/profile',
+    bestsellers: '/bestsellers'
+  };
+
+  // Sync current page with URL pathname on mount
+  useEffect(() => {
+    const page = ROUTE_TO_PAGE[window.location.pathname] || 'home';
     setCurrentPage(page);
   }, []);
 
   // Handle browser back/forward buttons
   useEffect(() => {
     const handlePopState = () => {
-      const routeToPage: Record<string, Page> = {
-        '/': 'home',
-        '/shop': 'shop',
-        '/cart': 'cart',
-        '/contact': 'contact',
-        '/appointment': 'appointment',
-        '/product': 'product',
-        '/terms': 'terms',
-        '/privacy': 'privacy',
-        '/about': 'about',
-        '/profile': 'profile'
-      };
-
-      const page = routeToPage[window.location.pathname] || 'home';
+      const page = ROUTE_TO_PAGE[window.location.pathname] || 'home';
       setCurrentPage(page);
     };
 
@@ -199,23 +202,8 @@ function DeeceeHairApp(): React.ReactElement {
     setMobileMenuOpen(false);
 
     // Update URL based on page without navigation
-    const pageRoutes: Record<Page, string> = {
-      home: '/',
-      shop: '/shop',
-      cart: '/cart',
-      contact: '/contact',
-      appointment: '/appointment',
-      product: '/product',
-      terms: '/terms',
-      privacy: '/privacy',
-      about: '/about',
-      profile: '/profile',
-      bestsellers: '/bestsellers'
-    };
-
-    // Use history API to update URL without triggering navigation
     if (typeof window !== 'undefined') {
-      window.history.pushState({}, '', pageRoutes[page]);
+      window.history.pushState({}, '', PAGE_TO_ROUTE[page]);
     }
   }, [isAuthenticated]);
 

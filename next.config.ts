@@ -14,6 +14,7 @@ const nextConfig: NextConfig = {
       { source: "/privacy", destination: "/" },
       { source: "/about", destination: "/" },
       { source: "/profile", destination: "/" },
+      { source: "/bestsellers", destination: "/" },
     ];
   },
 };
