@@ -8,12 +8,14 @@ type BestsellersPageProps = {
   products: Product[];
   onProductClick: (product: Product) => void;
   onBackToHome: () => void;
+  convertPrice: (price: number) => string;
 };
 
 export default function BestsellersPage({
   products,
   onProductClick,
-  onBackToHome
+  onBackToHome,
+  convertPrice
 }: BestsellersPageProps): React.ReactElement {
   const bestsellers = products.filter(p => p.isBestseller);
 
@@ -62,7 +64,7 @@ export default function BestsellersPage({
                     {product.name}
                   </h3>
                   <p className="text-white text-lg font-semibold mb-2">
-                    ₹{product.price.toLocaleString()}
+                    {convertPrice(product.price)}
                   </p>
                   <div className="flex flex-wrap gap-1 mb-2">
                     {product.colors.slice(0, 3).map((color, idx) => (

@@ -11,6 +11,7 @@ type ProductPageProps = {
   setSelectedSize: (size: string) => void;
   onAddToCart: () => void;
   onBackToShop: () => void;
+  convertPrice: (price: number) => string;
 };
 
 export default function ProductPage({
@@ -20,7 +21,8 @@ export default function ProductPage({
   selectedSize,
   setSelectedSize,
   onAddToCart,
-  onBackToShop
+  onBackToShop,
+  convertPrice
 }: ProductPageProps): React.ReactElement {
   return (
     <div className="w-full px-4 sm:px-6 lg:px-8 py-8 sm:py-12">
@@ -31,7 +33,7 @@ export default function ProductPage({
         <img src={product.image} alt={product.name} className="w-full md:w-1/2 rounded-2xl object-cover h-64 sm:h-auto shadow-md" />
         <div className="flex flex-col flex-1">
           <h1 className="text-2xl sm:text-3xl font-bold text-gray-900 mb-6 truncate">{product.name}</h1>
-          <p className="text-rose-600 text-2xl font-extrabold mb-8">₹{product.price.toLocaleString()}</p>
+          <p className="text-rose-600 text-2xl font-extrabold mb-8">{convertPrice(product.price)}</p>
 
           {/* Product Description */}
           {product.description && (

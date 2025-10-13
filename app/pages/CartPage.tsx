@@ -8,9 +8,10 @@ type CartPageProps = {
   onUpdateQuantity: (index: number, delta: number) => void;
   onRemoveFromCart: (index: number) => void;
   onContinueShopping: () => void;
+  convertPrice: (price: number) => string;
 };
 
-export default function CartPage({ cart, onUpdateQuantity, onRemoveFromCart, onContinueShopping }: CartPageProps): React.ReactElement {
+export default function CartPage({ cart, onUpdateQuantity, onRemoveFromCart, onContinueShopping, convertPrice }: CartPageProps): React.ReactElement {
   const getTotalPrice = () => cart.reduce((sum, item) => sum + item.product.price * item.quantity, 0);
 
   return (
@@ -32,7 +33,7 @@ export default function CartPage({ cart, onUpdateQuantity, onRemoveFromCart, onC
                 <h3 className="text-lg font-semibold text-gray-900 truncate">{item.product.name}</h3>
                 <p className="text-gray-700 text-sm">Color: {item.color}</p>
                 <p className="text-gray-700 text-sm">Size: {item.size}</p>
-                <p className="text-rose-600 font-semibold text-lg">₹{item.product.price.toLocaleString()}</p>
+                <p className="text-rose-600 font-semibold text-lg">{convertPrice(item.product.price)}</p>
               </div>
               <div className="flex items-center justify-between w-full sm:w-auto mt-6 sm:mt-0">
                 <div className="flex items-center space-x-3">
@@ -50,7 +51,7 @@ export default function CartPage({ cart, onUpdateQuantity, onRemoveFromCart, onC
               </div>
             </div>
           ))}
-          <div className="text-right text-xl font-semibold text-gray-900">Total: ₹{getTotalPrice().toLocaleString()}</div>
+          <div className="text-right text-xl font-semibold text-gray-900">Total: {convertPrice(getTotalPrice())}</div>
           <button onClick={() => alert("Checkout functionality not implemented.")} className="w-full sm:w-auto bg-rose-600 text-white px-8 py-3 rounded-2xl font-semibold hover:bg-rose-700 transition shadow-lg">
             Proceed to Checkout
           </button>

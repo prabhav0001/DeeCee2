@@ -2,7 +2,7 @@
 
 import React, { useEffect, useMemo, useState, useRef, useCallback } from "react";
 // Router functionality handled with native History API
-import { Heart, User, Search, ShoppingCart, Menu, X, Star, Truck, Shield, CreditCard, ChevronLeft, ChevronRight, Calendar, Pause, Play, VolumeX, Volume2, Sparkles, Instagram, Facebook, Youtube, Mail, MessageCircle } from "lucide-react";
+import { Heart, User, Search, ShoppingCart, Menu, X, Star, Truck, Shield, CreditCard, ChevronLeft, ChevronRight, Calendar, Pause, Play, VolumeX, Volume2, Sparkles, Instagram, Facebook, Youtube, Mail, MessageCircle, Globe } from "lucide-react";
 import ShopPage from './pages/ShopPage';
 import ProductPage from './pages/ProductPage';
 import CartPage from './pages/CartPage';
@@ -104,6 +104,26 @@ function DeeceeHairApp(): React.ReactElement {
   const [showSignup, setShowSignup] = useState(false);
   const [showVerification, setShowVerification] = useState(false);
   const [showPromo, setShowPromo] = useState(true);
+  const [selectedCurrency, setSelectedCurrency] = useState<string>("INR");
+  const [showCurrencyDropdown, setShowCurrencyDropdown] = useState(false);
+
+  // Currency data with exchange rates (relative to INR)
+  const currencies = {
+    INR: { symbol: "₹", rate: 1, name: "India (INR)" },
+    USD: { symbol: "$", rate: 0.012, name: "USA (USD)" },
+    EUR: { symbol: "€", rate: 0.011, name: "Europe (EUR)" },
+    GBP: { symbol: "£", rate: 0.0095, name: "UK (GBP)" },
+    AED: { symbol: "د.إ", rate: 0.044, name: "UAE (AED)" },
+    AUD: { symbol: "A$", rate: 0.018, name: "Australia (AUD)" },
+    CAD: { symbol: "C$", rate: 0.016, name: "Canada (CAD)" },
+    SGD: { symbol: "S$", rate: 0.016, name: "Singapore (SGD)" },
+  };
+
+  // Function to convert price
+  const convertPrice = useCallback((priceInINR: number): string => {
+    const converted = priceInINR * currencies[selectedCurrency as keyof typeof currencies].rate;
+    return `${currencies[selectedCurrency as keyof typeof currencies].symbol}${Math.round(converted).toLocaleString()}`;
+  }, [selectedCurrency]);
 
   useEffect(() => {
     const interval = setInterval(() => setCurrentSlide((prev) => (prev + 1) % heroSlides.length), 5000);
@@ -289,6 +309,36 @@ function DeeceeHairApp(): React.ReactElement {
             </nav>
           </div>
           <div className="flex items-center space-x-2 sm:space-x-4">
+            {/* Currency Selector */}
+            <div className="relative">
+              <button
+                onClick={() => setShowCurrencyDropdown(!showCurrencyDropdown)}
+                className="flex items-center space-x-1 px-3 py-2 text-gray-700 hover:text-rose-600 hover:bg-rose-50 rounded-lg transition-all duration-200 focus:outline-none group"
+              >
+                <Globe className="w-4 h-4 group-hover:rotate-12 transition-transform" />
+                <span className="text-sm font-medium hidden sm:inline">{selectedCurrency}</span>
+              </button>
+              
+              {showCurrencyDropdown && (
+                <div className="absolute right-0 mt-2 w-48 bg-white border border-gray-200 rounded-lg shadow-xl z-50 py-2 animate-slideDown">
+                  {Object.entries(currencies).map(([code, data]) => (
+                    <button
+                      key={code}
+                      onClick={() => {
+                        setSelectedCurrency(code);
+                        setShowCurrencyDropdown(false);
+                      }}
+                      className={`w-full text-left px-4 py-2 text-sm hover:bg-rose-50 hover:text-rose-600 transition-colors ${
+                        selectedCurrency === code ? 'bg-rose-50 text-rose-600 font-medium' : 'text-gray-700'
+                      }`}
+                    >
+                      <span className="font-medium">{data.symbol}</span> {data.name}
+                    </button>
+                  ))}
+                </div>
+              )}
+            </div>
+
             <div className="hidden sm:flex items-center space-x-2">
               <IconButton icon={Heart} />
               <IconButton
@@ -359,7 +409,7 @@ function DeeceeHairApp(): React.ReactElement {
         </div>
       )}
     </header>
-  ), [cart.length, mobileMenuOpen, navigateTo, searchOpen, isAuthenticated]);
+  ), [cart.length, mobileMenuOpen, navigateTo, searchOpen, isAuthenticated, selectedCurrency, showCurrencyDropdown]);
 
   const HomePage = useCallback(() => (
     <div className="w-full">
@@ -417,7 +467,7 @@ function DeeceeHairApp(): React.ReactElement {
                   <div className="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent"></div>
                   <div className="absolute bottom-0 left-0 right-0 p-4 sm:p-6">
                     <h3 className="text-xl sm:text-2xl font-bold text-white mb-2 truncate">{product.name}</h3>
-                    <p className="text-white text-lg font-semibold mb-2">₹{product.price.toLocaleString()}</p>
+                    <p className="text-white text-lg font-semibold mb-2">{convertPrice(product.price)}</p>
                     <button className="text-white underline hover:no-underline text-sm sm:text-base">Shop Now →</button>
                   </div>
                 </div>
@@ -452,7 +502,7 @@ function DeeceeHairApp(): React.ReactElement {
                   <div className="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent"></div>
                   <div className="absolute bottom-0 left-0 right-0 p-4 sm:p-6">
                     <h3 className="text-xl sm:text-2xl font-bold text-white mb-2 truncate">{product.name}</h3>
-                    <p className="text-white text-lg font-semibold mb-2">₹{product.price.toLocaleString()}</p>
+                    <p className="text-white text-lg font-semibold mb-2">{convertPrice(product.price)}</p>
                     <button className="text-white underline hover:no-underline text-sm sm:text-base">Shop Now →</button>
                   </div>
                 </div>
@@ -501,7 +551,7 @@ function DeeceeHairApp(): React.ReactElement {
                   <div className="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent"></div>
                   <div className="absolute bottom-0 left-0 right-0 p-4 sm:p-6">
                     <h3 className="text-xl sm:text-2xl font-bold text-white mb-2 truncate">{product.name}</h3>
-                    <p className="text-white text-lg font-semibold mb-2">₹{product.price.toLocaleString()}</p>
+                    <p className="text-white text-lg font-semibold mb-2">{convertPrice(product.price)}</p>
                     <button className="text-white underline hover:no-underline text-sm sm:text-base">Shop Now →</button>
                   </div>
                 </div>
@@ -549,7 +599,7 @@ function DeeceeHairApp(): React.ReactElement {
         </div>
       </section>
     </div>
-  ), [currentSlide, navigateTo]);
+  ), [currentSlide, navigateTo, convertPrice]);
 
   return (
     <div className="min-h-screen bg-white text-gray-900 font-sans">
@@ -583,6 +633,7 @@ function DeeceeHairApp(): React.ReactElement {
               setSelectedSize("");
               setCurrentPage("product");
             }}
+            convertPrice={convertPrice}
           />
         )}
         {currentPage === "product" && selectedProduct && (
@@ -594,6 +645,7 @@ function DeeceeHairApp(): React.ReactElement {
             setSelectedSize={setSelectedSize}
             onAddToCart={addToCart}
             onBackToShop={() => setCurrentPage("shop")}
+            convertPrice={convertPrice}
           />
         )}
         {currentPage === "cart" && (
@@ -602,6 +654,7 @@ function DeeceeHairApp(): React.ReactElement {
             onUpdateQuantity={updateQuantity}
             onRemoveFromCart={removeFromCart}
             onContinueShopping={() => navigateTo("shop")}
+            convertPrice={convertPrice}
           />
         )}
         {currentPage === "contact" && <ContactPage />}
@@ -626,6 +679,7 @@ function DeeceeHairApp(): React.ReactElement {
               setCurrentPage("product");
             }}
             onBackToHome={() => navigateTo("home")}
+            convertPrice={convertPrice}
           />
         )}
       </main>
