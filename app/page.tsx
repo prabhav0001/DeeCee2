@@ -104,10 +104,25 @@ function DeeceeHairApp(): React.ReactElement {
   const [showLogin, setShowLogin] = useState(false);
   const [showSignup, setShowSignup] = useState(false);
   const [showVerification, setShowVerification] = useState(false);
+  const [showPromo, setShowPromo] = useState(true);
 
   useEffect(() => {
     const interval = setInterval(() => setCurrentSlide((prev) => (prev + 1) % heroSlides.length), 5000);
     return () => clearInterval(interval);
+  }, []);
+
+  // Handle scroll to hide/show promo slider
+  useEffect(() => {
+    const handleScroll = () => {
+      if (window.scrollY > 50) {
+        setShowPromo(false);
+      } else {
+        setShowPromo(true);
+      }
+    };
+
+    window.addEventListener('scroll', handleScroll);
+    return () => window.removeEventListener('scroll', handleScroll);
   }, []);
 
   // Sync current page with URL pathname on mount and pathname changes
@@ -219,7 +234,7 @@ function DeeceeHairApp(): React.ReactElement {
   }, []);
 
   const Header = useCallback(() => (
-    <header className="bg-white border-b border-gray-200 sticky top-0 z-50 shadow-md backdrop-blur-sm bg-white/90">
+    <header className="bg-white border-b border-gray-200 shadow-md backdrop-blur-sm bg-white/95">
       <div className="w-full px-4 sm:px-6 lg:px-8">
         <div className="flex items-center justify-between h-16">
           <div className="flex items-center">
@@ -325,7 +340,7 @@ function DeeceeHairApp(): React.ReactElement {
   ), [cart.length, mobileMenuOpen, navigateTo, searchOpen, isAuthenticated]);
 
   const HomePage = useCallback(() => (
-    <div className="w-full overflow-x-hidden">
+    <div className="w-full">
       <section className="relative min-h-screen flex items-center justify-center overflow-hidden">
         {heroSlides.map((slide, index) => (
           <div key={index} className={`absolute inset-0 transition-opacity duration-1000 ease-in-out ${index === currentSlide ? "opacity-100 z-10" : "opacity-0 z-0"}`} style={{ backgroundImage: `url('${slide.image}')`, backgroundSize: "cover", backgroundPosition: "center" }} />
@@ -534,10 +549,25 @@ function DeeceeHairApp(): React.ReactElement {
   ), [currentSlide, navigateTo]);
 
   return (
-    <div className="min-h-screen bg-white text-gray-900 font-sans overflow-x-hidden">
-      <PromoSlider messages={promoMessages} />
-      <Header />
-      <main className="w-full overflow-x-hidden">
+    <div className="min-h-screen bg-white text-gray-900 font-sans">
+      {/* Fixed Header Wrapper with PromoSlider that hides on scroll */}
+      <div className="fixed top-0 left-0 right-0 z-[9999] w-full">
+        {/* PromoSlider with smooth transition */}
+        <div
+          className={`transition-all duration-300 ease-in-out overflow-hidden ${
+            showPromo ? 'max-h-20 opacity-100' : 'max-h-0 opacity-0'
+          }`}
+        >
+          <PromoSlider messages={promoMessages} />
+        </div>
+        {/* Header always visible */}
+        <div className="bg-white shadow-sm">
+          <Header />
+        </div>
+      </div>
+      {/* Dynamic spacer - changes based on promo visibility */}
+      <div className={`transition-all duration-300 ${showPromo ? 'h-28' : 'h-16'}`}></div>
+      <main className="w-full">
         {currentPage === "home" && <HomePage />}
         {currentPage === "shop" && (
           <ShopPage
