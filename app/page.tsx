@@ -238,7 +238,7 @@ function DeeceeHairApp(): React.ReactElement {
           <div className="flex items-center">
             <button
               onClick={() => navigateTo("home")}
-              className="flex items-center space-x-2 focus:outline-none focus:ring-2 focus:ring-rose-600 rounded px-2 py-1 transition-all duration-200 hover:scale-105 active:scale-95"
+              className="flex items-center space-x-2 focus:outline-none rounded px-2 py-1 transition-all duration-200 hover:scale-105 active:scale-95"
             >
               <span className="text-xl sm:text-2xl font-bold text-rose-600 select-none">DEECEE</span>
               <span className="text-xl sm:text-2xl font-light text-gray-800 select-none">HAIR</span>
@@ -246,42 +246,42 @@ function DeeceeHairApp(): React.ReactElement {
             <nav className="hidden lg:flex space-x-6 ml-8">
               <button
                 onClick={() => navigateTo("bestsellers")}
-                className="text-sm font-medium text-gray-700 hover:text-rose-600 transition-all duration-200 focus:outline-none focus:ring-2 focus:ring-rose-600 rounded px-3 py-2 relative group hover:scale-105 active:scale-95"
+                className="text-sm font-medium text-gray-700 hover:text-rose-600 transition-all duration-200 focus:outline-none rounded px-3 py-2 relative group hover:scale-105 active:scale-95"
               >
                 Bestsellers
                 <span className="absolute bottom-0 left-0 w-0 h-0.5 bg-rose-600 group-hover:w-full transition-all duration-300"></span>
               </button>
               <button
                 onClick={() => navigateTo("shop")}
-                className="text-sm font-medium text-gray-700 hover:text-rose-600 transition-all duration-200 focus:outline-none focus:ring-2 focus:ring-rose-600 rounded px-3 py-2 relative group hover:scale-105 active:scale-95"
+                className="text-sm font-medium text-gray-700 hover:text-rose-600 transition-all duration-200 focus:outline-none rounded px-3 py-2 relative group hover:scale-105 active:scale-95"
               >
                 Shop for Women
                 <span className="absolute bottom-0 left-0 w-0 h-0.5 bg-rose-600 group-hover:w-full transition-all duration-300"></span>
               </button>
               <button
                 onClick={() => { setFilterCategory("mans"); setCurrentPage("shop"); }}
-                className="text-sm font-medium text-gray-700 hover:text-rose-600 transition-all duration-200 focus:outline-none focus:ring-2 focus:ring-rose-600 rounded px-3 py-2 relative group hover:scale-105 active:scale-95"
+                className="text-sm font-medium text-gray-700 hover:text-rose-600 transition-all duration-200 focus:outline-none rounded px-3 py-2 relative group hover:scale-105 active:scale-95"
               >
                 Shop for Men
                 <span className="absolute bottom-0 left-0 w-0 h-0.5 bg-rose-600 group-hover:w-full transition-all duration-300"></span>
               </button>
               <button
                 onClick={() => navigateTo("appointment")}
-                className="text-sm font-medium text-gray-700 hover:text-rose-600 transition-all duration-200 focus:outline-none focus:ring-2 focus:ring-rose-600 rounded px-3 py-2 relative group hover:scale-105 active:scale-95"
+                className="text-sm font-medium text-gray-700 hover:text-rose-600 transition-all duration-200 focus:outline-none rounded px-3 py-2 relative group hover:scale-105 active:scale-95"
               >
                 Book Appointment
                 <span className="absolute bottom-0 left-0 w-0 h-0.5 bg-rose-600 group-hover:w-full transition-all duration-300"></span>
               </button>
               <button
                 onClick={() => navigateTo("about")}
-                className="text-sm font-medium text-gray-700 hover:text-rose-600 transition-all duration-200 focus:outline-none focus:ring-2 focus:ring-rose-600 rounded px-3 py-2 relative group hover:scale-105 active:scale-95"
+                className="text-sm font-medium text-gray-700 hover:text-rose-600 transition-all duration-200 focus:outline-none rounded px-3 py-2 relative group hover:scale-105 active:scale-95"
               >
                 About Us
                 <span className="absolute bottom-0 left-0 w-0 h-0.5 bg-rose-600 group-hover:w-full transition-all duration-300"></span>
               </button>
               <button
                 onClick={() => navigateTo("contact")}
-                className="text-sm font-medium text-gray-700 hover:text-rose-600 transition-all duration-200 focus:outline-none focus:ring-2 focus:ring-rose-600 rounded px-3 py-2 relative group hover:scale-105 active:scale-95"
+                className="text-sm font-medium text-gray-700 hover:text-rose-600 transition-all duration-200 focus:outline-none rounded px-3 py-2 relative group hover:scale-105 active:scale-95"
               >
                 Contact Us
                 <span className="absolute bottom-0 left-0 w-0 h-0.5 bg-rose-600 group-hover:w-full transition-all duration-300"></span>
@@ -306,7 +306,7 @@ function DeeceeHairApp(): React.ReactElement {
             <IconButton icon={ShoppingCart} onClick={() => navigateTo("cart")} badge={cart.length} />
             <button
               onClick={() => setMobileMenuOpen((v) => !v)}
-              className="lg:hidden p-2 text-gray-700 hover:text-rose-600 focus:outline-none focus:ring-2 focus:ring-rose-600 rounded-lg hover:bg-rose-50 transition-all duration-200 active:scale-90"
+              className="lg:hidden p-2 text-gray-700 hover:text-rose-600 focus:outline-none rounded-lg hover:bg-rose-50 transition-all duration-200 active:scale-90"
             >
               {mobileMenuOpen ? <X className="w-6 h-6 transform rotate-0 transition-transform duration-200" /> : <Menu className="w-6 h-6 transform rotate-0 transition-transform duration-200" />}
             </button>
@@ -328,31 +328,31 @@ function DeeceeHairApp(): React.ReactElement {
                 setShowLogin(true);
               }
               setMobileMenuOpen(false);
-            }} className="text-sm font-medium text-gray-700 hover:text-rose-600 hover:bg-rose-50 transition-all duration-200 text-left focus:outline-none focus:ring-2 focus:ring-rose-600 rounded-lg px-4 py-3 active:scale-95 transform">
+            }} className="text-sm font-medium text-gray-700 hover:text-rose-600 hover:bg-rose-50 transition-all duration-200 text-left focus:outline-none rounded-lg px-4 py-3 active:scale-95 transform">
               My Profile
             </button>
-            <button onClick={() => { navigateTo("bestsellers"); setMobileMenuOpen(false); }} className="text-sm font-medium text-gray-700 hover:text-rose-600 hover:bg-rose-50 transition-all duration-200 text-left focus:outline-none focus:ring-2 focus:ring-rose-600 rounded-lg px-4 py-3 active:scale-95 transform">
+            <button onClick={() => { navigateTo("bestsellers"); setMobileMenuOpen(false); }} className="text-sm font-medium text-gray-700 hover:text-rose-600 hover:bg-rose-50 transition-all duration-200 text-left focus:outline-none rounded-lg px-4 py-3 active:scale-95 transform">
               Bestsellers
             </button>
-            <button onClick={() => { navigateTo("shop"); setMobileMenuOpen(false); }} className="text-sm font-medium text-gray-700 hover:text-rose-600 hover:bg-rose-50 transition-all duration-200 text-left focus:outline-none focus:ring-2 focus:ring-rose-600 rounded-lg px-4 py-3 active:scale-95 transform">
+            <button onClick={() => { navigateTo("shop"); setMobileMenuOpen(false); }} className="text-sm font-medium text-gray-700 hover:text-rose-600 hover:bg-rose-50 transition-all duration-200 text-left focus:outline-none rounded-lg px-4 py-3 active:scale-95 transform">
               Shop for Women
             </button>
-            <button onClick={() => { setFilterCategory("mans"); setCurrentPage("shop"); setMobileMenuOpen(false); }} className="text-sm font-medium text-gray-700 hover:text-rose-600 hover:bg-rose-50 transition-all duration-200 text-left focus:outline-none focus:ring-2 focus:ring-rose-600 rounded-lg px-4 py-3 active:scale-95 transform">
+            <button onClick={() => { setFilterCategory("mans"); setCurrentPage("shop"); setMobileMenuOpen(false); }} className="text-sm font-medium text-gray-700 hover:text-rose-600 hover:bg-rose-50 transition-all duration-200 text-left focus:outline-none rounded-lg px-4 py-3 active:scale-95 transform">
               Shop for Men
             </button>
-            <button onClick={() => { navigateTo("appointment"); setMobileMenuOpen(false); }} className="text-sm font-medium text-gray-700 hover:text-rose-600 hover:bg-rose-50 transition-all duration-200 text-left focus:outline-none focus:ring-2 focus:ring-rose-600 rounded-lg px-4 py-3 active:scale-95 transform">
+            <button onClick={() => { navigateTo("appointment"); setMobileMenuOpen(false); }} className="text-sm font-medium text-gray-700 hover:text-rose-600 hover:bg-rose-50 transition-all duration-200 text-left focus:outline-none rounded-lg px-4 py-3 active:scale-95 transform">
               Book Appointment
             </button>
-            <button onClick={() => { navigateTo("about"); setMobileMenuOpen(false); }} className="text-sm font-medium text-gray-700 hover:text-rose-600 hover:bg-rose-50 transition-all duration-200 text-left focus:outline-none focus:ring-2 focus:ring-rose-600 rounded-lg px-4 py-3 active:scale-95 transform">
+            <button onClick={() => { navigateTo("about"); setMobileMenuOpen(false); }} className="text-sm font-medium text-gray-700 hover:text-rose-600 hover:bg-rose-50 transition-all duration-200 text-left focus:outline-none rounded-lg px-4 py-3 active:scale-95 transform">
               About Us
             </button>
-            <button onClick={() => { navigateTo("contact"); setMobileMenuOpen(false); }} className="text-sm font-medium text-gray-700 hover:text-rose-600 hover:bg-rose-50 transition-all duration-200 text-left focus:outline-none focus:ring-2 focus:ring-rose-600 rounded-lg px-4 py-3 active:scale-95 transform">
+            <button onClick={() => { navigateTo("contact"); setMobileMenuOpen(false); }} className="text-sm font-medium text-gray-700 hover:text-rose-600 hover:bg-rose-50 transition-all duration-200 text-left focus:outline-none rounded-lg px-4 py-3 active:scale-95 transform">
               Contact Us
             </button>
-            <button onClick={() => { navigateTo("terms"); setMobileMenuOpen(false); }} className="text-sm font-medium text-gray-700 hover:text-rose-600 hover:bg-rose-50 transition-all duration-200 text-left focus:outline-none focus:ring-2 focus:ring-rose-600 rounded-lg px-4 py-3 active:scale-95 transform">
+            <button onClick={() => { navigateTo("terms"); setMobileMenuOpen(false); }} className="text-sm font-medium text-gray-700 hover:text-rose-600 hover:bg-rose-50 transition-all duration-200 text-left focus:outline-none rounded-lg px-4 py-3 active:scale-95 transform">
               Terms & Conditions
             </button>
-            <button onClick={() => { navigateTo("privacy"); setMobileMenuOpen(false); }} className="text-sm font-medium text-gray-700 hover:text-rose-600 hover:bg-rose-50 transition-all duration-200 text-left focus:outline-none focus:ring-2 focus:ring-rose-600 rounded-lg px-4 py-3 active:scale-95 transform">
+            <button onClick={() => { navigateTo("privacy"); setMobileMenuOpen(false); }} className="text-sm font-medium text-gray-700 hover:text-rose-600 hover:bg-rose-50 transition-all duration-200 text-left focus:outline-none rounded-lg px-4 py-3 active:scale-95 transform">
               Privacy Policy
             </button>
           </nav>
