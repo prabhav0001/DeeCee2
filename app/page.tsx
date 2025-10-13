@@ -318,7 +318,7 @@ function DeeceeHairApp(): React.ReactElement {
                 <Globe className="w-4 h-4 group-hover:rotate-12 transition-transform" />
                 <span className="text-sm font-medium hidden sm:inline">{selectedCurrency}</span>
               </button>
-              
+
               {showCurrencyDropdown && (
                 <div className="absolute right-0 mt-2 w-48 bg-white border border-gray-200 rounded-lg shadow-xl z-50 py-2 animate-slideDown">
                   {Object.entries(currencies).map(([code, data]) => (

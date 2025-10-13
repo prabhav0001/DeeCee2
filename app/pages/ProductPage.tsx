@@ -1,6 +1,6 @@
 "use client"
 
-import React from "react";
+import React, { useState } from "react";
 import { Product } from "@/app/types";
 
 type ProductPageProps = {
@@ -24,13 +24,53 @@ export default function ProductPage({
   onBackToShop,
   convertPrice
 }: ProductPageProps): React.ReactElement {
+  const [selectedImageIndex, setSelectedImageIndex] = useState(0);
+
+  // Create array of images - if product has images array, use it, otherwise use main image twice
+  const productImages = product.images && product.images.length > 0
+    ? product.images
+    : [product.image, product.image];
+
   return (
     <div className="w-full px-4 sm:px-6 lg:px-8 py-8 sm:py-12">
-      <button onClick={onBackToShop} className="mb-6 text-rose-600 hover:underline focus:outline-none focus:ring-2 focus:ring-rose-600 rounded">
+      <button onClick={onBackToShop} className="mb-6 text-rose-600 hover:underline focus:outline-none rounded">
         ← Back to Shop
       </button>
       <div className="flex flex-col md:flex-row gap-8 sm:gap-10">
-        <img src={product.image} alt={product.name} className="w-full md:w-1/2 rounded-2xl object-cover h-64 sm:h-auto shadow-md" />
+        {/* Product Images Section */}
+        <div className="w-full md:w-1/2">
+          {/* Main Image Display */}
+          <div className="mb-4 rounded-2xl overflow-hidden shadow-lg">
+            <img
+              src={productImages[selectedImageIndex]}
+              alt={`${product.name} - View ${selectedImageIndex + 1}`}
+              className="w-full h-[400px] sm:h-[500px] object-cover"
+            />
+          </div>
+
+          {/* Thumbnail Images */}
+          <div className="grid grid-cols-2 gap-4">
+            {productImages.slice(0, 2).map((img, index) => (
+              <button
+                key={index}
+                onClick={() => setSelectedImageIndex(index)}
+                className={`rounded-xl overflow-hidden transition-all duration-300 ${
+                  selectedImageIndex === index
+                    ? 'ring-4 ring-rose-600 shadow-xl transform scale-105'
+                    : 'ring-2 ring-gray-200 hover:ring-rose-300 shadow-md'
+                }`}
+              >
+                <img
+                  src={img}
+                  alt={`${product.name} - Thumbnail ${index + 1}`}
+                  className="w-full h-[120px] sm:h-[150px] object-cover"
+                />
+              </button>
+            ))}
+          </div>
+        </div>
+
+        {/* Product Details Section */}
         <div className="flex flex-col flex-1">
           <h1 className="text-2xl sm:text-3xl font-bold text-gray-900 mb-6 truncate">{product.name}</h1>
           <p className="text-rose-600 text-2xl font-extrabold mb-8">{convertPrice(product.price)}</p>

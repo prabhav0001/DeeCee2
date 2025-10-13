@@ -6,7 +6,11 @@ export const products: Product[] = [
     id: 1,
     name: "Bulk Hair Bundle",
     price: 13310,
-    image: "https://raw.githubusercontent.com/prabhav0001/deecee-src/refs/heads/main/bulk-hair-bundle.jpg",
+    image: "https://raw.githubusercontent.com/prabhav0001/deecee-src/refs/heads/main/bulk-hair-bundle2.png",
+    images: [
+      "https://raw.githubusercontent.com/prabhav0001/deecee-src/refs/heads/main/bulk-hair-bundle2.png",
+      "https://raw.githubusercontent.com/prabhav0001/deecee-src/refs/heads/main/bulk-hair-bundle.jpg"
+    ],
     colors: ["Black", "Brown", "Blonde", "Auburn"],
     sizes: ['14"', '18"', '22"', '26"'],
     category: "straight",
@@ -18,6 +22,10 @@ export const products: Product[] = [
     name: "Machine Weft Bundle",
     price: 12070,
     image: "https://raw.githubusercontent.com/prabhav0001/deecee-src/refs/heads/main/machine-weft-bundle.jpg",
+    images: [
+      "https://raw.githubusercontent.com/prabhav0001/deecee-src/refs/heads/main/machine-weft-bundle.jpg",
+      "https://raw.githubusercontent.com/prabhav0001/deecee-src/refs/heads/main/machine-weft.png"
+    ],
     colors: ["Black", "Brown", "Honey Blonde"],
     sizes: ['16"', '20"', '24"'],
     category: "wavy",
@@ -29,6 +37,10 @@ export const products: Product[] = [
     name: "Lace Closer",
     price: 7630,
     image: "https://raw.githubusercontent.com/prabhav0001/deecee-src/refs/heads/main/lace-closer.jpg",
+    images: [
+      "https://raw.githubusercontent.com/prabhav0001/deecee-src/refs/heads/main/lace-closer.jpg",
+      "https://raw.githubusercontent.com/prabhav0001/deecee-src/refs/heads/main/lace-closer2.jpg"
+    ],
     colors: ["Black", "Dark Brown", "Chestnut"],
     sizes: ['14"', '18"', '22"'],
     category: "curly",
@@ -40,6 +52,10 @@ export const products: Product[] = [
     name: "Lace Frontal",
     price: 12510,
     image: "https://raw.githubusercontent.com/prabhav0001/deecee-src/refs/heads/main/lace-frontal.jpg",
+    images: [
+      "https://raw.githubusercontent.com/prabhav0001/deecee-src/refs/heads/main/lace-frontal.jpg",
+      "https://raw.githubusercontent.com/prabhav0001/deecee-src/refs/heads/main/lace-frontal2.jpg"
+    ],
     colors: ["Black", "Brown", "Blonde", "Red"],
     sizes: ['18"', '22"', '26"'],
     category: "wavy",
