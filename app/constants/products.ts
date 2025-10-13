@@ -80,9 +80,9 @@ export const products: Product[] = [
   },
   {
     id: 8,
-    name: "Mens Hair Replacement System",
+    name: "Gents Patch",
     price: 5999,
-    image: "https://images.unsplash.com/photo-1519699047748-de8e457a634e?auto=format&fit=crop&w=400&q=80",
+    image: "https://raw.githubusercontent.com/prabhav0001/deecee-src/refs/heads/main/gents-patch.jpg",
     colors: ["Black", "Brown", "Blonde"],
     sizes: ["S", "M", "L"],
     category: "mans",
