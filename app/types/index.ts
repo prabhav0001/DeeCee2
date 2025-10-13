@@ -8,6 +8,7 @@ export type Product = {
   colors: string[];
   sizes: string[];
   category: string;
+  description?: string;
   isBestseller?: boolean;
   isNew?: boolean;
   isMans?: boolean;

@@ -32,6 +32,17 @@ export default function ProductPage({
         <div className="flex flex-col flex-1">
           <h1 className="text-2xl sm:text-3xl font-bold text-gray-900 mb-6 truncate">{product.name}</h1>
           <p className="text-rose-600 text-2xl font-extrabold mb-8">₹{product.price.toLocaleString()}</p>
+
+          {/* Product Description */}
+          {product.description && (
+            <div className="mb-8 p-4 bg-gray-50 rounded-xl border border-gray-200">
+              <h3 className="font-semibold text-gray-900 mb-3 text-lg">Product Description</h3>
+              <p className="text-gray-700 leading-relaxed text-sm sm:text-base">
+                {product.description}
+              </p>
+            </div>
+          )}
+
           <div className="mb-6">
             <h3 className="font-semibold text-gray-700 mb-3">Select Color</h3>
             <div className="flex flex-wrap gap-3">
