@@ -86,7 +86,11 @@ export const products: Product[] = [
     id: 7,
     name: "Mens Premium Hair Toppers",
     price: 4999,
-    image: "https://raw.githubusercontent.com/prabhav0001/deecee-src/refs/heads/main/mens-premium-hair-toppers.jpg",
+    image: "https://raw.githubusercontent.com/prabhav0001/deecee-src/refs/heads/main/men-patch1.png",
+    images: [
+      "https://raw.githubusercontent.com/prabhav0001/deecee-src/refs/heads/main/men-patch1.png",
+      "https://raw.githubusercontent.com/prabhav0001/deecee-src/refs/heads/main/men-patch2.png"
+    ],
     colors: ["Black", "Brown", "Gray"],
     sizes: ["S", "M", "L"],
     category: "mans",
@@ -98,7 +102,11 @@ export const products: Product[] = [
     id: 8,
     name: "Gents Patch",
     price: 5999,
-    image: "https://raw.githubusercontent.com/prabhav0001/deecee-src/refs/heads/main/gents-patch.jpg",
+    image: "https://raw.githubusercontent.com/prabhav0001/deecee-src/refs/heads/main/old-men-patch1.png",
+    images: [
+      "https://raw.githubusercontent.com/prabhav0001/deecee-src/refs/heads/main/old-men-patch1.png",
+      "https://raw.githubusercontent.com/prabhav0001/deecee-src/refs/heads/main/old-men-patch2.png"
+    ],
     colors: ["Black", "Brown", "Blonde"],
     sizes: ["S", "M", "L"],
     category: "mans",
