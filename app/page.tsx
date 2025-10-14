@@ -175,14 +175,64 @@ function DeeceeHairApp(): React.ReactElement {
 
   // Sync current page with URL pathname on mount
   useEffect(() => {
-    const page = ROUTE_TO_PAGE[window.location.pathname] || 'home';
+    const pathname = window.location.pathname;
+
+    // Handle dynamic product routes
+    if (pathname.startsWith('/product/')) {
+      const productId = pathname.split('/')[2];
+      const product = products.find(p => p.id === parseInt(productId));
+      if (product) {
+        setSelectedProduct(product);
+        setCurrentPage('product');
+        return;
+      }
+    }
+
+    // Handle shop category routes
+    if (pathname === '/shop/women') {
+      setCurrentPage('shop');
+      setFilterCategory('all');
+      return;
+    }
+    if (pathname === '/shop/men') {
+      setCurrentPage('shop');
+      setFilterCategory('mans');
+      return;
+    }
+
+    const page = ROUTE_TO_PAGE[pathname] || 'home';
     setCurrentPage(page);
   }, []);
 
   // Handle browser back/forward buttons
   useEffect(() => {
     const handlePopState = () => {
-      const page = ROUTE_TO_PAGE[window.location.pathname] || 'home';
+      const pathname = window.location.pathname;
+
+      // Handle dynamic product routes
+      if (pathname.startsWith('/product/')) {
+        const productId = pathname.split('/')[2];
+        const product = products.find(p => p.id === parseInt(productId));
+        if (product) {
+          setSelectedProduct(product);
+          setCurrentPage('product');
+          return;
+        }
+      }
+
+      // Handle shop category routes
+      if (pathname === '/shop/women') {
+        setCurrentPage('shop');
+        setFilterCategory('all');
+        return;
+      }
+      if (pathname === '/shop/men') {
+        setCurrentPage('shop');
+        setFilterCategory('mans');
+        return;
+      }
+
+      const page = ROUTE_TO_PAGE[pathname] || 'home';
       setCurrentPage(page);
     };
 
@@ -203,9 +253,30 @@ function DeeceeHairApp(): React.ReactElement {
 
     // Update URL based on page without navigation
     if (typeof window !== 'undefined') {
-      window.history.pushState({}, '', PAGE_TO_ROUTE[page]);
+      let url = PAGE_TO_ROUTE[page];
+
+      // Handle shop category URLs
+      if (page === 'shop') {
+        if (category === 'mans') {
+          url = '/shop/men';
+        } else {
+          url = '/shop/women';
+        }
+      }
+
+      window.history.pushState({}, '', url);
     }
   }, [isAuthenticated]);
+
+  const handleProductClick = useCallback((product: Product) => {
+    setSelectedProduct(product);
+    setSelectedColor("");
+    setSelectedSize("");
+    setCurrentPage("product");
+    if (typeof window !== 'undefined') {
+      window.history.pushState({}, '', `/product/${product.id}`);
+    }
+  }, []);
 
   const addToCart = useCallback(() => {
     if (!selectedProduct || !selectedColor || !selectedSize) {
@@ -267,7 +338,7 @@ function DeeceeHairApp(): React.ReactElement {
                 <span className="absolute bottom-0 left-0 w-0 h-0.5 bg-rose-600 group-hover:w-full transition-all duration-300"></span>
               </button>
               <button
-                onClick={() => { setFilterCategory("mans"); setCurrentPage("shop"); }}
+                onClick={() => navigateTo("shop", "mans")}
                 className="text-sm font-medium text-gray-700 hover:text-rose-600 transition-all duration-200 focus:outline-none rounded px-3 py-2 relative group hover:scale-105 active:scale-95"
               >
                 Shop for Men
@@ -375,7 +446,7 @@ function DeeceeHairApp(): React.ReactElement {
             <button onClick={() => { navigateTo("shop"); setMobileMenuOpen(false); }} className="text-sm font-medium text-gray-700 hover:text-rose-600 hover:bg-rose-50 transition-all duration-200 text-left focus:outline-none rounded-lg px-4 py-3 active:scale-95 transform">
               Shop for Women
             </button>
-            <button onClick={() => { setFilterCategory("mans"); setCurrentPage("shop"); setMobileMenuOpen(false); }} className="text-sm font-medium text-gray-700 hover:text-rose-600 hover:bg-rose-50 transition-all duration-200 text-left focus:outline-none rounded-lg px-4 py-3 active:scale-95 transform">
+            <button onClick={() => { navigateTo("shop", "mans"); setMobileMenuOpen(false); }} className="text-sm font-medium text-gray-700 hover:text-rose-600 hover:bg-rose-50 transition-all duration-200 text-left focus:outline-none rounded-lg px-4 py-3 active:scale-95 transform">
               Shop for Men
             </button>
             <button onClick={() => { navigateTo("appointment"); setMobileMenuOpen(false); }} className="text-sm font-medium text-gray-700 hover:text-rose-600 hover:bg-rose-50 transition-all duration-200 text-left focus:outline-none rounded-lg px-4 py-3 active:scale-95 transform">
@@ -446,7 +517,7 @@ function DeeceeHairApp(): React.ReactElement {
           </div>
           <div className="grid grid-cols-1 md:grid-cols-3 gap-6 sm:gap-8">
             {products.filter(p => p.isBestseller).map((product) => (
-              <div key={product.id} className="group cursor-pointer rounded-2xl shadow-lg overflow-hidden bg-white hover:shadow-2xl transition-all duration-300" onClick={() => { setSelectedProduct(product); setSelectedColor(""); setSelectedSize(""); setCurrentPage("product"); }}>
+              <div key={product.id} className="group cursor-pointer rounded-2xl shadow-lg overflow-hidden bg-white hover:shadow-2xl transition-all duration-300" onClick={() => handleProductClick(product)}>
                 <div className="relative overflow-hidden">
                   <img src={product.image} alt={product.name} className="w-full h-64 sm:h-80 object-cover group-hover:scale-110 transition-transform duration-500" />
                   <div className="absolute top-4 right-4 bg-rose-600 text-white px-3 py-1 rounded-full text-xs font-semibold flex items-center gap-1">
@@ -481,7 +552,7 @@ function DeeceeHairApp(): React.ReactElement {
           </div>
           <div className="grid grid-cols-1 md:grid-cols-3 gap-6 sm:gap-8">
             {products.filter(p => p.isNew).map((product) => (
-              <div key={product.id} className="group cursor-pointer rounded-2xl shadow-lg overflow-hidden bg-white hover:shadow-2xl transition-all duration-300" onClick={() => { setSelectedProduct(product); setSelectedColor(""); setSelectedSize(""); setCurrentPage("product"); }}>
+              <div key={product.id} className="group cursor-pointer rounded-2xl shadow-lg overflow-hidden bg-white hover:shadow-2xl transition-all duration-300" onClick={() => handleProductClick(product)}>
                 <div className="relative overflow-hidden">
                   <img src={product.image} alt={product.name} className="w-full h-64 sm:h-80 object-cover group-hover:scale-110 transition-transform duration-500" />
                   <div className="absolute top-4 right-4 bg-green-600 text-white px-3 py-1 rounded-full text-xs font-semibold flex items-center gap-1">
@@ -533,7 +604,7 @@ function DeeceeHairApp(): React.ReactElement {
           </div>
           <div className="grid grid-cols-1 md:grid-cols-3 gap-6 sm:gap-8">
             {products.filter(p => p.isMans).map((product) => (
-              <div key={product.id} className="group cursor-pointer rounded-2xl shadow-lg overflow-hidden bg-white hover:shadow-2xl transition-all duration-300" onClick={() => { setSelectedProduct(product); setSelectedColor(""); setSelectedSize(""); setCurrentPage("product"); }}>
+              <div key={product.id} className="group cursor-pointer rounded-2xl shadow-lg overflow-hidden bg-white hover:shadow-2xl transition-all duration-300" onClick={() => handleProductClick(product)}>
                 <div className="relative overflow-hidden">
                   <img src={product.image} alt={product.name} className="w-full h-64 sm:h-80 object-cover group-hover:scale-110 transition-transform duration-500" />
                   <div className="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent"></div>
@@ -615,12 +686,7 @@ function DeeceeHairApp(): React.ReactElement {
             products={products}
             filterCategory={filterCategory}
             setFilterCategory={setFilterCategory}
-            onProductClick={(product) => {
-              setSelectedProduct(product);
-              setSelectedColor("");
-              setSelectedSize("");
-              setCurrentPage("product");
-            }}
+            onProductClick={handleProductClick}
             convertPrice={convertPrice}
           />
         )}
@@ -632,7 +698,7 @@ function DeeceeHairApp(): React.ReactElement {
             selectedSize={selectedSize}
             setSelectedSize={setSelectedSize}
             onAddToCart={addToCart}
-            onBackToShop={() => setCurrentPage("shop")}
+            onBackToShop={() => navigateTo("shop")}
             convertPrice={convertPrice}
           />
         )}
@@ -660,12 +726,7 @@ function DeeceeHairApp(): React.ReactElement {
         {currentPage === "bestsellers" && (
           <BestsellersPage
             products={products}
-            onProductClick={(product) => {
-              setSelectedProduct(product);
-              setSelectedColor("");
-              setSelectedSize("");
-              setCurrentPage("product");
-            }}
+            onProductClick={handleProductClick}
             onBackToHome={() => navigateTo("home")}
             convertPrice={convertPrice}
           />

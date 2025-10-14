@@ -6,7 +6,9 @@ const nextConfig: NextConfig = {
     // Ensure direct refreshes on these paths serve the root page
     return [
       { source: "/shop", destination: "/" },
-      { source: "/product", destination: "/" },
+      { source: "/shop/women", destination: "/" },
+      { source: "/shop/men", destination: "/" },
+      { source: "/product/:id", destination: "/" },
       { source: "/cart", destination: "/" },
       { source: "/contact", destination: "/" },
       { source: "/appointment", destination: "/" },
