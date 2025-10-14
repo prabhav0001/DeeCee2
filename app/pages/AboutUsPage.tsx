@@ -20,7 +20,7 @@ export default function AboutUsPage(): React.ReactElement {
     {
       name: "Sahdev Kumar",
       role: "Marketing Manager",
-      image: "https://raw.githubusercontent.com/prabhav0001/deecee-src/refs/heads/main/marketing_manager.jpeg",
+      image: "https://raw.githubusercontent.com/prabhav0001/deecee-src/refs/heads/main/marketing_manager.png",
       description: "Ensuring smooth operations and customer satisfaction"
     }
   ];

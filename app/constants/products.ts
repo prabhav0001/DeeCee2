@@ -6,10 +6,10 @@ export const products: Product[] = [
     id: 1,
     name: "Bulk Hair Bundle",
     price: 13310,
-    image: "https://raw.githubusercontent.com/prabhav0001/deecee-src/refs/heads/main/bulk-hair-bundle2.png",
+    image: "https://raw.githubusercontent.com/prabhav0001/deecee-src/refs/heads/main/bulk-hair-bundle1.jpeg",
     images: [
-      "https://raw.githubusercontent.com/prabhav0001/deecee-src/refs/heads/main/bulk-hair-bundle2.png",
-      "https://raw.githubusercontent.com/prabhav0001/deecee-src/refs/heads/main/bulk-hair-bundle.jpg"
+      "https://raw.githubusercontent.com/prabhav0001/deecee-src/refs/heads/main/bulk-hair-bundle1.jpeg",
+      "https://raw.githubusercontent.com/prabhav0001/deecee-src/refs/heads/main/bulk-hair-bundle2.jpeg"
     ],
     colors: ["Black", "Brown", "Blonde", "Auburn"],
     sizes: ['14"', '18"', '22"', '26"'],
@@ -21,10 +21,10 @@ export const products: Product[] = [
     id: 2,
     name: "Machine Weft Bundle",
     price: 12070,
-    image: "https://raw.githubusercontent.com/prabhav0001/deecee-src/refs/heads/main/machine-weft-bundle.jpg",
+    image: "https://raw.githubusercontent.com/prabhav0001/deecee-src/refs/heads/main/machine-weft-bundle1.png",
     images: [
-      "https://raw.githubusercontent.com/prabhav0001/deecee-src/refs/heads/main/machine-weft-bundle.jpg",
-      "https://raw.githubusercontent.com/prabhav0001/deecee-src/refs/heads/main/machine-weft.png"
+      "https://raw.githubusercontent.com/prabhav0001/deecee-src/refs/heads/main/machine-weft-bundle1.png",
+      "https://raw.githubusercontent.com/prabhav0001/deecee-src/refs/heads/main/machine-weft-bundle2.png"
     ],
     colors: ["Black", "Brown", "Honey Blonde"],
     sizes: ['16"', '20"', '24"'],
@@ -36,10 +36,10 @@ export const products: Product[] = [
     id: 3,
     name: "Lace Closer",
     price: 7630,
-    image: "https://raw.githubusercontent.com/prabhav0001/deecee-src/refs/heads/main/lace-closer.jpg",
+    image: "https://raw.githubusercontent.com/prabhav0001/deecee-src/refs/heads/main/lace-closer1.png",
     images: [
-      "https://raw.githubusercontent.com/prabhav0001/deecee-src/refs/heads/main/lace-closer.jpg",
-      "https://raw.githubusercontent.com/prabhav0001/deecee-src/refs/heads/main/lace-closer2.jpg"
+      "https://raw.githubusercontent.com/prabhav0001/deecee-src/refs/heads/main/lace-closer1.png",
+      "https://raw.githubusercontent.com/prabhav0001/deecee-src/refs/heads/main/lace-closer2.png"
     ],
     colors: ["Black", "Dark Brown", "Chestnut"],
     sizes: ['14"', '18"', '22"'],
@@ -51,9 +51,9 @@ export const products: Product[] = [
     id: 4,
     name: "Lace Frontal",
     price: 12510,
-    image: "https://raw.githubusercontent.com/prabhav0001/deecee-src/refs/heads/main/lace-frontal.jpg",
+    image: "https://raw.githubusercontent.com/prabhav0001/deecee-src/refs/heads/main/lace-frontal1.jpg",
     images: [
-      "https://raw.githubusercontent.com/prabhav0001/deecee-src/refs/heads/main/lace-frontal.jpg",
+      "https://raw.githubusercontent.com/prabhav0001/deecee-src/refs/heads/main/lace-frontal1.jpg",
       "https://raw.githubusercontent.com/prabhav0001/deecee-src/refs/heads/main/lace-frontal2.jpg"
     ],
     colors: ["Black", "Brown", "Blonde", "Red"],
