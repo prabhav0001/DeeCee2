@@ -736,7 +736,7 @@ function DeeceeHairApp(): React.ReactElement {
                 <h5 className="text-sm font-semibold text-gray-400 mb-3">Follow Us</h5>
                 <div className="flex space-x-3">
                   <a
-                    href="https://www.instagram.com"
+                    href="https://www.instagram.com/deeceehairofficial"
                     target="_blank"
                     rel="noopener noreferrer"
                     className="w-10 h-10 bg-gray-800 hover:bg-gradient-to-br hover:from-purple-600 hover:to-pink-600 rounded-full flex items-center justify-center transition-all duration-300 hover:scale-110 group"
@@ -745,7 +745,7 @@ function DeeceeHairApp(): React.ReactElement {
                     <Instagram className="w-5 h-5 group-hover:rotate-12 transition-transform" />
                   </a>
                   <a
-                    href="https://www.facebook.com"
+                    href="https://www.facebook.com/hairdeecee"
                     target="_blank"
                     rel="noopener noreferrer"
                     className="w-10 h-10 bg-gray-800 hover:bg-blue-600 rounded-full flex items-center justify-center transition-all duration-300 hover:scale-110 group"
@@ -754,7 +754,7 @@ function DeeceeHairApp(): React.ReactElement {
                     <Facebook className="w-5 h-5 group-hover:rotate-12 transition-transform" />
                   </a>
                   <a
-                    href="https://www.youtube.com"
+                    href="https://www.youtube.com/@deeceehair"
                     target="_blank"
                     rel="noopener noreferrer"
                     className="w-10 h-10 bg-gray-800 hover:bg-red-600 rounded-full flex items-center justify-center transition-all duration-300 hover:scale-110 group"
@@ -763,7 +763,7 @@ function DeeceeHairApp(): React.ReactElement {
                     <Youtube className="w-5 h-5 group-hover:rotate-12 transition-transform" />
                   </a>
                   <a
-                    href="mailto:contact@deeceehair.com"
+                    href="mailto:info@deeceehairs.com"
                     className="w-10 h-10 bg-gray-800 hover:bg-rose-600 rounded-full flex items-center justify-center transition-all duration-300 hover:scale-110 group"
                     aria-label="Email"
                   >
@@ -887,7 +887,7 @@ function DeeceeHairApp(): React.ReactElement {
 
       {/* Floating WhatsApp Button */}
       <a
-        href="https://wa.me/919876543210"
+        href="https://wa.me/919351455595"
         target="_blank"
         rel="noopener noreferrer"
         className="fixed bottom-6 right-6 z-50 w-16 h-16 bg-[#25D366] hover:bg-[#128C7E] rounded-full flex items-center justify-center shadow-2xl hover:shadow-[0_0_30px_rgba(37,211,102,0.6)] transition-all duration-300 hover:scale-110 active:scale-95 group animate-bounce hover:animate-none"

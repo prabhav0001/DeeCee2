@@ -74,7 +74,7 @@ export const products: Product[] = [
   },
   {
     id: 6,
-    name: "Alopecia Wig",
+    name: "Lace Frontel Wig",
     price: 43899,
     image: "https://raw.githubusercontent.com/prabhav0001/deecee-src/refs/heads/main/alopecia-wig.jpg",
     colors: ["Black", "Dark Brown"],
