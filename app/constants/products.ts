@@ -117,10 +117,13 @@ export const products: Product[] = [
 ];
 
 export const promoMessages = [
-  { text: "Sign up and Get 5% OFF on your 1st order", icon: Gift },
-  { text: "COD AVAILABLE", icon: Package },
-  { text: "Free Shipping on Orders Above ₹5000", icon: Truck },
-  { text: "Premium Quality Hair Extensions", icon: Sparkles },
+  { text: "100% Premium Human Hair Extensions - Authentic Quality", icon: Sparkles },
+  { text: "Trusted by Thousands of Happy Customers Across India", icon: Sparkles },
+  { text: "Expert Styling Consultation Available - Book Your Appointment", icon: Gift },
+  { text: "Can Be Colored, Styled & Heat-Treated Like Natural Hair", icon: Sparkles },
+  { text: "Fast & Secure Delivery - We Ship Pan India", icon: Truck },
+  { text: "All Products Come With Quality Assurance", icon: Package },
+  { text: "From Straight to Curly - Perfect Match for Every Style", icon: Sparkles },
 ];
 
 export const heroSlides = [
