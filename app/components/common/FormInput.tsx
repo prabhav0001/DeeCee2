@@ -5,6 +5,7 @@ import { X } from "lucide-react";
 import { FormInputProps } from "@/app/types";
 
 export const FormInput = ({
+
   label,
   type = "text",
   value,
