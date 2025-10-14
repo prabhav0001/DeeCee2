@@ -479,20 +479,20 @@ function DeeceeHairApp(): React.ReactElement {
         <div className="absolute inset-0 bg-gradient-to-br from-rose-600/40 via-transparent to-rose-600/40"></div>
         <div className="relative z-20 w-full px-4 sm:px-6 lg:px-8 text-center">
           <div className="transform transition-all duration-700">
-            <h1 className="text-4xl sm:text-5xl lg:text-7xl font-bold text-white mb-6 tracking-tight">
+            <h1 className="text-3xl sm:text-4xl md:text-5xl lg:text-6xl xl:text-7xl font-bold text-white mb-4 md:mb-6 tracking-tight">
               {heroSlides[currentSlide].title}
-              <span className="block text-2xl sm:text-3xl lg:text-5xl mt-2 font-light">{heroSlides[currentSlide].subtitle}</span>
+              <span className="block text-xl sm:text-2xl md:text-3xl lg:text-4xl xl:text-5xl mt-2 font-light">{heroSlides[currentSlide].subtitle}</span>
             </h1>
-            <p className="text-base sm:text-lg lg:text-xl text-white/90 mb-8 max-w-2xl mx-auto px-4">
+            <p className="text-sm sm:text-base md:text-lg lg:text-xl text-white/90 mb-6 md:mb-8 max-w-2xl mx-auto px-4">
               {heroSlides[currentSlide].description}
             </p>
           </div>
-          <div className="flex flex-col sm:flex-row gap-4 justify-center px-4">
-            <button onClick={() => navigateTo("shop")} className="bg-white text-rose-600 px-6 sm:px-8 py-3 sm:py-4 rounded-full font-semibold hover:bg-gray-100 transition transform hover:scale-105 shadow-lg">
+          <div className="flex flex-col sm:flex-row gap-3 md:gap-4 justify-center px-4">
+            <button onClick={() => navigateTo("shop")} className="bg-white text-rose-600 px-6 sm:px-7 md:px-8 py-2.5 sm:py-3 md:py-3.5 lg:py-4 rounded-full font-semibold hover:bg-gray-100 transition transform hover:scale-105 shadow-lg text-sm md:text-base">
               Shop Collection
             </button>
-            <button onClick={() => navigateTo("appointment")} className="bg-transparent border-2 border-white text-white px-6 sm:px-8 py-3 sm:py-4 rounded-full font-semibold hover:bg-white hover:text-rose-600 transition transform hover:scale-105 flex items-center justify-center gap-2">
-              <Calendar className="w-5 h-5" /> Book Consultation
+            <button onClick={() => navigateTo("appointment")} className="bg-transparent border-2 border-white text-white px-6 sm:px-7 md:px-8 py-2.5 sm:py-3 md:py-3.5 lg:py-4 rounded-full font-semibold hover:bg-white hover:text-rose-600 transition transform hover:scale-105 flex items-center justify-center gap-2 text-sm md:text-base">
+              <Calendar className="w-4 h-4 md:w-5 md:h-5" /> Book Consultation
             </button>
           </div>
         </div>
@@ -509,25 +509,25 @@ function DeeceeHairApp(): React.ReactElement {
         </div>
       </section>
 
-      <section className="py-12 sm:py-20 bg-white">
+      <section className="py-8 sm:py-12 md:py-16 lg:py-20 bg-white">
         <div className="w-full px-4 sm:px-6 lg:px-8">
-          <div className="text-center mb-8 sm:mb-12">
-            <h2 className="text-3xl sm:text-4xl font-bold text-gray-900 mb-4">Bestsellers</h2>
-            <p className="text-gray-600 max-w-2xl mx-auto px-4">Our most loved products, trusted by thousands of customers</p>
+          <div className="text-center mb-6 sm:mb-8 md:mb-10 lg:mb-12">
+            <h2 className="text-2xl sm:text-3xl md:text-3xl lg:text-4xl font-bold text-gray-900 mb-3 md:mb-4">Bestsellers</h2>
+            <p className="text-sm md:text-base text-gray-600 max-w-2xl mx-auto px-4">Our most loved products, trusted by thousands of customers</p>
           </div>
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-6 sm:gap-8">
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-4 sm:gap-6 md:gap-6 lg:gap-8">
             {products.filter(p => p.isBestseller).map((product) => (
               <div key={product.id} className="group cursor-pointer rounded-2xl shadow-lg overflow-hidden bg-white hover:shadow-2xl transition-all duration-300" onClick={() => handleProductClick(product)}>
                 <div className="relative overflow-hidden">
-                  <img src={product.image} alt={product.name} className="w-full h-64 sm:h-80 object-cover group-hover:scale-110 transition-transform duration-500" />
-                  <div className="absolute top-4 right-4 bg-rose-600 text-white px-3 py-1 rounded-full text-xs font-semibold flex items-center gap-1">
+                  <img src={product.image} alt={product.name} className="w-full h-56 sm:h-64 md:h-72 lg:h-80 object-cover group-hover:scale-110 transition-transform duration-500" />
+                  <div className="absolute top-3 right-3 md:top-4 md:right-4 bg-rose-600 text-white px-2.5 py-1 md:px-3 md:py-1 rounded-full text-xs font-semibold flex items-center gap-1">
                     <Star className="w-3 h-3 fill-current" /> Bestseller
                   </div>
                   <div className="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent"></div>
-                  <div className="absolute bottom-0 left-0 right-0 p-4 sm:p-6">
-                    <h3 className="text-xl sm:text-2xl font-bold text-white mb-2 truncate">{product.name}</h3>
-                    <p className="text-white text-lg font-semibold mb-2">{convertPrice(product.price)}</p>
-                    <button className="text-white underline hover:no-underline text-sm sm:text-base">Shop Now →</button>
+                  <div className="absolute bottom-0 left-0 right-0 p-3 sm:p-4 md:p-5 lg:p-6">
+                    <h3 className="text-lg sm:text-xl md:text-xl lg:text-2xl font-bold text-white mb-1.5 md:mb-2 truncate">{product.name}</h3>
+                    <p className="text-white text-base md:text-lg font-semibold mb-1.5 md:mb-2">{convertPrice(product.price)}</p>
+                    <button className="text-white underline hover:no-underline text-xs sm:text-sm md:text-base">Shop Now →</button>
                   </div>
                 </div>
               </div>
@@ -544,25 +544,25 @@ function DeeceeHairApp(): React.ReactElement {
         </div>
       </section>
 
-      <section className="py-12 sm:py-20 bg-gray-50">
+      <section className="py-8 sm:py-12 md:py-16 lg:py-20 bg-gray-50">
         <div className="w-full px-4 sm:px-6 lg:px-8">
-          <div className="text-center mb-8 sm:mb-12">
-            <h2 className="text-3xl sm:text-4xl font-bold text-gray-900 mb-4">New Arrivals</h2>
-            <p className="text-gray-600 max-w-2xl mx-auto px-4">Discover our latest collection of premium hair extensions</p>
+          <div className="text-center mb-6 sm:mb-8 md:mb-10 lg:mb-12">
+            <h2 className="text-2xl sm:text-3xl md:text-3xl lg:text-4xl font-bold text-gray-900 mb-3 md:mb-4">New Arrivals</h2>
+            <p className="text-sm md:text-base text-gray-600 max-w-2xl mx-auto px-4">Discover our latest collection of premium hair extensions</p>
           </div>
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-6 sm:gap-8">
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-4 sm:gap-6 md:gap-6 lg:gap-8">
             {products.filter(p => p.isNew).map((product) => (
               <div key={product.id} className="group cursor-pointer rounded-2xl shadow-lg overflow-hidden bg-white hover:shadow-2xl transition-all duration-300" onClick={() => handleProductClick(product)}>
                 <div className="relative overflow-hidden">
-                  <img src={product.image} alt={product.name} className="w-full h-64 sm:h-80 object-cover group-hover:scale-110 transition-transform duration-500" />
-                  <div className="absolute top-4 right-4 bg-green-600 text-white px-3 py-1 rounded-full text-xs font-semibold flex items-center gap-1">
+                  <img src={product.image} alt={product.name} className="w-full h-56 sm:h-64 md:h-72 lg:h-80 object-cover group-hover:scale-110 transition-transform duration-500" />
+                  <div className="absolute top-3 right-3 md:top-4 md:right-4 bg-green-600 text-white px-2.5 py-1 md:px-3 md:py-1 rounded-full text-xs font-semibold flex items-center gap-1">
                     <Sparkles className="w-3 h-3 fill-current" /> New
                   </div>
                   <div className="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent"></div>
-                  <div className="absolute bottom-0 left-0 right-0 p-4 sm:p-6">
-                    <h3 className="text-xl sm:text-2xl font-bold text-white mb-2 truncate">{product.name}</h3>
-                    <p className="text-white text-lg font-semibold mb-2">{convertPrice(product.price)}</p>
-                    <button className="text-white underline hover:no-underline text-sm sm:text-base">Shop Now →</button>
+                  <div className="absolute bottom-0 left-0 right-0 p-3 sm:p-4 md:p-5 lg:p-6">
+                    <h3 className="text-lg sm:text-xl md:text-xl lg:text-2xl font-bold text-white mb-1.5 md:mb-2 truncate">{product.name}</h3>
+                    <p className="text-white text-base md:text-lg font-semibold mb-1.5 md:mb-2">{convertPrice(product.price)}</p>
+                    <button className="text-white underline hover:no-underline text-xs sm:text-sm md:text-base">Shop Now →</button>
                   </div>
                 </div>
               </div>
@@ -571,11 +571,11 @@ function DeeceeHairApp(): React.ReactElement {
         </div>
       </section>
 
-      <section className="py-12 sm:py-20 bg-gray-50">
+      <section className="py-8 sm:py-12 md:py-16 lg:py-20 bg-gray-50">
         <div className="w-full px-4 sm:px-6 lg:px-8">
-          <h2 className="text-3xl sm:text-4xl font-bold text-gray-900 mb-4 text-center">Featured Collections</h2>
-          <p className="text-gray-600 text-center mb-8 sm:mb-12 max-w-2xl mx-auto px-4">Discover our premium hair extensions in various textures to match your style</p>
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-6 sm:gap-8">
+          <h2 className="text-2xl sm:text-3xl md:text-3xl lg:text-4xl font-bold text-gray-900 mb-3 md:mb-4 text-center">Featured Collections</h2>
+          <p className="text-sm md:text-base text-gray-600 text-center mb-6 sm:mb-8 md:mb-10 lg:mb-12 max-w-2xl mx-auto px-4">Discover our premium hair extensions in various textures to match your style</p>
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-4 sm:gap-6 md:gap-6 lg:gap-8">
             {[
               { type: "Straight", image: "https://raw.githubusercontent.com/prabhav0001/deecee-src/refs/heads/main/straight.jpg" },
               { type: "Wavy", image: "https://raw.githubusercontent.com/prabhav0001/deecee-src/refs/heads/main/wavy.jpg" },
@@ -583,11 +583,11 @@ function DeeceeHairApp(): React.ReactElement {
             ].map((item) => (
               <div key={item.type} className="group cursor-pointer" onClick={() => { setFilterCategory(item.type.toLowerCase()); setCurrentPage("shop"); }}>
                 <div className="relative overflow-hidden rounded-2xl shadow-lg">
-                  <img src={item.image} alt={item.type} className="w-full h-64 sm:h-80 object-cover group-hover:scale-110 transition duration-500" />
+                  <img src={item.image} alt={item.type} className="w-full h-56 sm:h-64 md:h-72 lg:h-80 object-cover group-hover:scale-110 transition duration-500" />
                   <div className="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent"></div>
-                  <div className="absolute bottom-0 left-0 right-0 p-4 sm:p-6">
-                    <h3 className="text-xl sm:text-2xl font-bold text-white mb-2">{item.type} Extensions</h3>
-                    <button className="text-white underline hover:no-underline text-sm sm:text-base">Shop Now →</button>
+                  <div className="absolute bottom-0 left-0 right-0 p-3 sm:p-4 md:p-5 lg:p-6">
+                    <h3 className="text-lg sm:text-xl md:text-xl lg:text-2xl font-bold text-white mb-1.5 md:mb-2">{item.type} Extensions</h3>
+                    <button className="text-white underline hover:no-underline text-xs sm:text-sm md:text-base">Shop Now →</button>
                   </div>
                 </div>
               </div>
@@ -596,31 +596,31 @@ function DeeceeHairApp(): React.ReactElement {
         </div>
       </section>
 
-      <section className="py-12 sm:py-20 bg-gray-100">
+      <section className="py-8 sm:py-12 md:py-16 lg:py-20 bg-gray-100">
         <div className="w-full px-4 sm:px-6 lg:px-8">
-          <div className="text-center mb-8 sm:mb-12">
-            <h2 className="text-3xl sm:text-4xl font-bold text-gray-900 mb-4">Mans Collection</h2>
-            <p className="text-gray-600 max-w-2xl mx-auto px-4">Premium hair solutions designed specifically for men</p>
+          <div className="text-center mb-6 sm:mb-8 md:mb-10 lg:mb-12">
+            <h2 className="text-2xl sm:text-3xl md:text-3xl lg:text-4xl font-bold text-gray-900 mb-3 md:mb-4">Mans Collection</h2>
+            <p className="text-sm md:text-base text-gray-600 max-w-2xl mx-auto px-4">Premium hair solutions designed specifically for men</p>
           </div>
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-6 sm:gap-8">
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-4 sm:gap-6 md:gap-6 lg:gap-8">
             {products.filter(p => p.isMans).map((product) => (
               <div key={product.id} className="group cursor-pointer rounded-2xl shadow-lg overflow-hidden bg-white hover:shadow-2xl transition-all duration-300" onClick={() => handleProductClick(product)}>
                 <div className="relative overflow-hidden">
-                  <img src={product.image} alt={product.name} className="w-full h-64 sm:h-80 object-cover group-hover:scale-110 transition-transform duration-500" />
+                  <img src={product.image} alt={product.name} className="w-full h-56 sm:h-64 md:h-72 lg:h-80 object-cover group-hover:scale-110 transition-transform duration-500" />
                   <div className="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent"></div>
-                  <div className="absolute bottom-0 left-0 right-0 p-4 sm:p-6">
-                    <h3 className="text-xl sm:text-2xl font-bold text-white mb-2 truncate">{product.name}</h3>
-                    <p className="text-white text-lg font-semibold mb-2">{convertPrice(product.price)}</p>
-                    <button className="text-white underline hover:no-underline text-sm sm:text-base">Shop Now →</button>
+                  <div className="absolute bottom-0 left-0 right-0 p-3 sm:p-4 md:p-5 lg:p-6">
+                    <h3 className="text-lg sm:text-xl md:text-xl lg:text-2xl font-bold text-white mb-1.5 md:mb-2 truncate">{product.name}</h3>
+                    <p className="text-white text-base md:text-lg font-semibold mb-1.5 md:mb-2">{convertPrice(product.price)}</p>
+                    <button className="text-white underline hover:no-underline text-xs sm:text-sm md:text-base">Shop Now →</button>
                   </div>
                 </div>
               </div>
             ))}
           </div>
-          <div className="text-center mt-8">
+          <div className="text-center mt-6 md:mt-8">
             <button
               onClick={() => { setFilterCategory("mans"); setCurrentPage("shop"); }}
-              className="bg-rose-600 text-white px-6 py-3 rounded-lg font-semibold hover:bg-rose-700 transition"
+              className="bg-rose-600 text-white px-5 md:px-6 py-2.5 md:py-3 rounded-lg font-semibold hover:bg-rose-700 transition text-sm md:text-base"
             >
               View All Mans Products
             </button>
