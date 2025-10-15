@@ -11,6 +11,7 @@ A modern, full-featured e-commerce web application for premium hair extensions b
 
 - **Single-Page Application (SPA)**: Smooth navigation using History API
 - **Firebase Authentication**: Secure email authentication with real email verification
+- **Password Reset**: Forgot password functionality with Firebase email reset
 - **Product Catalog**: Browse straight, wavy, curly, and men's hair extensions
 - **Shopping Cart**: Full cart management with quantity controls
 - **User Profile**: Manage profile, orders, addresses, and wishlist
@@ -246,14 +247,29 @@ const errors = useFormValidation({ name, email, phone });
 
 ## 📚 Documentation
 
+### Getting Started
+- **[GETTING_STARTED.md](GETTING_STARTED.md)**: Complete overview and quick start guide
+
+### Firebase Setup
 - **[FIREBASE_QUICKSTART.md](FIREBASE_QUICKSTART.md)**: Quick 5-minute Firebase setup guide
 - **[FIREBASE_SETUP.md](FIREBASE_SETUP.md)**: Detailed Firebase authentication setup
+- **[FIREBASE_CHECKLIST.md](FIREBASE_CHECKLIST.md)**: Interactive setup checklist
+- **[PASSWORD_RESET_GUIDE.md](PASSWORD_RESET_GUIDE.md)**: Password reset feature documentation
+
+### Deployment
+- **[DEPLOY_VERCEL.md](DEPLOY_VERCEL.md)**: Quick Vercel deployment guide (5 minutes)
+- **[DEPLOYMENT.md](DEPLOYMENT.md)**: Complete deployment guide for all platforms
+
+### Troubleshooting
+- **[TROUBLESHOOTING.md](TROUBLESHOOTING.md)**: Common issues and solutions
+
+### Development
 - **[.github/copilot-instructions.md](.github/copilot-instructions.md)**: AI coding assistant guide
 
 ## 🚧 Roadmap
 
 - [x] Firebase Authentication with email verification
-- [ ] Password reset functionality
+- [x] Password reset functionality
 - [ ] Social authentication (Google, Facebook)
 - [ ] Backend API integration
 - [ ] Payment gateway integration

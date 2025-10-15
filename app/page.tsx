@@ -16,6 +16,7 @@ import BestsellersPage from './pages/BestsellersPage';
 import LoginPage from './pages/LoginPage';
 import SignupPage from './pages/SignupPage';
 import VerificationPage from './pages/VerificationPage';
+import ForgotPasswordPage from './pages/ForgotPasswordPage';
 import { AuthProvider, useAuth } from './contexts/AuthContext';
 import { Product, CartItem, Appointment, Page, ReelVideo } from './types';
 import { IconButton, PromoSlider } from './components/common';
@@ -103,6 +104,7 @@ function DeeceeHairApp(): React.ReactElement {
   const [showLogin, setShowLogin] = useState(false);
   const [showSignup, setShowSignup] = useState(false);
   const [showVerification, setShowVerification] = useState(false);
+  const [showForgotPassword, setShowForgotPassword] = useState(false);
   const [showPromo, setShowPromo] = useState(true);
   const [selectedCurrency, setSelectedCurrency] = useState<string>("INR");
   const [showCurrencyDropdown, setShowCurrencyDropdown] = useState(false);
@@ -748,6 +750,10 @@ function DeeceeHairApp(): React.ReactElement {
           onNeedsVerification={() => {
             setShowVerification(true);
           }}
+          onForgotPassword={() => {
+            setShowLogin(false);
+            setShowForgotPassword(true);
+          }}
         />
       )}
 
@@ -773,6 +779,17 @@ function DeeceeHairApp(): React.ReactElement {
           onVerificationSuccess={() => {
             setShowVerification(false);
             setCurrentPage("profile");
+          }}
+        />
+      )}
+
+      {/* Forgot Password Modal */}
+      {showForgotPassword && (
+        <ForgotPasswordPage
+          onClose={() => setShowForgotPassword(false)}
+          onBackToLogin={() => {
+            setShowForgotPassword(false);
+            setShowLogin(true);
           }}
         />
       )}

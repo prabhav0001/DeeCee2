@@ -8,6 +8,7 @@ import {
   signInWithEmailAndPassword,
   signOut,
   sendEmailVerification,
+  sendPasswordResetEmail,
   onAuthStateChanged,
   updateProfile,
   User as FirebaseUser,
@@ -27,6 +28,7 @@ type AuthContextType = {
   setPendingVerification: (data: { email: string; password: string; name: string } | null) => void;
   completeSignup: () => void;
   checkEmailVerification: () => Promise<boolean>;
+  resetPassword: (email: string) => Promise<{ success: boolean; message?: string }>;
 };
 
 const AuthContext = createContext<AuthContextType | undefined>(undefined);
@@ -295,6 +297,29 @@ export const AuthProvider = ({ children }: AuthProviderProps) => {
     }
   };
 
+  const resetPassword = async (email: string): Promise<{ success: boolean; message?: string }> => {
+    try {
+      await sendPasswordResetEmail(auth, email);
+      return {
+        success: true,
+        message: 'Password reset email sent! Please check your inbox.'
+      };
+    } catch (error: any) {
+      console.error('Password reset error:', error);
+
+      // Handle specific Firebase errors
+      if (error.code === 'auth/user-not-found') {
+        return { success: false, message: 'No account found with this email address.' };
+      } else if (error.code === 'auth/invalid-email') {
+        return { success: false, message: 'Invalid email address.' };
+      } else if (error.code === 'auth/too-many-requests') {
+        return { success: false, message: 'Too many requests. Please try again later.' };
+      } else {
+        return { success: false, message: 'Failed to send password reset email. Please try again.' };
+      }
+    }
+  };
+
   return (
     <AuthContext.Provider
       value={{
@@ -310,6 +335,7 @@ export const AuthProvider = ({ children }: AuthProviderProps) => {
         setPendingVerification,
         completeSignup,
         checkEmailVerification,
+        resetPassword,
       }}
     >
       {children}

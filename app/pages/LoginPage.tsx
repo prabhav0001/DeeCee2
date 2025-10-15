@@ -10,9 +10,10 @@ type LoginPageProps = {
   onSwitchToSignup: () => void;
   onLoginSuccess: () => void;
   onNeedsVerification: () => void;
+  onForgotPassword: () => void;
 };
 
-export default function LoginPage({ onClose, onSwitchToSignup, onLoginSuccess, onNeedsVerification }: LoginPageProps) {
+export default function LoginPage({ onClose, onSwitchToSignup, onLoginSuccess, onNeedsVerification, onForgotPassword }: LoginPageProps) {
   const { login } = useAuth();
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
@@ -115,7 +116,11 @@ export default function LoginPage({ onClose, onSwitchToSignup, onLoginSuccess, o
               <input type="checkbox" className="rounded" />
               <span className="text-gray-600">Remember me</span>
             </label>
-            <button type="button" className="text-rose-600 hover:underline font-medium">
+            <button
+              type="button"
+              onClick={onForgotPassword}
+              className="text-rose-600 hover:underline font-medium"
+            >
               Forgot Password?
             </button>
           </div>
