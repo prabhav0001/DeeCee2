@@ -1,4 +1,4 @@
-# DEECEE HAIR - Premium Hair Extensions E-Commerce
+# DEECEE HAIR - Premium Hair Extensions E-Commerc
 
 A modern, full-featured e-commerce web application for premium hair extensions built with Next.js 15, React 19, and Tailwind CSS 4.
 
