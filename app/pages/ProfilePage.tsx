@@ -403,10 +403,9 @@ export default function ProfilePage({ onNavigateToLogin }: ProfilePageProps): Re
                     <FormInput
                       label="Email"
                       type="email"
-                      value={isEditing ? editProfile.email : user.email}
-                      onChange={(e) => setEditProfile({ ...editProfile, email: e.target.value })}
-                      error={isEditing ? formErrors.email : undefined}
-                      disabled={!isEditing}
+                      value={user.email}
+                      onChange={() => {}}
+                      disabled={true}
                     />
                     <FormInput
                       label="Phone"
