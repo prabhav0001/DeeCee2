@@ -6,14 +6,14 @@ export const useFormValidation = (fields: Record<string, any>) => {
   return useMemo(() => createFormErrors(fields), [fields]);
 };
 
-// Custom hook for email/phone validation specifically
-export const useAuthValidation = (name: string, email: string, phone: string, password?: string, confirmPassword?: string) => {
+// Custom hook for email validation specifically (no phone)
+export const useAuthValidation = (name: string, email: string, password?: string, confirmPassword?: string) => {
   return useMemo(() => {
-    const fields: Record<string, any> = { name, email, phone };
+    const fields: Record<string, any> = { name, email };
     if (password !== undefined) fields.password = password;
     if (confirmPassword !== undefined) fields.confirmPassword = confirmPassword;
     return createFormErrors(fields);
-  }, [name, email, phone, password, confirmPassword]);
+  }, [name, email, password, confirmPassword]);
 };
 
 // Custom hook for contact form validation

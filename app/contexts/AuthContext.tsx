@@ -6,16 +6,14 @@ import { User } from '@/app/types';
 type AuthContextType = {
   user: User | null;
   isAuthenticated: boolean;
-  pendingVerification: { email: string; phone: string; password: string; name: string } | null;
+  pendingVerification: { email: string; password: string; name: string } | null;
   login: (email: string, password: string) => Promise<{ success: boolean; needsVerification?: boolean; message?: string }>;
-  signup: (name: string, email: string, phone: string, password: string) => Promise<boolean>;
+  signup: (name: string, email: string, password: string) => Promise<boolean>;
   logout: () => void;
   updateUser: (userData: Partial<User>) => void;
   verifyEmail: (otp: string) => Promise<boolean>;
-  verifyMobile: (otp: string) => Promise<boolean>;
   resendEmailOTP: () => Promise<boolean>;
-  resendMobileOTP: () => Promise<boolean>;
-  setPendingVerification: (data: { email: string; phone: string; password: string; name: string } | null) => void;
+  setPendingVerification: (data: { email: string; password: string; name: string } | null) => void;
   completeSignup: () => void;
 };
 
@@ -44,12 +42,11 @@ const getJoinedDate = (): string => {
 export const AuthProvider = ({ children }: AuthProviderProps) => {
   const [user, setUser] = useState<User | null>(null);
   const [isAuthenticated, setIsAuthenticated] = useState(false);
-  const [pendingVerification, setPendingVerification] = useState<{ email: string; phone: string; password: string; name: string } | null>(null);
+  const [pendingVerification, setPendingVerification] = useState<{ email: string; password: string; name: string } | null>(null);
   const [isClient, setIsClient] = useState(false);
 
   // Simulated OTP storage (in production, this would be on backend)
   const [emailOTP, setEmailOTP] = useState<string>('');
-  const [mobileOTP, setMobileOTP] = useState<string>('');
 
   // Set client-side flag
   useEffect(() => {
@@ -88,17 +85,6 @@ export const AuthProvider = ({ children }: AuthProviderProps) => {
     return otp;
   };
 
-  const sendMobileOTP = (phone: string): string => {
-    const otp = generateOTP();
-    setMobileOTP(otp);
-    console.log(`📱 Mobile OTP sent to ${phone}: ${otp}`);
-    // In production: Call backend API to send SMS
-    if (typeof window !== 'undefined') {
-      alert(`Mobile OTP sent to ${phone}: ${otp}\n(This is a demo, in production this would be sent via SMS)`);
-    }
-    return otp;
-  };
-
   const login = async (email: string, password: string): Promise<{ success: boolean; needsVerification?: boolean; message?: string }> => {
     try {
       if (typeof window === 'undefined') return { success: false, message: 'Client-side only' };
@@ -112,26 +98,20 @@ export const AuthProvider = ({ children }: AuthProviderProps) => {
 
       if (foundUser) {
         // Check if user is verified
-        if (!foundUser.isEmailVerified || !foundUser.isMobileVerified) {
+        if (!foundUser.isEmailVerified) {
           setPendingVerification({
             email: foundUser.email,
-            phone: foundUser.phone,
             password: foundUser.password,
             name: foundUser.name
           });
 
-          // Send OTPs
-          if (!foundUser.isEmailVerified) {
-            sendEmailOTP(foundUser.email);
-          }
-          if (!foundUser.isMobileVerified) {
-            sendMobileOTP(foundUser.phone);
-          }
+          // Send OTP
+          sendEmailOTP(foundUser.email);
 
           return {
             success: false,
             needsVerification: true,
-            message: 'Please verify your email and mobile number'
+            message: 'Please verify your email'
           };
         }
 
@@ -161,7 +141,6 @@ export const AuthProvider = ({ children }: AuthProviderProps) => {
   const signup = async (
     name: string,
     email: string,
-    phone: string,
     password: string
   ): Promise<boolean> => {
     try {
@@ -176,11 +155,10 @@ export const AuthProvider = ({ children }: AuthProviderProps) => {
       }
 
       // Set pending verification data
-      setPendingVerification({ email, phone, password, name });
+      setPendingVerification({ email, password, name });
 
-      // Generate and send OTPs
+      // Generate and send OTP
       sendEmailOTP(email);
-      sendMobileOTP(phone);
 
       return true;
     } catch (error) {
@@ -199,7 +177,7 @@ export const AuthProvider = ({ children }: AuthProviderProps) => {
       id: `user_${Date.now()}`,
       name: pendingVerification.name,
       email: pendingVerification.email,
-      phone: pendingVerification.phone,
+      phone: '',
       password: pendingVerification.password,
       joinedDate: getJoinedDate(),
       isEmailVerified: true,
@@ -224,7 +202,6 @@ export const AuthProvider = ({ children }: AuthProviderProps) => {
     localStorage.setItem('deecee_user', JSON.stringify(userData));
     setPendingVerification(null);
     setEmailOTP('');
-    setMobileOTP('');
   };
 
   const verifyEmail = async (otp: string): Promise<boolean> => {
@@ -245,35 +222,9 @@ export const AuthProvider = ({ children }: AuthProviderProps) => {
     return false;
   };
 
-  const verifyMobile = async (otp: string): Promise<boolean> => {
-    if (otp === mobileOTP) {
-      // Update user verification status if already exists
-      if (pendingVerification && typeof window !== 'undefined') {
-        const storedUsers = localStorage.getItem('deecee_users');
-        const users = storedUsers ? JSON.parse(storedUsers) : [];
-        const userIndex = users.findIndex((u: any) => u.email === pendingVerification.email);
-
-        if (userIndex !== -1) {
-          users[userIndex].isMobileVerified = true;
-          localStorage.setItem('deecee_users', JSON.stringify(users));
-        }
-      }
-      return true;
-    }
-    return false;
-  };
-
   const resendEmailOTP = async (): Promise<boolean> => {
     if (pendingVerification) {
       sendEmailOTP(pendingVerification.email);
-      return true;
-    }
-    return false;
-  };
-
-  const resendMobileOTP = async (): Promise<boolean> => {
-    if (pendingVerification) {
-      sendMobileOTP(pendingVerification.phone);
       return true;
     }
     return false;
@@ -306,9 +257,7 @@ export const AuthProvider = ({ children }: AuthProviderProps) => {
         logout,
         updateUser,
         verifyEmail,
-        verifyMobile,
         resendEmailOTP,
-        resendMobileOTP,
         setPendingVerification,
         completeSignup,
       }}
