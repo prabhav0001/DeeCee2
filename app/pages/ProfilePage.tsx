@@ -19,9 +19,10 @@ import {
 
 type ProfilePageProps = {
   onNavigateToLogin: () => void;
+  onNavigateHome: () => void;
 };
 
-export default function ProfilePage({ onNavigateToLogin }: ProfilePageProps): React.ReactElement {
+export default function ProfilePage({ onNavigateToLogin, onNavigateHome }: ProfilePageProps): React.ReactElement {
   const { user, isAuthenticated, logout, updateUser } = useAuth();
   const [activeTab, setActiveTab] = useState<ProfileTab>("profile");
   const [isEditing, setIsEditing] = useState(false);
@@ -282,7 +283,7 @@ export default function ProfilePage({ onNavigateToLogin }: ProfilePageProps): Re
 
   const handleLogout = () => {
     logout();
-    onNavigateToLogin();
+    onNavigateHome();
   };
 
   const getStatusColor = (status: Order["status"]) => {

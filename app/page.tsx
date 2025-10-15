@@ -791,7 +791,12 @@ function DeeceeHairApp(): React.ReactElement {
         {currentPage === "terms" && <TermsPage />}
         {currentPage === "privacy" && <PrivacyPolicyPage />}
         {currentPage === "about" && <AboutUsPage />}
-        {currentPage === "profile" && <ProfilePage onNavigateToLogin={() => setShowLogin(true)} />}
+        {currentPage === "profile" && (
+          <ProfilePage
+            onNavigateToLogin={() => setShowLogin(true)}
+            onNavigateHome={() => navigateTo("home")}
+          />
+        )}
         {currentPage === "bestsellers" && (
           <BestsellersPage
             products={products}
