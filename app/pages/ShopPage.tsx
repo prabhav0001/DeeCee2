@@ -29,7 +29,12 @@ type ShopPageProps = {
 };
 
 export default function ShopPage({ products, filterCategory, setFilterCategory, onProductClick, convertPrice }: ShopPageProps): React.ReactElement {
-  const filteredProducts = filterCategory === "all" ? products : products.filter((p) => p.category === filterCategory);
+  // Filter products: exclude men's products from women's shop sections
+  const filteredProducts = filterCategory === "all"
+    ? products.filter((p) => !p.isMans)
+    : filterCategory === "mans"
+      ? products.filter((p) => p.category === filterCategory)
+      : products.filter((p) => p.category === filterCategory && !p.isMans);
 
   return (
     <div className="w-full px-4 sm:px-6 lg:px-8 py-8 sm:py-12">
