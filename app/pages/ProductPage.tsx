@@ -206,10 +206,10 @@ export default function ProductPage({
               ))}
             </div>
           </div>
-          
+
           <div className="flex gap-3 flex-wrap">
-            <button 
-              onClick={onAddToCart} 
+            <button
+              onClick={onAddToCart}
               className="bg-rose-600 text-white px-8 py-3 rounded-2xl font-semibold hover:bg-rose-700 transition shadow-lg flex-1 min-w-[200px]"
             >
               Add to Cart
@@ -218,8 +218,8 @@ export default function ProductPage({
               <button
                 onClick={() => onToggleWishlist(product)}
                 className={`px-6 py-3 rounded-2xl font-semibold transition shadow-lg flex items-center gap-2 ${
-                  isInWishlist 
-                    ? 'bg-rose-100 text-rose-700 hover:bg-rose-200' 
+                  isInWishlist
+                    ? 'bg-rose-100 text-rose-700 hover:bg-rose-200'
                     : 'bg-gray-100 text-gray-700 hover:bg-gray-200'
                 }`}
                 title={isInWishlist ? "Remove from wishlist" : "Add to wishlist"}

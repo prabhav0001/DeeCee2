@@ -257,19 +257,6 @@ export default function ProfilePage({ onNavigateToLogin }: ProfilePageProps): Re
     const addressId = await addAddressToFirestore(user.email, address);
 
     if (addressId) {
-      let profileUpdated = false;
-
-      // Auto-update profile phone if not set
-      if (newAddress.phone && (!user.phone || user.phone === '')) {
-        updateUser({
-          name: user.name,
-          email: user.email,
-          phone: newAddress.phone
-        });
-        profileUpdated = true;
-        console.log('✅ Profile phone updated from address:', newAddress.phone);
-      }
-
       // Reload addresses from Firestore
       const updatedAddresses = await getUserAddresses(user.email);
       setAddresses(updatedAddresses);
@@ -277,7 +264,7 @@ export default function ProfilePage({ onNavigateToLogin }: ProfilePageProps): Re
       // Reset form
       setNewAddress({
         name: user.name || '',
-        phone: newAddress.phone || user.phone || '',
+        phone: user.phone || '',
         addressLine1: '',
         addressLine2: '',
         city: '',
@@ -288,13 +275,6 @@ export default function ProfilePage({ onNavigateToLogin }: ProfilePageProps): Re
       setShowAddressForm(false);
       setShowSuccess(true);
       setTimeout(() => setShowSuccess(false), 3000);
-
-      // Notify user if profile was updated
-      if (profileUpdated) {
-        setTimeout(() => {
-          alert('✅ Address added! Your profile phone number has also been updated.');
-        }, 500);
-      }
     } else {
       alert('Failed to add address. Please try again.');
     }
@@ -431,7 +411,7 @@ export default function ProfilePage({ onNavigateToLogin }: ProfilePageProps): Re
                     <FormInput
                       label="Phone"
                       type="tel"
-                      value={isEditing ? editProfile.phone : user.phone}
+                      value={isEditing ? editProfile.phone : (user.phone || addresses.find(addr => addr.isDefault)?.phone || addresses[0]?.phone || '')}
                       onChange={(e) => setEditProfile({ ...editProfile, phone: e.target.value })}
                       error={isEditing ? formErrors.phone : undefined}
                       disabled={!isEditing}
@@ -443,6 +423,12 @@ export default function ProfilePage({ onNavigateToLogin }: ProfilePageProps): Re
                       disabled={true}
                     />
                   </div>
+
+                  {!user.phone && addresses.length > 0 && !isEditing && (addresses.find(addr => addr.isDefault)?.phone || addresses[0]?.phone) && (
+                    <div className="mt-4 p-3 bg-blue-50 border border-blue-200 rounded-lg text-sm text-blue-700">
+                      ℹ️ Phone number shown from your {addresses.find(addr => addr.isDefault) ? 'default' : 'saved'} address
+                    </div>
+                  )}
                 </div>
               )}
 
@@ -691,7 +677,7 @@ export default function ProfilePage({ onNavigateToLogin }: ProfilePageProps): Re
               {activeTab === "wishlist" && (
                 <div>
                   <h2 className="text-xl font-bold text-gray-900 mb-6">My Wishlist ({wishlistItems.length})</h2>
-                  
+
                   {wishlistLoading ? (
                     <div className="text-center py-12">
                       <div className="inline-block animate-spin rounded-full h-12 w-12 border-b-2 border-rose-600"></div>
@@ -702,7 +688,7 @@ export default function ProfilePage({ onNavigateToLogin }: ProfilePageProps): Re
                       <Heart className="w-16 h-16 text-gray-300 mx-auto mb-4" />
                       <h3 className="text-lg font-semibold text-gray-900 mb-2">Your Wishlist is Empty</h3>
                       <p className="text-gray-600 mb-6">Save your favorite products to buy them later!</p>
-                      <button 
+                      <button
                         onClick={() => window.location.href = '/shop'}
                         className="bg-rose-600 text-white px-6 py-3 rounded-lg font-semibold hover:bg-rose-700 transition"
                       >
@@ -718,7 +704,7 @@ export default function ProfilePage({ onNavigateToLogin }: ProfilePageProps): Re
                             <h3 className="font-semibold text-gray-900 mb-2 line-clamp-1">{item.name}</h3>
                             <p className="text-rose-600 font-bold mb-3">₹{item.price.toLocaleString()}</p>
                             <div className="flex gap-2">
-                              <button 
+                              <button
                                 onClick={() => {
                                   // Will be connected to cart functionality
                                   alert('Add to cart functionality will be connected soon!');
@@ -727,7 +713,7 @@ export default function ProfilePage({ onNavigateToLogin }: ProfilePageProps): Re
                               >
                                 Add to Cart
                               </button>
-                              <button 
+                              <button
                                 onClick={() => handleRemoveFromWishlist(item.id)}
                                 className="p-2 border border-gray-300 rounded-lg hover:bg-gray-50 transition"
                                 title="Remove from wishlist"

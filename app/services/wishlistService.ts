@@ -1,16 +1,16 @@
 /**
  * Wishlist Service - Firebase Firestore Integration
- * 
+ *
  * Manages user wishlist items with CRUD operations.
  * Each user's wishlist is stored in Firestore with their email as the identifier.
  */
 
-import { 
-  collection, 
-  addDoc, 
-  deleteDoc, 
-  getDocs, 
-  query, 
+import {
+  collection,
+  addDoc,
+  deleteDoc,
+  getDocs,
+  query,
   where,
   doc,
   serverTimestamp,
@@ -44,7 +44,7 @@ type FirestoreWishlistItem = {
 export async function getUserWishlist(userEmail: string): Promise<WishlistItem[]> {
   try {
     console.log('📖 Fetching wishlist for:', userEmail);
-    
+
     const wishlistRef = collection(db, 'wishlists');
     const q = query(wishlistRef, where('userEmail', '==', userEmail));
     const querySnapshot = await getDocs(q);

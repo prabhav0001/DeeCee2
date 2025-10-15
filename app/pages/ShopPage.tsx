@@ -5,15 +5,15 @@ import { Product } from "@/app/types";
 import { FilterButton } from "@/app/components/common";
 import { Heart } from "lucide-react";
 
-const ProductCard = ({ 
-  product, 
-  onClick, 
-  convertPrice, 
-  isInWishlist, 
-  onToggleWishlist 
-}: { 
-  product: Product; 
-  onClick: () => void; 
+const ProductCard = ({
+  product,
+  onClick,
+  convertPrice,
+  isInWishlist,
+  onToggleWishlist
+}: {
+  product: Product;
+  onClick: () => void;
   convertPrice: (price: number) => string;
   isInWishlist?: boolean;
   onToggleWishlist?: (product: Product) => void;
@@ -59,14 +59,14 @@ type ShopPageProps = {
   onToggleWishlist?: (product: Product) => void;
 };
 
-export default function ShopPage({ 
-  products, 
-  filterCategory, 
-  setFilterCategory, 
-  onProductClick, 
+export default function ShopPage({
+  products,
+  filterCategory,
+  setFilterCategory,
+  onProductClick,
   convertPrice,
   wishlistProductIds = [],
-  onToggleWishlist 
+  onToggleWishlist
 }: ShopPageProps): React.ReactElement {
   // Filter products: exclude men's products from women's shop sections
   const filteredProducts = filterCategory === "all"
@@ -89,10 +89,10 @@ export default function ShopPage({
       </div>
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 sm:gap-8 lg:gap-10">
         {filteredProducts.map((product) => (
-          <ProductCard 
-            key={product.id} 
-            product={product} 
-            onClick={() => onProductClick(product)} 
+          <ProductCard
+            key={product.id}
+            product={product}
+            onClick={() => onProductClick(product)}
             convertPrice={convertPrice}
             isInWishlist={wishlistProductIds.includes(product.id)}
             onToggleWishlist={onToggleWishlist}
