@@ -10,13 +10,11 @@ type VerificationPageProps = {
 };
 
 export default function VerificationPage({ onClose, onVerificationSuccess }: VerificationPageProps) {
-  const { pendingVerification, verifyEmail, resendEmailOTP, completeSignup } = useAuth();
+  const { pendingVerification, resendEmailOTP, completeSignup, checkEmailVerification } = useAuth();
 
-  const [emailOTP, setEmailOTP] = useState(['', '', '', '', '', '']);
   const [emailVerified, setEmailVerified] = useState(false);
-  const [emailError, setEmailError] = useState('');
   const [emailResendTimer, setEmailResendTimer] = useState(30);
-  const [isLoading, setIsLoading] = useState(false);
+  const [isChecking, setIsChecking] = useState(false);
 
   // Email Resend Timer
   useEffect(() => {
@@ -26,44 +24,13 @@ export default function VerificationPage({ onClose, onVerificationSuccess }: Ver
     }
   }, [emailResendTimer]);
 
-  const handleOTPChange = (index: number, value: string) => {
-    if (!/^\d*$/.test(value)) return;
+  const handleCheckVerification = async () => {
+    setIsChecking(true);
+    const isVerified = await checkEmailVerification();
+    setIsChecking(false);
 
-    const newOTP = [...emailOTP];
-    newOTP[index] = value;
-    setEmailOTP(newOTP);
-    setEmailError('');
-
-    // Auto-focus next input
-    if (value && index < 5) {
-      const nextInput = document.getElementById(`email-otp-${index + 1}`);
-      nextInput?.focus();
-    }
-
-    // Auto-verify when all digits entered
-    if (newOTP.every(digit => digit !== '') && !emailVerified) {
-      handleVerifyEmail(newOTP.join(''));
-    }
-  };
-
-  const handleKeyDown = (index: number, e: React.KeyboardEvent) => {
-    if (e.key === 'Backspace' && index > 0) {
-      const currentValue = emailOTP[index];
-      if (!currentValue) {
-        const prevInput = document.getElementById(`email-otp-${index - 1}`);
-        prevInput?.focus();
-      }
-    }
-  };
-
-  const handleVerifyEmail = async (otp: string) => {
-    setIsLoading(true);
-    const success = await verifyEmail(otp);
-    setIsLoading(false);
-
-    if (success) {
+    if (isVerified) {
       setEmailVerified(true);
-      setEmailError('');
 
       // Complete signup and redirect
       setTimeout(() => {
@@ -71,17 +38,17 @@ export default function VerificationPage({ onClose, onVerificationSuccess }: Ver
         onVerificationSuccess();
       }, 1500);
     } else {
-      setEmailError('Invalid OTP. Please try again.');
-      setEmailOTP(['', '', '', '', '', '']);
-      document.getElementById('email-otp-0')?.focus();
+      if (typeof window !== 'undefined') {
+        alert('Email not verified yet. Please check your inbox and click the verification link.');
+      }
     }
   };
 
   const handleResendEmailOTP = async () => {
-    await resendEmailOTP();
-    setEmailResendTimer(30);
-    setEmailOTP(['', '', '', '', '', '']);
-    setEmailError('');
+    const success = await resendEmailOTP();
+    if (success) {
+      setEmailResendTimer(30);
+    }
   };
 
   if (!pendingVerification) {
@@ -103,7 +70,7 @@ export default function VerificationPage({ onClose, onVerificationSuccess }: Ver
             <CheckCircle2 className="w-6 h-6 sm:w-7 sm:h-7 md:w-8 md:h-8 text-rose-600" />
           </div>
           <h2 className="text-xl sm:text-2xl font-bold text-gray-900">Verify Your Email</h2>
-          <p className="text-sm sm:text-base text-gray-600 mt-1 sm:mt-2">We've sent a verification code to your email</p>
+          <p className="text-sm sm:text-base text-gray-600 mt-1 sm:mt-2">We've sent a verification link to your email</p>
         </div>
 
         {/* Email Verification */}
@@ -121,38 +88,33 @@ export default function VerificationPage({ onClose, onVerificationSuccess }: Ver
 
           {!emailVerified && (
             <>
-              <p className="text-xs sm:text-sm text-gray-600 mb-3 sm:mb-4">Enter 6-digit OTP sent to your email</p>
-
-              <div className="flex gap-1.5 sm:gap-2 justify-center mb-3 sm:mb-4">
-                {emailOTP.map((digit, index) => (
-                  <input
-                    key={index}
-                    id={`email-otp-${index}`}
-                    type="text"
-                    maxLength={1}
-                    value={digit}
-                    onChange={(e) => handleOTPChange(index, e.target.value)}
-                    onKeyDown={(e) => handleKeyDown(index, e)}
-                    disabled={emailVerified || isLoading}
-                    className="w-10 h-10 sm:w-12 sm:h-12 text-center text-lg sm:text-xl font-bold border-2 border-gray-300 rounded-xl focus:border-rose-500 focus:outline-none transition-all disabled:bg-gray-100"
-                  />
-                ))}
+              <div className="bg-blue-50 border border-blue-200 rounded-xl p-3 sm:p-4 mb-4">
+                <p className="text-xs sm:text-sm text-blue-800">
+                  📧 <strong>Check your email inbox</strong> and click the verification link to verify your account.
+                </p>
+                <p className="text-xs text-blue-600 mt-2">
+                  Don't forget to check your spam folder if you don't see the email.
+                </p>
               </div>
 
-              {emailError && (
-                <p className="text-red-600 text-xs sm:text-sm mb-3 sm:mb-4 text-center">{emailError}</p>
-              )}
+              <button
+                onClick={handleCheckVerification}
+                disabled={isChecking}
+                className="w-full bg-rose-600 text-white py-2.5 sm:py-3 rounded-xl text-sm sm:text-base font-semibold hover:bg-rose-700 transition shadow-lg disabled:opacity-50 disabled:cursor-not-allowed mb-3"
+              >
+                {isChecking ? 'Checking...' : 'I\'ve Verified My Email'}
+              </button>
 
               <div className="text-center">
                 {emailResendTimer > 0 ? (
-                  <p className="text-xs sm:text-sm text-gray-500">Resend OTP in {emailResendTimer}s</p>
+                  <p className="text-xs sm:text-sm text-gray-500">Resend email in {emailResendTimer}s</p>
                 ) : (
                   <button
                     onClick={handleResendEmailOTP}
                     className="text-xs sm:text-sm text-rose-600 hover:underline font-medium flex items-center gap-1 mx-auto"
                   >
                     <RefreshCw className="w-3 h-3 sm:w-4 sm:h-4" />
-                    Resend Email OTP
+                    Resend Verification Email
                   </button>
                 )}
               </div>
@@ -165,6 +127,12 @@ export default function VerificationPage({ onClose, onVerificationSuccess }: Ver
               <p className="text-xs sm:text-sm text-green-600 mt-1">Redirecting to your profile...</p>
             </div>
           )}
+        </div>
+
+        <div className="mt-4 sm:mt-6 pt-4 sm:pt-6 border-t border-gray-200">
+          <p className="text-xs text-gray-500 text-center">
+            Having trouble? Contact support at support@deeceehair.com
+          </p>
         </div>
       </div>
     </div>

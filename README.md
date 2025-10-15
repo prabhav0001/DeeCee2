@@ -10,7 +10,7 @@ A modern, full-featured e-commerce web application for premium hair extensions b
 ## 🌟 Features
 
 - **Single-Page Application (SPA)**: Smooth navigation using History API
-- **Authentication System**: Local authentication with email & mobile OTP verification
+- **Firebase Authentication**: Secure email authentication with real email verification
 - **Product Catalog**: Browse straight, wavy, curly, and men's hair extensions
 - **Shopping Cart**: Full cart management with quantity controls
 - **User Profile**: Manage profile, orders, addresses, and wishlist
@@ -31,6 +31,8 @@ app/
 │       ├── FeatureCard.tsx
 │       ├── PromoSlider.tsx
 │       └── index.ts         # Barrel export
+├── config/
+│   └── firebase.ts          # Firebase configuration
 ├── pages/                   # Page components
 │   ├── ShopPage.tsx
 │   ├── ProductPage.tsx
@@ -45,7 +47,7 @@ app/
 │   ├── SignupPage.tsx
 │   └── VerificationPage.tsx
 ├── contexts/
-│   └── AuthContext.tsx      # Authentication context
+│   └── AuthContext.tsx      # Firebase authentication context
 ├── hooks/
 │   └── use-form-validation.ts  # Form validation hooks
 ├── types/
@@ -77,12 +79,23 @@ app/
    npm install
    ```
 
-3. **Run the development server**:
+3. **Setup Firebase Authentication**:
+
+   See **[FIREBASE_QUICKSTART.md](FIREBASE_QUICKSTART.md)** for a 5-minute setup guide, or **[FIREBASE_SETUP.md](FIREBASE_SETUP.md)** for detailed instructions.
+
+   Quick setup:
+   - Create Firebase project at https://console.firebase.google.com/
+   - Enable Email/Password authentication
+   - Copy your Firebase config
+   - Create `.env.local` file (use `.env.example` as template)
+   - Add your Firebase credentials
+
+4. **Run the development server**:
    ```bash
    npm run dev
    ```
 
-4. **Open your browser**:
+5. **Open your browser**:
    Navigate to [http://localhost:3000](http://localhost:3000)
 
 ### Available Scripts
@@ -105,12 +118,13 @@ This app uses a **custom SPA navigation** system instead of Next.js file-based r
 
 ### Authentication
 
-- **Local-only auth**: Uses `localStorage` for demo purposes
-- **OTP verification**: Client-side email and mobile OTP generation
-- **Protected routes**: Profile page requires authentication
-- **User persistence**: Stored in `localStorage` keys: `deecee_user`, `deecee_users`
+- **Firebase Authentication**: Production-ready authentication system
+- **Email Verification**: Real email verification with Firebase
+- **Secure Password Storage**: Firebase handles password hashing
+- **Protected Routes**: Profile page requires authentication
+- **Session Management**: Firebase manages user sessions automatically
 
-⚠️ **Note**: This is a demo auth system. For production, implement server-side authentication.
+🔐 **Setup Required**: See [FIREBASE_QUICKSTART.md](FIREBASE_QUICKSTART.md) for authentication setup.
 
 ### State Management
 
@@ -220,6 +234,7 @@ const errors = useFormValidation({ name, email, phone });
 - **Next.js** 15.5.4 - React framework with App Router
 - **React** 19.1.0 - UI library
 - **React DOM** 19.1.0 - React rendering
+- **Firebase** (latest) - Authentication & backend services
 
 ### UI
 - **Tailwind CSS** 4 - Utility-first CSS framework
@@ -231,13 +246,16 @@ const errors = useFormValidation({ name, email, phone });
 
 ## 📚 Documentation
 
+- **[FIREBASE_QUICKSTART.md](FIREBASE_QUICKSTART.md)**: Quick 5-minute Firebase setup guide
+- **[FIREBASE_SETUP.md](FIREBASE_SETUP.md)**: Detailed Firebase authentication setup
 - **[.github/copilot-instructions.md](.github/copilot-instructions.md)**: AI coding assistant guide
-- **[REFACTORING.md](REFACTORING.md)**: Complete refactoring summary
 
 ## 🚧 Roadmap
 
+- [x] Firebase Authentication with email verification
+- [ ] Password reset functionality
+- [ ] Social authentication (Google, Facebook)
 - [ ] Backend API integration
-- [ ] Real authentication system
 - [ ] Payment gateway integration
 - [ ] Order management system
 - [ ] Admin dashboard

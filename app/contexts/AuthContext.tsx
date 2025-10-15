@@ -2,6 +2,17 @@
 
 import React, { createContext, useContext, useState, useEffect, ReactNode } from 'react';
 import { User } from '@/app/types';
+import { auth } from '@/app/config/firebase';
+import {
+  createUserWithEmailAndPassword,
+  signInWithEmailAndPassword,
+  signOut,
+  sendEmailVerification,
+  onAuthStateChanged,
+  updateProfile,
+  User as FirebaseUser,
+  reload
+} from 'firebase/auth';
 
 type AuthContextType = {
   user: User | null;
@@ -15,6 +26,7 @@ type AuthContextType = {
   resendEmailOTP: () => Promise<boolean>;
   setPendingVerification: (data: { email: string; password: string; name: string } | null) => void;
   completeSignup: () => void;
+  checkEmailVerification: () => Promise<boolean>;
 };
 
 const AuthContext = createContext<AuthContextType | undefined>(undefined);
@@ -39,102 +51,89 @@ const getJoinedDate = (): string => {
   return `${month} ${year}`;
 };
 
+// Convert Firebase user to app User type
+const convertFirebaseUser = (firebaseUser: FirebaseUser): User => {
+  return {
+    id: firebaseUser.uid,
+    name: firebaseUser.displayName || '',
+    email: firebaseUser.email || '',
+    phone: firebaseUser.phoneNumber || '',
+    joinedDate: getJoinedDate(),
+    isEmailVerified: firebaseUser.emailVerified,
+    isMobileVerified: !!firebaseUser.phoneNumber,
+  };
+};
+
 export const AuthProvider = ({ children }: AuthProviderProps) => {
   const [user, setUser] = useState<User | null>(null);
   const [isAuthenticated, setIsAuthenticated] = useState(false);
   const [pendingVerification, setPendingVerification] = useState<{ email: string; password: string; name: string } | null>(null);
   const [isClient, setIsClient] = useState(false);
 
-  // Simulated OTP storage (in production, this would be on backend)
-  const [emailOTP, setEmailOTP] = useState<string>('');
-
   // Set client-side flag
   useEffect(() => {
     setIsClient(true);
   }, []);
 
-  // Load user from localStorage on mount (only on client)
+  // Listen to Firebase auth state changes
   useEffect(() => {
     if (!isClient) return;
 
-    const storedUser = localStorage.getItem('deecee_user');
-    if (storedUser) {
-      try {
-        const parsedUser = JSON.parse(storedUser);
-        setUser(parsedUser);
+    const unsubscribe = onAuthStateChanged(auth, (firebaseUser) => {
+      if (firebaseUser) {
+        const appUser = convertFirebaseUser(firebaseUser);
+        setUser(appUser);
         setIsAuthenticated(true);
-      } catch (error) {
-        console.error('Error parsing stored user:', error);
-        localStorage.removeItem('deecee_user');
+
+        // Store in localStorage for persistence
+        if (typeof window !== 'undefined') {
+          localStorage.setItem('deecee_user', JSON.stringify(appUser));
+        }
+      } else {
+        setUser(null);
+        setIsAuthenticated(false);
+        if (typeof window !== 'undefined') {
+          localStorage.removeItem('deecee_user');
+        }
       }
-    }
+    });
+
+    return () => unsubscribe();
   }, [isClient]);
-
-  const generateOTP = (): string => {
-    return Math.floor(100000 + Math.random() * 900000).toString();
-  };
-
-  const sendEmailOTP = (email: string): string => {
-    const otp = generateOTP();
-    setEmailOTP(otp);
-    console.log(`📧 Email OTP sent to ${email}: ${otp}`);
-    // In production: Call backend API to send email
-    if (typeof window !== 'undefined') {
-      alert(`Email OTP sent to ${email}: ${otp}\n(This is a demo, in production this would be sent via email)`);
-    }
-    return otp;
-  };
 
   const login = async (email: string, password: string): Promise<{ success: boolean; needsVerification?: boolean; message?: string }> => {
     try {
-      if (typeof window === 'undefined') return { success: false, message: 'Client-side only' };
+      const userCredential = await signInWithEmailAndPassword(auth, email, password);
 
-      const storedUsers = localStorage.getItem('deecee_users');
-      const users = storedUsers ? JSON.parse(storedUsers) : [];
+      // Check if email is verified
+      if (!userCredential.user.emailVerified) {
+        setPendingVerification({
+          email: userCredential.user.email || email,
+          password,
+          name: userCredential.user.displayName || ''
+        });
 
-      const foundUser = users.find(
-        (u: any) => u.email === email && u.password === password
-      );
-
-      if (foundUser) {
-        // Check if user is verified
-        if (!foundUser.isEmailVerified) {
-          setPendingVerification({
-            email: foundUser.email,
-            password: foundUser.password,
-            name: foundUser.name
-          });
-
-          // Send OTP
-          sendEmailOTP(foundUser.email);
-
-          return {
-            success: false,
-            needsVerification: true,
-            message: 'Please verify your email'
-          };
-        }
-
-        const userData: User = {
-          id: foundUser.id,
-          name: foundUser.name,
-          email: foundUser.email,
-          phone: foundUser.phone,
-          joinedDate: foundUser.joinedDate,
-          isEmailVerified: foundUser.isEmailVerified,
-          isMobileVerified: foundUser.isMobileVerified,
+        return {
+          success: false,
+          needsVerification: true,
+          message: 'Please verify your email before logging in'
         };
-
-        setUser(userData);
-        setIsAuthenticated(true);
-        localStorage.setItem('deecee_user', JSON.stringify(userData));
-        return { success: true };
-      } else {
-        return { success: false, message: 'Invalid email or password' };
       }
-    } catch (error) {
+
+      return { success: true };
+    } catch (error: any) {
       console.error('Login error:', error);
-      return { success: false, message: 'An error occurred during login' };
+
+      // Handle specific Firebase errors
+      if (error.code === 'auth/invalid-credential' || error.code === 'auth/wrong-password') {
+        return { success: false, message: 'Invalid email or password' };
+      } else if (error.code === 'auth/user-not-found') {
+        return { success: false, message: 'No account found with this email' };
+      } else if (error.code === 'auth/too-many-requests') {
+        return { success: false, message: 'Too many failed attempts. Please try again later.' };
+      } else {
+        return { success: false, message: 'An error occurred during login' };
+      }
     }
   };
 
@@ -144,105 +143,155 @@ export const AuthProvider = ({ children }: AuthProviderProps) => {
     password: string
   ): Promise<boolean> => {
     try {
-      if (typeof window === 'undefined') return false;
+      // Create user account
+      const userCredential = await createUserWithEmailAndPassword(auth, email, password);
 
-      const storedUsers = localStorage.getItem('deecee_users');
-      const users = storedUsers ? JSON.parse(storedUsers) : [];
+      // Update profile with name
+      await updateProfile(userCredential.user, {
+        displayName: name
+      });
 
-      const emailExists = users.some((u: any) => u.email === email);
-      if (emailExists) {
+      // Send email verification
+      await sendEmailVerification(userCredential.user);
+
+      // Set pending verification
+      setPendingVerification({ email, password, name });
+
+      // Sign out until email is verified
+      await signOut(auth);
+
+      if (typeof window !== 'undefined') {
+        alert(`Verification email sent to ${email}.\nPlease check your inbox and verify your email.`);
+      }
+
+      return true;
+    } catch (error: any) {
+      console.error('Signup error:', error);
+
+      // Handle specific Firebase errors
+      if (error.code === 'auth/email-already-in-use') {
         return false;
       }
 
-      // Set pending verification data
-      setPendingVerification({ email, password, name });
-
-      // Generate and send OTP
-      sendEmailOTP(email);
-
-      return true;
-    } catch (error) {
-      console.error('Signup error:', error);
       return false;
     }
   };
 
   const completeSignup = () => {
-    if (!pendingVerification || typeof window === 'undefined') return;
-
-    const storedUsers = localStorage.getItem('deecee_users');
-    const users = storedUsers ? JSON.parse(storedUsers) : [];
-
-    const newUser = {
-      id: `user_${Date.now()}`,
-      name: pendingVerification.name,
-      email: pendingVerification.email,
-      phone: '',
-      password: pendingVerification.password,
-      joinedDate: getJoinedDate(),
-      isEmailVerified: true,
-      isMobileVerified: true,
-    };
-
-    users.push(newUser);
-    localStorage.setItem('deecee_users', JSON.stringify(users));
-
-    const userData: User = {
-      id: newUser.id,
-      name: newUser.name,
-      email: newUser.email,
-      phone: newUser.phone,
-      joinedDate: newUser.joinedDate,
-      isEmailVerified: true,
-      isMobileVerified: true,
-    };
-
-    setUser(userData);
-    setIsAuthenticated(true);
-    localStorage.setItem('deecee_user', JSON.stringify(userData));
+    // This function is called after verification modal
+    // The actual email verification happens via Firebase email link
     setPendingVerification(null);
-    setEmailOTP('');
   };
 
   const verifyEmail = async (otp: string): Promise<boolean> => {
-    if (otp === emailOTP) {
-      // Update user verification status if already exists
-      if (pendingVerification && typeof window !== 'undefined') {
-        const storedUsers = localStorage.getItem('deecee_users');
-        const users = storedUsers ? JSON.parse(storedUsers) : [];
-        const userIndex = users.findIndex((u: any) => u.email === pendingVerification.email);
+    // Firebase handles email verification via email link
+    // This function is kept for compatibility but OTP is not used
+    // Users should click the link in their email
+    return false;
+  };
 
-        if (userIndex !== -1) {
-          users[userIndex].isEmailVerified = true;
-          localStorage.setItem('deecee_users', JSON.stringify(users));
+  const checkEmailVerification = async (): Promise<boolean> => {
+    try {
+      // If user is already logged in, just reload and check
+      if (auth.currentUser) {
+        await reload(auth.currentUser);
+        return auth.currentUser.emailVerified;
+      }
+
+      // If we have pending verification, sign in to check status
+      if (pendingVerification) {
+        try {
+          const userCredential = await signInWithEmailAndPassword(
+            auth,
+            pendingVerification.email,
+            pendingVerification.password
+          );
+
+          // Reload to get the latest verification status
+          await reload(userCredential.user);
+
+          const isVerified = userCredential.user.emailVerified;
+
+          // If verified, keep them logged in, otherwise sign them out
+          if (!isVerified) {
+            await signOut(auth);
+          }
+
+          return isVerified;
+        } catch (error: any) {
+          console.error('Error signing in to check verification:', error);
+          return false;
         }
       }
-      return true;
+
+      return false;
+    } catch (error) {
+      console.error('Error checking email verification:', error);
+      return false;
     }
-    return false;
   };
 
   const resendEmailOTP = async (): Promise<boolean> => {
-    if (pendingVerification) {
-      sendEmailOTP(pendingVerification.email);
-      return true;
+    try {
+      if (auth.currentUser) {
+        await sendEmailVerification(auth.currentUser);
+        if (typeof window !== 'undefined') {
+          alert('Verification email sent! Please check your inbox.');
+        }
+        return true;
+      } else if (pendingVerification) {
+        // If user is not logged in but we have pending verification,
+        // we need to sign them in first to resend
+        const userCredential = await signInWithEmailAndPassword(
+          auth,
+          pendingVerification.email,
+          pendingVerification.password
+        );
+        await sendEmailVerification(userCredential.user);
+        await signOut(auth);
+
+        if (typeof window !== 'undefined') {
+          alert('Verification email sent! Please check your inbox.');
+        }
+        return true;
+      }
+      return false;
+    } catch (error) {
+      console.error('Error resending verification email:', error);
+      return false;
     }
-    return false;
   };
 
-  const logout = () => {
-    setUser(null);
-    setIsAuthenticated(false);
-    if (typeof window !== 'undefined') {
-      localStorage.removeItem('deecee_user');
+  const logout = async () => {
+    try {
+      await signOut(auth);
+      setUser(null);
+      setIsAuthenticated(false);
+      if (typeof window !== 'undefined') {
+        localStorage.removeItem('deecee_user');
+      }
+    } catch (error) {
+      console.error('Logout error:', error);
     }
   };
 
-  const updateUser = (userData: Partial<User>) => {
-    if (user && typeof window !== 'undefined') {
-      const updatedUser = { ...user, ...userData };
-      setUser(updatedUser);
-      localStorage.setItem('deecee_user', JSON.stringify(updatedUser));
+  const updateUser = async (userData: Partial<User>) => {
+    if (auth.currentUser && typeof window !== 'undefined') {
+      try {
+        // Update Firebase profile if name changed
+        if (userData.name && userData.name !== auth.currentUser.displayName) {
+          await updateProfile(auth.currentUser, {
+            displayName: userData.name
+          });
+        }
+
+        // Update local user state
+        const updatedUser = { ...user, ...userData } as User;
+        setUser(updatedUser);
+        localStorage.setItem('deecee_user', JSON.stringify(updatedUser));
+      } catch (error) {
+        console.error('Error updating user:', error);
+      }
     }
   };
 
@@ -260,6 +309,7 @@ export const AuthProvider = ({ children }: AuthProviderProps) => {
         resendEmailOTP,
         setPendingVerification,
         completeSignup,
+        checkEmailVerification,
       }}
     >
       {children}

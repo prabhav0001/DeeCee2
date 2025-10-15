@@ -181,7 +181,7 @@ export default function SignupPage({ onClose, onSwitchToLogin, onSignupSuccess }
 
         <div className="mt-4 sm:mt-6 pt-4 sm:pt-6 border-t border-gray-200">
           <p className="text-xs text-gray-500 text-center">
-            📧 Email verification required after signup
+            � Secure signup with email verification via Firebase
           </p>
         </div>
       </div>
