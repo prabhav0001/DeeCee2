@@ -74,6 +74,16 @@ export type Address = {
   isDefault: boolean;
 };
 
+export type WishlistItem = {
+  id: string;
+  productId: number;
+  name: string;
+  price: number;
+  image: string;
+  category?: string;
+  addedAt: Date;
+};
+
 export type ProfileTab = "profile" | "orders" | "addresses" | "security" | "wishlist";
 
 // Common form validation patterns

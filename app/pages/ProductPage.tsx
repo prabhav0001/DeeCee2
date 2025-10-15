@@ -2,7 +2,7 @@
 
 import React, { useState, useRef, useEffect } from "react";
 import { Product } from "@/app/types";
-import { X, ZoomIn, ZoomOut, RotateCcw, ChevronLeft, ChevronRight } from "lucide-react";
+import { X, ZoomIn, ZoomOut, RotateCcw, ChevronLeft, ChevronRight, Heart } from "lucide-react";
 
 type ProductPageProps = {
   product: Product;
@@ -13,6 +13,8 @@ type ProductPageProps = {
   onAddToCart: () => void;
   onBackToShop: () => void;
   convertPrice: (price: number) => string;
+  isInWishlist?: boolean;
+  onToggleWishlist?: (product: Product) => void;
 };
 
 export default function ProductPage({
@@ -23,7 +25,9 @@ export default function ProductPage({
   setSelectedSize,
   onAddToCart,
   onBackToShop,
-  convertPrice
+  convertPrice,
+  isInWishlist = false,
+  onToggleWishlist
 }: ProductPageProps): React.ReactElement {
   const [selectedImageIndex, setSelectedImageIndex] = useState(0);
   const [showZoomModal, setShowZoomModal] = useState(false);
@@ -202,9 +206,29 @@ export default function ProductPage({
               ))}
             </div>
           </div>
-          <button onClick={onAddToCart} className="bg-rose-600 text-white px-8 py-3 rounded-2xl font-semibold hover:bg-rose-700 transition shadow-lg w-full md:w-auto">
-            Add to Cart
-          </button>
+          
+          <div className="flex gap-3 flex-wrap">
+            <button 
+              onClick={onAddToCart} 
+              className="bg-rose-600 text-white px-8 py-3 rounded-2xl font-semibold hover:bg-rose-700 transition shadow-lg flex-1 min-w-[200px]"
+            >
+              Add to Cart
+            </button>
+            {onToggleWishlist && (
+              <button
+                onClick={() => onToggleWishlist(product)}
+                className={`px-6 py-3 rounded-2xl font-semibold transition shadow-lg flex items-center gap-2 ${
+                  isInWishlist 
+                    ? 'bg-rose-100 text-rose-700 hover:bg-rose-200' 
+                    : 'bg-gray-100 text-gray-700 hover:bg-gray-200'
+                }`}
+                title={isInWishlist ? "Remove from wishlist" : "Add to wishlist"}
+              >
+                <Heart className={`w-5 h-5 ${isInWishlist ? 'fill-rose-600' : ''}`} />
+                {isInWishlist ? 'Saved' : 'Save'}
+              </button>
+            )}
+          </div>
         </div>
       </div>
 

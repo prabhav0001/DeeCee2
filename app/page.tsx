@@ -90,7 +90,7 @@ const VideoReelCard = ({ video }: { video: ReelVideo }) => {
 };
 
 function DeeceeHairApp(): React.ReactElement {
-  const { isAuthenticated } = useAuth();
+  const { isAuthenticated, user } = useAuth();
   const [currentPage, setCurrentPage] = useState<Page>("home");
   const [selectedProduct, setSelectedProduct] = useState<Product | null>(null);
   const [selectedColor, setSelectedColor] = useState("");
@@ -108,6 +108,7 @@ function DeeceeHairApp(): React.ReactElement {
   const [showPromo, setShowPromo] = useState(true);
   const [selectedCurrency, setSelectedCurrency] = useState<string>("INR");
   const [showCurrencyDropdown, setShowCurrencyDropdown] = useState(false);
+  const [wishlistProductIds, setWishlistProductIds] = useState<number[]>([]);
 
   // Currency data with exchange rates (relative to INR)
   const currencies = {
@@ -311,6 +312,68 @@ function DeeceeHairApp(): React.ReactElement {
   const removeFromCart = useCallback((index: number) => {
     setCart((prevCart) => prevCart.filter((_, i) => i !== index));
   }, []);
+
+  // Wishlist functions
+  const toggleWishlist = useCallback(async (product: Product) => {
+    if (!isAuthenticated || !user?.email) {
+      alert('Please login to add items to wishlist');
+      setShowLogin(true);
+      return;
+    }
+
+    const { addToWishlist, removeFromWishlist, getWishlistItemId } = await import('./services/wishlistService');
+
+    const isInWishlist = wishlistProductIds.includes(product.id);
+
+    if (isInWishlist) {
+      // Remove from wishlist
+      const itemId = await getWishlistItemId(user.email, product.id);
+      if (itemId) {
+        const success = await removeFromWishlist(itemId);
+        if (success) {
+          setWishlistProductIds(prev => prev.filter(id => id !== product.id));
+          if (typeof window !== 'undefined') {
+            alert('Removed from wishlist!');
+          }
+        }
+      }
+    } else {
+      // Add to wishlist
+      const itemId = await addToWishlist(
+        user.email,
+        product.id,
+        product.name,
+        product.price,
+        product.image,
+        product.category
+      );
+      if (itemId) {
+        setWishlistProductIds(prev => [...prev, product.id]);
+        if (typeof window !== 'undefined') {
+          alert('Added to wishlist! ❤️');
+        }
+      } else {
+        // Already exists
+        if (typeof window !== 'undefined') {
+          alert('Already in wishlist!');
+        }
+      }
+    }
+  }, [isAuthenticated, user, wishlistProductIds]);
+
+  // Load wishlist on auth change
+  useEffect(() => {
+    const loadWishlist = async () => {
+      if (isAuthenticated && user?.email) {
+        const { getUserWishlist } = await import('./services/wishlistService');
+        const items = await getUserWishlist(user.email);
+        setWishlistProductIds(items.map(item => item.productId));
+      } else {
+        setWishlistProductIds([]);
+      }
+    };
+    loadWishlist();
+  }, [isAuthenticated, user]);
 
   const Header = useCallback(() => (
     <header className="bg-white border-b border-gray-200 shadow-md backdrop-blur-sm bg-white/95">
@@ -690,6 +753,8 @@ function DeeceeHairApp(): React.ReactElement {
             setFilterCategory={setFilterCategory}
             onProductClick={handleProductClick}
             convertPrice={convertPrice}
+            wishlistProductIds={wishlistProductIds}
+            onToggleWishlist={toggleWishlist}
           />
         )}
         {currentPage === "product" && selectedProduct && (
@@ -702,6 +767,8 @@ function DeeceeHairApp(): React.ReactElement {
             onAddToCart={addToCart}
             onBackToShop={() => navigateTo("shop")}
             convertPrice={convertPrice}
+            isInWishlist={wishlistProductIds.includes(selectedProduct.id)}
+            onToggleWishlist={toggleWishlist}
           />
         )}
         {currentPage === "cart" && (

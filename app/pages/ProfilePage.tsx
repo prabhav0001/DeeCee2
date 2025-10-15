@@ -3,7 +3,7 @@
 import React, { useState, useEffect, useMemo } from "react";
 import { User, Mail, Phone, MapPin, Package, Heart, Lock, Edit2, Save, X, ShoppingBag, Calendar, CheckCircle2, Truck, CreditCard, LogOut } from "lucide-react";
 import { useAuth } from '@/app/contexts/AuthContext';
-import { Order, Address, ProfileTab } from "@/app/types";
+import { Order, Address, ProfileTab, WishlistItem } from "@/app/types";
 import { FormInput } from "@/app/components/common";
 import { useFormValidation } from "@/app/hooks/use-form-validation";
 import {
@@ -12,6 +12,10 @@ import {
   deleteAddress as deleteAddressFromFirestore,
   setDefaultAddress as setDefaultAddressInFirestore
 } from '@/app/services/addressService';
+import {
+  getUserWishlist,
+  removeFromWishlist
+} from '@/app/services/wishlistService';
 
 type ProfilePageProps = {
   onNavigateToLogin: () => void;
@@ -90,10 +94,8 @@ export default function ProfilePage({ onNavigateToLogin }: ProfilePageProps): Re
   });
 
   // Wishlist State
-  const [wishlistItems] = useState([
-    { id: 1, name: "Silky Straight Extensions", price: 2999, image: "https://images.unsplash.com/photo-1508214751196-bcfd4ca60f91?auto=format&fit=crop&w=400&q=80" },
-    { id: 2, name: "Wavy Luxe Hair", price: 3499, image: "https://images.unsplash.com/photo-1522335789203-aabd1fc54bc9?auto=format&fit=crop&w=400&q=80" },
-  ]);
+  const [wishlistItems, setWishlistItems] = useState<WishlistItem[]>([]);
+  const [wishlistLoading, setWishlistLoading] = useState(false);
 
   const formErrors = useFormValidation(editProfile);
 
@@ -196,6 +198,40 @@ export default function ProfilePage({ onNavigateToLogin }: ProfilePageProps): Re
     }
   };
 
+  // Load Wishlist from Firestore
+  const loadWishlist = async () => {
+    if (!user?.email) return;
+
+    setWishlistLoading(true);
+    try {
+      const items = await getUserWishlist(user.email);
+      setWishlistItems(items);
+    } catch (error) {
+      console.error('Error loading wishlist:', error);
+    } finally {
+      setWishlistLoading(false);
+    }
+  };
+
+  // Remove from wishlist
+  const handleRemoveFromWishlist = async (itemId: string) => {
+    const success = await removeFromWishlist(itemId);
+    if (success) {
+      setWishlistItems(wishlistItems.filter(item => item.id !== itemId));
+      setShowSuccess(true);
+      setTimeout(() => setShowSuccess(false), 3000);
+    } else {
+      alert('Failed to remove from wishlist. Please try again.');
+    }
+  };
+
+  // Load wishlist when tab changes to wishlist
+  useEffect(() => {
+    if (activeTab === 'wishlist' && user?.email) {
+      loadWishlist();
+    }
+  }, [activeTab, user?.email]);
+
   const addNewAddress = async () => {
     if (!newAddress.addressLine1 || !newAddress.city || !newAddress.state || !newAddress.pincode) {
       alert('Please fill all required fields');
@@ -225,10 +261,10 @@ export default function ProfilePage({ onNavigateToLogin }: ProfilePageProps): Re
 
       // Auto-update profile phone if not set
       if (newAddress.phone && (!user.phone || user.phone === '')) {
-        updateUser({ 
-          name: user.name, 
-          email: user.email, 
-          phone: newAddress.phone 
+        updateUser({
+          name: user.name,
+          email: user.email,
+          phone: newAddress.phone
         });
         profileUpdated = true;
         console.log('✅ Profile phone updated from address:', newAddress.phone);
@@ -655,25 +691,55 @@ export default function ProfilePage({ onNavigateToLogin }: ProfilePageProps): Re
               {activeTab === "wishlist" && (
                 <div>
                   <h2 className="text-xl font-bold text-gray-900 mb-6">My Wishlist ({wishlistItems.length})</h2>
-                  <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4">
-                    {wishlistItems.map((item) => (
-                      <div key={item.id} className="border border-gray-200 rounded-xl overflow-hidden hover:shadow-lg transition-shadow">
-                        <img src={item.image} alt={item.name} className="w-full h-48 object-cover" />
-                        <div className="p-4">
-                          <h3 className="font-semibold text-gray-900 mb-2 line-clamp-1">{item.name}</h3>
-                          <p className="text-rose-600 font-bold mb-3">₹{item.price.toLocaleString()}</p>
-                          <div className="flex gap-2">
-                            <button className="flex-1 bg-rose-600 text-white py-2 rounded-lg text-sm font-medium hover:bg-rose-700 transition">
-                              Add to Cart
-                            </button>
-                            <button className="p-2 border border-gray-300 rounded-lg hover:bg-gray-50 transition">
-                              <X className="w-4 h-4 text-gray-600" />
-                            </button>
+                  
+                  {wishlistLoading ? (
+                    <div className="text-center py-12">
+                      <div className="inline-block animate-spin rounded-full h-12 w-12 border-b-2 border-rose-600"></div>
+                      <p className="mt-4 text-gray-600">Loading wishlist...</p>
+                    </div>
+                  ) : wishlistItems.length === 0 ? (
+                    <div className="text-center py-12 bg-gray-50 rounded-xl">
+                      <Heart className="w-16 h-16 text-gray-300 mx-auto mb-4" />
+                      <h3 className="text-lg font-semibold text-gray-900 mb-2">Your Wishlist is Empty</h3>
+                      <p className="text-gray-600 mb-6">Save your favorite products to buy them later!</p>
+                      <button 
+                        onClick={() => window.location.href = '/shop'}
+                        className="bg-rose-600 text-white px-6 py-3 rounded-lg font-semibold hover:bg-rose-700 transition"
+                      >
+                        Start Shopping
+                      </button>
+                    </div>
+                  ) : (
+                    <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4">
+                      {wishlistItems.map((item) => (
+                        <div key={item.id} className="border border-gray-200 rounded-xl overflow-hidden hover:shadow-lg transition-shadow">
+                          <img src={item.image} alt={item.name} className="w-full h-48 object-cover" />
+                          <div className="p-4">
+                            <h3 className="font-semibold text-gray-900 mb-2 line-clamp-1">{item.name}</h3>
+                            <p className="text-rose-600 font-bold mb-3">₹{item.price.toLocaleString()}</p>
+                            <div className="flex gap-2">
+                              <button 
+                                onClick={() => {
+                                  // Will be connected to cart functionality
+                                  alert('Add to cart functionality will be connected soon!');
+                                }}
+                                className="flex-1 bg-rose-600 text-white py-2 rounded-lg text-sm font-medium hover:bg-rose-700 transition"
+                              >
+                                Add to Cart
+                              </button>
+                              <button 
+                                onClick={() => handleRemoveFromWishlist(item.id)}
+                                className="p-2 border border-gray-300 rounded-lg hover:bg-gray-50 transition"
+                                title="Remove from wishlist"
+                              >
+                                <X className="w-4 h-4 text-gray-600" />
+                              </button>
+                            </div>
                           </div>
                         </div>
-                      </div>
-                    ))}
-                  </div>
+                      ))}
+                    </div>
+                  )}
                 </div>
               )}
             </div>

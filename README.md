@@ -14,6 +14,11 @@ A modern, full-featured e-commerce web application for premium hair extensions b
 - **Password Reset**: Forgot password functionality with Firebase email reset
 - **Product Catalog**: Browse straight, wavy, curly, and men's hair extensions
 - **Shopping Cart**: Full cart management with quantity controls
+- **Wishlist Feature**: Save favorite products with Firestore cloud persistence
+  - ✅ Add/remove from shop and product pages
+  - ✅ Heart icon visual indicators
+  - ✅ Profile page wishlist management
+  - ✅ Auto-sync across devices
 - **User Profile**: Manage profile, orders, addresses, and wishlist
 - **Appointment Booking**: Schedule consultations with backend integration
   - ✅ Email confirmations with professional HTML templates (SendGrid)
@@ -300,13 +305,13 @@ const errors = useFormValidation({ name, email, phone });
 - [x] Email confirmations with SendGrid (100 emails/day free)
 - [x] Google Calendar integration
 - [x] Firebase Firestore for user addresses
+- [x] **Wishlist functionality with Firestore persistence**
 - [ ] Social authentication (Google, Facebook)
 - [ ] Payment gateway integration (Razorpay/Stripe)
 - [ ] Order management system
 - [ ] Admin dashboard
 - [ ] Product reviews and ratings
 - [ ] Search functionality
-- [ ] Wishlist persistence
 - [ ] Order history in Firestore
 - [ ] Analytics integration
 
