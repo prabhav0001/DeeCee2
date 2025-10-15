@@ -15,15 +15,24 @@ A modern, full-featured e-commerce web application for premium hair extensions b
 - **Product Catalog**: Browse straight, wavy, curly, and men's hair extensions
 - **Shopping Cart**: Full cart management with quantity controls
 - **User Profile**: Manage profile, orders, addresses, and wishlist
-- **Appointment Booking**: Schedule consultations at various locations
+- **Appointment Booking**: Schedule consultations with backend integration
+  - ✅ Email confirmations with professional HTML templates (SendGrid)
+  - ✅ Google Calendar integration
+  - ✅ Real-time slot availability
 - **Responsive Design**: Mobile-first design with Tailwind CSS
 - **Type Safety**: Full TypeScript implementation
 - **Modern UI**: Beautiful components with Lucide React icons
+- **Backend Integration**: API routes for appointments and email notifications
 
 ## 📁 Project Structure
 
 ```
 app/
+├── api/                     # API routes (Next.js Route Handlers)
+│   ├── appointments/
+│   │   └── route.ts        # Appointment CRUD API
+│   └── send-email/
+│       └── route.ts        # SendGrid email API
 ├── components/
 │   └── common/              # Reusable UI components
 │       ├── FormInput.tsx
@@ -39,7 +48,7 @@ app/
 │   ├── ProductPage.tsx
 │   ├── CartPage.tsx
 │   ├── ContactPage.tsx
-│   ├── AppointmentPage.tsx
+│   ├── AppointmentPage.tsx  # With backend integration
 │   ├── ProfilePage.tsx
 │   ├── AboutUsPage.tsx
 │   ├── TermsPage.tsx
@@ -47,6 +56,8 @@ app/
 │   ├── LoginPage.tsx
 │   ├── SignupPage.tsx
 │   └── VerificationPage.tsx
+├── services/
+│   └── appointmentService.ts # Backend integration service
 ├── contexts/
 │   └── AuthContext.tsx      # Firebase authentication context
 ├── hooks/
@@ -256,12 +267,17 @@ const errors = useFormValidation({ name, email, phone });
 - **[FIREBASE_CHECKLIST.md](FIREBASE_CHECKLIST.md)**: Interactive setup checklist
 - **[PASSWORD_RESET_GUIDE.md](PASSWORD_RESET_GUIDE.md)**: Password reset feature documentation
 
+### Email Integration
+- **[SENDGRID_SETUP.md](SENDGRID_SETUP.md)**: SendGrid email setup guide (3 minutes)
+
 ### Deployment
-- **[DEPLOY_VERCEL.md](DEPLOY_VERCEL.md)**: Quick Vercel deployment guide (5 minutes)
-- **[DEPLOYMENT.md](DEPLOYMENT.md)**: Complete deployment guide for all platforms
+- **[VERCEL_DEPLOYMENT.md](VERCEL_DEPLOYMENT.md)**: Complete Vercel deployment guide with environment variables
 
 ### Troubleshooting
-- **[TROUBLESHOOTING.md](TROUBLESHOOTING.md)**: Common issues and solutions
+- Check environment variables in `.env.local`
+- Ensure Firebase configuration is correct
+- Verify SendGrid API key and sender email are set up
+- See console logs for debugging
 
 ### Development
 - **[.github/copilot-instructions.md](.github/copilot-instructions.md)**: AI coding assistant guide
@@ -270,15 +286,17 @@ const errors = useFormValidation({ name, email, phone });
 
 - [x] Firebase Authentication with email verification
 - [x] Password reset functionality
+- [x] Appointment booking with backend integration
+- [x] Email confirmations with SendGrid (100 emails/day free)
+- [x] Google Calendar integration
 - [ ] Social authentication (Google, Facebook)
-- [ ] Backend API integration
-- [ ] Payment gateway integration
+- [ ] Payment gateway integration (Razorpay/Stripe)
 - [ ] Order management system
 - [ ] Admin dashboard
 - [ ] Product reviews and ratings
 - [ ] Search functionality
 - [ ] Wishlist persistence
-- [ ] Email notifications
+- [ ] Database integration (MongoDB/Supabase)
 - [ ] Analytics integration
 
 ## 🤝 Contributing
