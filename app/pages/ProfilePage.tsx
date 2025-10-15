@@ -6,6 +6,12 @@ import { useAuth } from '@/app/contexts/AuthContext';
 import { Order, Address, ProfileTab } from "@/app/types";
 import { FormInput } from "@/app/components/common";
 import { useFormValidation } from "@/app/hooks/use-form-validation";
+import {
+  getUserAddresses,
+  addAddress as addAddressToFirestore,
+  deleteAddress as deleteAddressFromFirestore,
+  setDefaultAddress as setDefaultAddressInFirestore
+} from '@/app/services/addressService';
 
 type ProfilePageProps = {
   onNavigateToLogin: () => void;
@@ -16,6 +22,8 @@ export default function ProfilePage({ onNavigateToLogin }: ProfilePageProps): Re
   const [activeTab, setActiveTab] = useState<ProfileTab>("profile");
   const [isEditing, setIsEditing] = useState(false);
   const [showSuccess, setShowSuccess] = useState(false);
+  const [showAddressForm, setShowAddressForm] = useState(false);
+  const [editingAddressId, setEditingAddressId] = useState<string | null>(null);
 
   // Redirect to login if not authenticated
   useEffect(() => {
@@ -41,37 +49,38 @@ export default function ProfilePage({ onNavigateToLogin }: ProfilePageProps): Re
     }
   }, [user]);
 
-  // Orders State
-  const [orders] = useState<Order[]>([
-    { id: "ORD001", date: "2024-01-15", total: 5999, status: "Delivered", items: 2, trackingId: "TRK123456" },
-    { id: "ORD002", date: "2024-01-20", total: 3499, status: "Shipped", items: 1, trackingId: "TRK789012" },
-    { id: "ORD003", date: "2024-01-25", total: 7998, status: "Processing", items: 3 },
-  ]);
+  // Orders State - Real orders from user's purchase history
+  const [orders] = useState<Order[]>([]);
 
-  // Addresses State
-  const [addresses, setAddresses] = useState<Address[]>([
-    {
-      id: "ADD001",
-      name: user?.name || "User",
-      phone: user?.phone || "",
-      addressLine1: "123, MG Road",
-      addressLine2: "Near City Mall",
-      city: "Mumbai",
-      state: "Maharashtra",
-      pincode: "400001",
-      isDefault: true
-    },
-    {
-      id: "ADD002",
-      name: user?.name || "User",
-      phone: user?.phone || "",
-      addressLine1: "456, Park Street",
-      city: "Delhi",
-      state: "Delhi",
-      pincode: "110001",
-      isDefault: false
-    }
-  ]);
+  // Addresses State - Load from Firestore
+  const [addresses, setAddresses] = useState<Address[]>([]);
+  const [loadingAddresses, setLoadingAddresses] = useState(true);
+
+  // Load addresses from Firestore when user changes
+  useEffect(() => {
+    const loadAddresses = async () => {
+      if (user?.email) {
+        setLoadingAddresses(true);
+        const userAddresses = await getUserAddresses(user.email);
+        setAddresses(userAddresses);
+        setLoadingAddresses(false);
+      }
+    };
+
+    loadAddresses();
+  }, [user?.email]);
+
+  // New address form state
+  const [newAddress, setNewAddress] = useState<Partial<Address>>({
+    name: user?.name || '',
+    phone: user?.phone || '',
+    addressLine1: '',
+    addressLine2: '',
+    city: '',
+    state: '',
+    pincode: '',
+    isDefault: false
+  });
 
   // Password State
   const [passwordData, setPasswordData] = useState({
@@ -116,21 +125,123 @@ export default function ProfilePage({ onNavigateToLogin }: ProfilePageProps): Re
     setIsEditing(false);
   };
 
-  const handlePasswordChange = (e: React.FormEvent) => {
+  const handlePasswordChange = async (e: React.FormEvent) => {
     e.preventDefault();
     if (Object.keys(passwordErrors).length === 0 && passwordData.currentPassword && passwordData.newPassword) {
-      setPasswordData({ currentPassword: "", newPassword: "", confirmPassword: "" });
-      setShowSuccess(true);
-      setTimeout(() => setShowSuccess(false), 3000);
+      try {
+        // Import Firebase auth functions
+        const { getAuth, updatePassword, reauthenticateWithCredential, EmailAuthProvider } = await import('firebase/auth');
+        const auth = getAuth();
+        const currentUser = auth.currentUser;
+
+        if (!currentUser || !currentUser.email) {
+          setPasswordData({ currentPassword: "", newPassword: "", confirmPassword: "" });
+          alert('Please login again to change password');
+          return;
+        }
+
+        // Reauthenticate user with current password
+        const credential = EmailAuthProvider.credential(
+          currentUser.email,
+          passwordData.currentPassword
+        );
+
+        await reauthenticateWithCredential(currentUser, credential);
+
+        // Update to new password
+        await updatePassword(currentUser, passwordData.newPassword);
+
+        setPasswordData({ currentPassword: "", newPassword: "", confirmPassword: "" });
+        setShowSuccess(true);
+        setTimeout(() => setShowSuccess(false), 3000);
+        alert('Password updated successfully! ✅');
+      } catch (error: any) {
+        console.error('Password update error:', error);
+        if (error.code === 'auth/wrong-password') {
+          alert('Current password is incorrect');
+        } else if (error.code === 'auth/requires-recent-login') {
+          alert('Please logout and login again to change password');
+        } else {
+          alert('Failed to update password. Please try again.');
+        }
+      }
     }
   };
 
-  const setDefaultAddress = (id: string) => {
-    setAddresses(addresses.map(addr => ({ ...addr, isDefault: addr.id === id })));
+  const setDefaultAddress = async (id: string) => {
+    if (!user?.email) return;
+
+    const success = await setDefaultAddressInFirestore(user.email, id);
+    if (success) {
+      // Update local state
+      setAddresses(addresses.map(addr => ({ ...addr, isDefault: addr.id === id })));
+      setShowSuccess(true);
+      setTimeout(() => setShowSuccess(false), 3000);
+    } else {
+      alert('Failed to set default address. Please try again.');
+    }
   };
 
-  const deleteAddress = (id: string) => {
-    setAddresses(addresses.filter(addr => addr.id !== id));
+  const deleteAddress = async (id: string) => {
+    if (!confirm('Are you sure you want to delete this address?')) return;
+
+    const success = await deleteAddressFromFirestore(id);
+    if (success) {
+      // Update local state
+      setAddresses(addresses.filter(addr => addr.id !== id));
+      setShowSuccess(true);
+      setTimeout(() => setShowSuccess(false), 3000);
+    } else {
+      alert('Failed to delete address. Please try again.');
+    }
+  };
+
+  const addNewAddress = async () => {
+    if (!newAddress.addressLine1 || !newAddress.city || !newAddress.state || !newAddress.pincode) {
+      alert('Please fill all required fields');
+      return;
+    }
+
+    if (!user?.email) {
+      alert('User not authenticated');
+      return;
+    }
+
+    const address: Omit<Address, 'id'> = {
+      name: newAddress.name || user.name || '',
+      phone: newAddress.phone || user.phone || '',
+      addressLine1: newAddress.addressLine1,
+      addressLine2: newAddress.addressLine2,
+      city: newAddress.city,
+      state: newAddress.state,
+      pincode: newAddress.pincode,
+      isDefault: addresses.length === 0 ? true : (newAddress.isDefault || false)
+    };
+
+    const addressId = await addAddressToFirestore(user.email, address);
+
+    if (addressId) {
+      // Reload addresses from Firestore
+      const updatedAddresses = await getUserAddresses(user.email);
+      setAddresses(updatedAddresses);
+
+      // Reset form
+      setNewAddress({
+        name: user.name || '',
+        phone: user.phone || '',
+        addressLine1: '',
+        addressLine2: '',
+        city: '',
+        state: '',
+        pincode: '',
+        isDefault: false
+      });
+      setShowAddressForm(false);
+      setShowSuccess(true);
+      setTimeout(() => setShowSuccess(false), 3000);
+    } else {
+      alert('Failed to add address. Please try again.');
+    }
   };
 
   const handleLogout = () => {
@@ -283,42 +394,58 @@ export default function ProfilePage({ onNavigateToLogin }: ProfilePageProps): Re
               {activeTab === "orders" && (
                 <div>
                   <h2 className="text-xl font-bold text-gray-900 mb-6">Order History</h2>
-                  <div className="space-y-4">
-                    {orders.map((order) => (
-                      <div key={order.id} className="border border-gray-200 rounded-xl p-4 hover:shadow-md transition-shadow">
-                        <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
-                          <div className="flex items-start gap-4">
-                            <div className="p-3 bg-rose-50 rounded-xl">
-                              <ShoppingBag className="w-6 h-6 text-rose-600" />
-                            </div>
-                            <div>
-                              <h3 className="font-semibold text-gray-900">Order #{order.id}</h3>
-                              <p className="text-sm text-gray-600 flex items-center gap-2 mt-1">
-                                <Calendar className="w-4 h-4" />
-                                {new Date(order.date).toLocaleDateString('en-US', { day: 'numeric', month: 'long', year: 'numeric' })}
-                              </p>
-                              <p className="text-sm text-gray-600 mt-1">{order.items} item(s)</p>
-                              {order.trackingId && (
-                                <p className="text-xs text-gray-500 flex items-center gap-1 mt-1">
-                                  <Truck className="w-3 h-3" />
-                                  Tracking: {order.trackingId}
+                  {orders.length === 0 ? (
+                    <div className="text-center py-12">
+                      <div className="w-20 h-20 bg-gray-100 rounded-full flex items-center justify-center mx-auto mb-4">
+                        <ShoppingBag className="w-10 h-10 text-gray-400" />
+                      </div>
+                      <h3 className="text-lg font-semibold text-gray-900 mb-2">No Orders Yet</h3>
+                      <p className="text-gray-600 mb-6">Start shopping to see your order history here</p>
+                      <button
+                        onClick={() => window.history.back()}
+                        className="bg-rose-600 text-white px-6 py-3 rounded-xl hover:bg-rose-700 transition font-medium"
+                      >
+                        Start Shopping
+                      </button>
+                    </div>
+                  ) : (
+                    <div className="space-y-4">
+                      {orders.map((order) => (
+                        <div key={order.id} className="border border-gray-200 rounded-xl p-4 hover:shadow-md transition-shadow">
+                          <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
+                            <div className="flex items-start gap-4">
+                              <div className="p-3 bg-rose-50 rounded-xl">
+                                <ShoppingBag className="w-6 h-6 text-rose-600" />
+                              </div>
+                              <div>
+                                <h3 className="font-semibold text-gray-900">Order #{order.id}</h3>
+                                <p className="text-sm text-gray-600 flex items-center gap-2 mt-1">
+                                  <Calendar className="w-4 h-4" />
+                                  {new Date(order.date).toLocaleDateString('en-US', { day: 'numeric', month: 'long', year: 'numeric' })}
                                 </p>
-                              )}
+                                <p className="text-sm text-gray-600 mt-1">{order.items} item(s)</p>
+                                {order.trackingId && (
+                                  <p className="text-xs text-gray-500 flex items-center gap-1 mt-1">
+                                    <Truck className="w-3 h-3" />
+                                    Tracking: {order.trackingId}
+                                  </p>
+                                )}
+                              </div>
                             </div>
-                          </div>
-                          <div className="flex flex-col items-start sm:items-end gap-2">
-                            <span className={`px-3 py-1 rounded-full text-xs font-semibold ${getStatusColor(order.status)}`}>
-                              {order.status}
-                            </span>
-                            <p className="font-bold text-gray-900">₹{order.total.toLocaleString()}</p>
-                            <button className="text-rose-600 text-sm font-medium hover:underline">
-                              View Details →
-                            </button>
+                            <div className="flex flex-col items-start sm:items-end gap-2">
+                              <span className={`px-3 py-1 rounded-full text-xs font-semibold ${getStatusColor(order.status)}`}>
+                                {order.status}
+                              </span>
+                              <p className="font-bold text-gray-900">₹{order.total.toLocaleString()}</p>
+                              <button className="text-rose-600 text-sm font-medium hover:underline">
+                                View Details →
+                              </button>
+                            </div>
                           </div>
                         </div>
-                      </div>
-                    ))}
-                  </div>
+                      ))}
+                    </div>
+                  )}
                 </div>
               )}
 
@@ -327,48 +454,140 @@ export default function ProfilePage({ onNavigateToLogin }: ProfilePageProps): Re
                 <div>
                   <div className="flex items-center justify-between mb-6">
                     <h2 className="text-xl font-bold text-gray-900">Saved Addresses</h2>
-                    <button className="bg-rose-600 text-white px-4 py-2 rounded-xl hover:bg-rose-700 transition text-sm font-medium">
-                      + Add New Address
+                    <button
+                      onClick={() => setShowAddressForm(!showAddressForm)}
+                      className="bg-rose-600 text-white px-4 py-2 rounded-xl hover:bg-rose-700 transition text-sm font-medium"
+                    >
+                      {showAddressForm ? '✕ Cancel' : '+ Add New Address'}
                     </button>
                   </div>
-                  <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                    {addresses.map((address) => (
-                      <div key={address.id} className="border border-gray-200 rounded-xl p-4 relative">
-                        {address.isDefault && (
-                          <span className="absolute top-4 right-4 bg-green-100 text-green-700 text-xs font-semibold px-2 py-1 rounded-full">
-                            Default
-                          </span>
-                        )}
-                        <div className="mb-4">
-                          <h3 className="font-semibold text-gray-900">{address.name}</h3>
-                          <p className="text-sm text-gray-600 mt-2">{address.addressLine1}</p>
-                          {address.addressLine2 && <p className="text-sm text-gray-600">{address.addressLine2}</p>}
-                          <p className="text-sm text-gray-600">{address.city}, {address.state} - {address.pincode}</p>
-                          <p className="text-sm text-gray-600 flex items-center gap-1 mt-2">
-                            <Phone className="w-3 h-3" />
-                            {address.phone}
-                          </p>
+
+                  {/* Add Address Form */}
+                  {showAddressForm && (
+                    <div className="bg-gray-50 rounded-xl p-6 mb-6 border-2 border-rose-200">
+                      <h3 className="font-semibold text-gray-900 mb-4">New Address</h3>
+                      <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                        <FormInput
+                          label="Full Name"
+                          value={newAddress.name || ''}
+                          onChange={(e) => setNewAddress({ ...newAddress, name: e.target.value })}
+                          placeholder="Enter full name"
+                        />
+                        <FormInput
+                          label="Phone Number"
+                          value={newAddress.phone || ''}
+                          onChange={(e) => setNewAddress({ ...newAddress, phone: e.target.value })}
+                          placeholder="Enter phone number"
+                        />
+                        <div className="md:col-span-2">
+                          <FormInput
+                            label="Address Line 1 *"
+                            value={newAddress.addressLine1 || ''}
+                            onChange={(e) => setNewAddress({ ...newAddress, addressLine1: e.target.value })}
+                            placeholder="House no., Building, Street"
+                          />
                         </div>
-                        <div className="flex gap-2 pt-3 border-t border-gray-200">
-                          {!address.isDefault && (
-                            <button
-                              onClick={() => setDefaultAddress(address.id)}
-                              className="text-xs text-rose-600 hover:underline font-medium"
-                            >
-                              Set as Default
-                            </button>
-                          )}
-                          <button className="text-xs text-gray-600 hover:underline font-medium">Edit</button>
-                          <button
-                            onClick={() => deleteAddress(address.id)}
-                            className="text-xs text-red-600 hover:underline font-medium"
-                          >
-                            Delete
-                          </button>
+                        <div className="md:col-span-2">
+                          <FormInput
+                            label="Address Line 2"
+                            value={newAddress.addressLine2 || ''}
+                            onChange={(e) => setNewAddress({ ...newAddress, addressLine2: e.target.value })}
+                            placeholder="Landmark, Area (Optional)"
+                          />
+                        </div>
+                        <FormInput
+                          label="City *"
+                          value={newAddress.city || ''}
+                          onChange={(e) => setNewAddress({ ...newAddress, city: e.target.value })}
+                          placeholder="Enter city"
+                        />
+                        <FormInput
+                          label="State *"
+                          value={newAddress.state || ''}
+                          onChange={(e) => setNewAddress({ ...newAddress, state: e.target.value })}
+                          placeholder="Enter state"
+                        />
+                        <FormInput
+                          label="Pincode *"
+                          value={newAddress.pincode || ''}
+                          onChange={(e) => setNewAddress({ ...newAddress, pincode: e.target.value })}
+                          placeholder="Enter pincode"
+                        />
+                        <div className="flex items-center gap-2">
+                          <input
+                            type="checkbox"
+                            id="defaultAddress"
+                            checked={newAddress.isDefault || false}
+                            onChange={(e) => setNewAddress({ ...newAddress, isDefault: e.target.checked })}
+                            className="w-4 h-4 text-rose-600 border-gray-300 rounded focus:ring-rose-500"
+                          />
+                          <label htmlFor="defaultAddress" className="text-sm text-gray-700">
+                            Set as default address
+                          </label>
                         </div>
                       </div>
-                    ))}
-                  </div>
+                      <button
+                        onClick={addNewAddress}
+                        className="mt-4 bg-rose-600 text-white px-6 py-2 rounded-xl hover:bg-rose-700 transition font-medium"
+                      >
+                        Save Address
+                      </button>
+                    </div>
+                  )}
+
+                  {/* Addresses List */}
+                  {loadingAddresses ? (
+                    <div className="text-center py-12">
+                      <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-rose-600 mx-auto mb-4"></div>
+                      <p className="text-gray-600">Loading addresses...</p>
+                    </div>
+                  ) : addresses.length === 0 ? (
+                    <div className="text-center py-12">
+                      <div className="w-20 h-20 bg-gray-100 rounded-full flex items-center justify-center mx-auto mb-4">
+                        <MapPin className="w-10 h-10 text-gray-400" />
+                      </div>
+                      <h3 className="text-lg font-semibold text-gray-900 mb-2">No Saved Addresses</h3>
+                      <p className="text-gray-600 mb-6">Add your delivery address for faster checkout</p>
+                    </div>
+                  ) : (
+                    <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                      {addresses.map((address) => (
+                        <div key={address.id} className="border border-gray-200 rounded-xl p-4 relative">
+                          {address.isDefault && (
+                            <span className="absolute top-4 right-4 bg-green-100 text-green-700 text-xs font-semibold px-2 py-1 rounded-full">
+                              Default
+                            </span>
+                          )}
+                          <div className="mb-4">
+                            <h3 className="font-semibold text-gray-900">{address.name}</h3>
+                            <p className="text-sm text-gray-600 mt-2">{address.addressLine1}</p>
+                            {address.addressLine2 && <p className="text-sm text-gray-600">{address.addressLine2}</p>}
+                            <p className="text-sm text-gray-600">{address.city}, {address.state} - {address.pincode}</p>
+                            <p className="text-sm text-gray-600 flex items-center gap-1 mt-2">
+                              <Phone className="w-3 h-3" />
+                              {address.phone}
+                            </p>
+                          </div>
+                          <div className="flex gap-2 pt-3 border-t border-gray-200">
+                            {!address.isDefault && (
+                              <button
+                                onClick={() => setDefaultAddress(address.id)}
+                                className="text-xs text-rose-600 hover:underline font-medium"
+                              >
+                                Set as Default
+                              </button>
+                            )}
+                            <button
+                              onClick={() => deleteAddress(address.id)}
+                              className="text-xs text-red-600 hover:underline font-medium"
+                            >
+                              Delete
+                            </button>
+                          </div>
+                        </div>
+                      ))}
+                    </div>
+                  )}
                 </div>
               )}
 

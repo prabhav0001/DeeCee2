@@ -142,7 +142,17 @@ This app uses a **custom SPA navigation** system instead of Next.js file-based r
 
 - **React Context**: Authentication state via `AuthContext`
 - **Local State**: Cart, appointments, and UI state in `page.tsx`
-- **localStorage**: User data and session persistence
+- **Firebase Firestore**: User addresses stored in cloud database
+- **localStorage**: Cart data and session persistence
+
+### Database
+
+- **Firebase Firestore**: NoSQL cloud database for user data
+  - User addresses with CRUD operations
+  - Secure data access with Firestore security rules
+  - Real-time synchronization across devices
+
+🔥 **Setup Required**: See [FIRESTORE_SETUP.md](FIRESTORE_SETUP.md) for database configuration.
 
 ## 🎨 Styling
 
@@ -289,6 +299,7 @@ const errors = useFormValidation({ name, email, phone });
 - [x] Appointment booking with backend integration
 - [x] Email confirmations with SendGrid (100 emails/day free)
 - [x] Google Calendar integration
+- [x] Firebase Firestore for user addresses
 - [ ] Social authentication (Google, Facebook)
 - [ ] Payment gateway integration (Razorpay/Stripe)
 - [ ] Order management system
@@ -296,7 +307,7 @@ const errors = useFormValidation({ name, email, phone });
 - [ ] Product reviews and ratings
 - [ ] Search functionality
 - [ ] Wishlist persistence
-- [ ] Database integration (MongoDB/Supabase)
+- [ ] Order history in Firestore
 - [ ] Analytics integration
 
 ## 🤝 Contributing
