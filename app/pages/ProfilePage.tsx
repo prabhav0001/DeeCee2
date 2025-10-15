@@ -221,6 +221,19 @@ export default function ProfilePage({ onNavigateToLogin }: ProfilePageProps): Re
     const addressId = await addAddressToFirestore(user.email, address);
 
     if (addressId) {
+      let profileUpdated = false;
+
+      // Auto-update profile phone if not set
+      if (newAddress.phone && (!user.phone || user.phone === '')) {
+        updateUser({ 
+          name: user.name, 
+          email: user.email, 
+          phone: newAddress.phone 
+        });
+        profileUpdated = true;
+        console.log('✅ Profile phone updated from address:', newAddress.phone);
+      }
+
       // Reload addresses from Firestore
       const updatedAddresses = await getUserAddresses(user.email);
       setAddresses(updatedAddresses);
@@ -228,7 +241,7 @@ export default function ProfilePage({ onNavigateToLogin }: ProfilePageProps): Re
       // Reset form
       setNewAddress({
         name: user.name || '',
-        phone: user.phone || '',
+        phone: newAddress.phone || user.phone || '',
         addressLine1: '',
         addressLine2: '',
         city: '',
@@ -239,6 +252,13 @@ export default function ProfilePage({ onNavigateToLogin }: ProfilePageProps): Re
       setShowAddressForm(false);
       setShowSuccess(true);
       setTimeout(() => setShowSuccess(false), 3000);
+
+      // Notify user if profile was updated
+      if (profileUpdated) {
+        setTimeout(() => {
+          alert('✅ Address added! Your profile phone number has also been updated.');
+        }, 500);
+      }
     } else {
       alert('Failed to add address. Please try again.');
     }
