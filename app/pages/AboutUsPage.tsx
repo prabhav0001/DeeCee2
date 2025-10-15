@@ -6,19 +6,19 @@ import { Award, Users, Heart, Globe, Sparkles, Target, ShieldCheck, Zap } from "
 export default function AboutUsPage(): React.ReactElement {
   const teamMembers = [
     {
-      name: "Sumit Kumar",
+      name: "Sumit Kyamsaria",
       role: "Founder & CEO",
-      image: "https://raw.githubusercontent.com/prabhav0001/deecee-src/refs/heads/main/founder.jpeg",
+      image: "https://raw.githubusercontent.com/prabhav0001/deecee-src/refs/heads/main/founder.png",
       description: "With over 10 years of experience in the hair industry"
     },
     {
-      name: "Sonpal Kumawat",
+      name: "Prerak Kyamsaria",
       role: "Head of Sales",
       image: "https://raw.githubusercontent.com/prabhav0001/deecee-src/refs/heads/main/head_of_sales.png",
       description: "Expert in hair styling and product development"
     },
     {
-      name: "Sahdev Kumar",
+      name: "Prabhav Kyamsaria",
       role: "Marketing Manager",
       image: "https://raw.githubusercontent.com/prabhav0001/deecee-src/refs/heads/main/marketing_manager.png",
       description: "Ensuring smooth operations and customer satisfaction"
@@ -93,7 +93,7 @@ export default function AboutUsPage(): React.ReactElement {
             </div>
             <div className="relative">
               <img
-                src="https://images.unsplash.com/photo-1522337660859-02fbefca4702?auto=format&fit=crop&w=600&q=80"
+                src="https://raw.githubusercontent.com/prabhav0001/deecee-src/refs/heads/main/about_us_story.png"
                 alt="DEECEE HAIR Story"
                 className="rounded-2xl shadow-2xl w-full"
               />
