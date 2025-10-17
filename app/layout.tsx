@@ -80,7 +80,7 @@ export const metadata: Metadata = {
     },
   },
   verification: {
-    google: 'your-google-verification-code', // Add your Google Search Console verification
+    google: 'google-site-verification=IvfBdZ1nEtZIEYVSRJkTt9YwcnxP9XrBPqiVoQDevLI', // Add your Google Search Console verification
   },
   category: 'E-commerce',
 };
