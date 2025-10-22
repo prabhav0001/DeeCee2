@@ -34,7 +34,7 @@ export type Appointment = {
   notes?: string;
 };
 
-export type Page = "home" | "shop" | "product" | "cart" | "contact" | "appointment" | "terms" | "privacy" | "about" | "profile" | "bestsellers" | "admin-login" | "admin-dashboard";
+export type Page = "home" | "shop" | "product" | "cart" | "checkout" | "contact" | "appointment" | "terms" | "privacy" | "about" | "profile" | "bestsellers" | "admin-login" | "admin-dashboard";
 
 export type ReelVideo = {
   id: number;
@@ -55,11 +55,25 @@ export type User = {
 
 export type Order = {
   id: string;
-  date: string;
+  userId: string;
+  userEmail: string;
+  userName: string;
+  userPhone: string;
+  items: CartItem[];
+  shippingAddress: Address;
+  subtotal: number;
+  shippingCharges: number;
+  tax: number;
   total: number;
-  status: "Processing" | "Shipped" | "Delivered" | "Cancelled";
-  items: number;
+  status: "Pending" | "Processing" | "Shipped" | "Delivered" | "Cancelled";
+  paymentStatus: "Pending" | "Paid" | "Failed" | "Refunded";
+  paymentMethod: "COD" | "Razorpay" | "UPI";
+  paymentId?: string;
   trackingId?: string;
+  createdAt: string;
+  updatedAt?: string;
+  deliveredAt?: string;
+  notes?: string;
 };
 
 export type Address = {

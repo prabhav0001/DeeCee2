@@ -8,10 +8,11 @@ type CartPageProps = {
   onUpdateQuantity: (index: number, delta: number) => void;
   onRemoveFromCart: (index: number) => void;
   onContinueShopping: () => void;
+  onProceedToCheckout: () => void;
   convertPrice: (price: number) => string;
 };
 
-export default function CartPage({ cart, onUpdateQuantity, onRemoveFromCart, onContinueShopping, convertPrice }: CartPageProps): React.ReactElement {
+export default function CartPage({ cart, onUpdateQuantity, onRemoveFromCart, onContinueShopping, onProceedToCheckout, convertPrice }: CartPageProps): React.ReactElement {
   const getTotalPrice = () => cart.reduce((sum, item) => sum + item.product.price * item.quantity, 0);
 
   return (
@@ -52,7 +53,7 @@ export default function CartPage({ cart, onUpdateQuantity, onRemoveFromCart, onC
             </div>
           ))}
           <div className="text-right text-xl font-semibold text-gray-900">Total: {convertPrice(getTotalPrice())}</div>
-          <button onClick={() => alert("Checkout functionality not implemented.")} className="w-full sm:w-auto bg-rose-600 text-white px-8 py-3 rounded-2xl font-semibold hover:bg-rose-700 transition shadow-lg">
+          <button onClick={onProceedToCheckout} className="w-full sm:w-auto bg-rose-600 text-white px-8 py-3 rounded-2xl font-semibold hover:bg-rose-700 transition shadow-lg">
             Proceed to Checkout
           </button>
         </div>

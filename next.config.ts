@@ -25,6 +25,7 @@ const nextConfig: NextConfig = {
       { source: "/shop/men", destination: "/" },
       { source: "/product/:id", destination: "/" },
       { source: "/cart", destination: "/" },
+      { source: "/checkout", destination: "/" },
       { source: "/contact", destination: "/" },
       { source: "/appointment", destination: "/" },
       { source: "/terms", destination: "/" },

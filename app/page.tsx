@@ -6,6 +6,7 @@ import { Heart, User, Search, ShoppingCart, Menu, X, Star, Truck, Shield, Chevro
 import ShopPage from './pages/ShopPage';
 import ProductPage from './pages/ProductPage';
 import CartPage from './pages/CartPage';
+import CheckoutPage from './pages/CheckoutPage';
 import ContactPage from './pages/ContactPage';
 import AppointmentPage from './pages/AppointmentPage';
 import TermsPage from './pages/TermsPage';
@@ -155,6 +156,7 @@ function DeeceeHairApp(): React.ReactElement {
     '/': 'home',
     '/shop': 'shop',
     '/cart': 'cart',
+    '/checkout': 'checkout',
     '/contact': 'contact',
     '/appointment': 'appointment',
     '/product': 'product',
@@ -172,6 +174,7 @@ function DeeceeHairApp(): React.ReactElement {
     home: '/',
     shop: '/shop',
     cart: '/cart',
+    checkout: '/checkout',
     contact: '/contact',
     appointment: '/appointment',
     product: '/product',
@@ -792,7 +795,25 @@ function DeeceeHairApp(): React.ReactElement {
             onUpdateQuantity={updateQuantity}
             onRemoveFromCart={removeFromCart}
             onContinueShopping={() => navigateTo("shop")}
+            onProceedToCheckout={() => {
+              if (!isAuthenticated) {
+                setShowLogin(true);
+              } else {
+                navigateTo("checkout");
+              }
+            }}
             convertPrice={convertPrice}
+          />
+        )}
+        {currentPage === "checkout" && (
+          <CheckoutPage
+            cart={cart}
+            convertPrice={convertPrice}
+            onBackToCart={() => navigateTo("cart")}
+            onOrderSuccess={() => {
+              setCart([]);
+              navigateTo("profile");
+            }}
           />
         )}
         {currentPage === "contact" && <ContactPage />}
