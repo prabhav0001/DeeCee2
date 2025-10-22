@@ -1,6 +1,6 @@
 "use client"
 
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useMemo } from 'react';
 import { useAdminAuth } from '@/app/contexts/AdminAuthContext';
 import {
   LayoutDashboard,
@@ -184,27 +184,6 @@ export default function AdminDashboardPage({ onLogout }: AdminDashboardPageProps
     </div>
   );
 
-  const ProductsTab = () => (
-    <ProductManagement />
-  );
-
-  const OrdersTab = () => (
-    <div>
-      <h2 className="text-2xl font-bold text-gray-900 mb-6">Orders Management</h2>
-      <div className="bg-white rounded-xl shadow-md p-6">
-        <p className="text-gray-600">Order management features coming soon...</p>
-      </div>
-    </div>
-  );
-
-  const UsersTab = () => (
-    <UserManagement />
-  );
-
-  const AppointmentsTab = () => (
-    <AppointmentManagement />
-  );
-
   return (
     <div className="min-h-screen bg-gray-50">
       {/* Top navbar */}
@@ -302,11 +281,24 @@ export default function AdminDashboardPage({ onLogout }: AdminDashboardPageProps
 
           {/* Main content */}
           <main className="flex-1">
-            {activeTab === 'overview' && <OverviewTab />}
-            {activeTab === 'products' && <ProductsTab />}
-            {activeTab === 'orders' && <OrdersTab />}
-            {activeTab === 'users' && <UsersTab />}
-            {activeTab === 'appointments' && <AppointmentsTab />}
+            <div style={{ display: activeTab === 'overview' ? 'block' : 'none' }}>
+              <OverviewTab />
+            </div>
+            <div style={{ display: activeTab === 'products' ? 'block' : 'none' }}>
+              <ProductManagement />
+            </div>
+            <div style={{ display: activeTab === 'orders' ? 'block' : 'none' }}>
+              <h2 className="text-2xl font-bold text-gray-900 mb-6">Orders Management</h2>
+              <div className="bg-white rounded-xl shadow-md p-6">
+                <p className="text-gray-600">Order management features coming soon...</p>
+              </div>
+            </div>
+            <div style={{ display: activeTab === 'users' ? 'block' : 'none' }}>
+              <UserManagement />
+            </div>
+            <div style={{ display: activeTab === 'appointments' ? 'block' : 'none' }}>
+              <AppointmentManagement />
+            </div>
           </main>
         </div>
       </div>
