@@ -43,6 +43,35 @@ export default function ProductManagement() {
   const [isEditing, setIsEditing] = useState(false);
   const [formData, setFormData] = useState<Partial<Product>>({});
   const [submitting, setSubmitting] = useState(false);
+  const [migrating, setMigrating] = useState(false);
+
+  // Migrate products from constants to Firestore
+  const handleMigrateProducts = async () => {
+    if (!confirm('This will migrate all products from constants to Firestore. Continue?')) {
+      return;
+    }
+
+    setMigrating(true);
+    try {
+      const response = await fetch('/api/admin/migrate-products', {
+        method: 'POST',
+      });
+
+      const data = await response.json();
+
+      if (data.success) {
+        alert(`Migration successful! ${data.stats.migrated} products migrated, ${data.stats.skipped} already existed.`);
+        fetchProducts(1, searchQuery, categoryFilter); // Refresh the list
+      } else {
+        alert(`Migration failed: ${data.details}`);
+      }
+    } catch (error) {
+      console.error('Migration error:', error);
+      alert('Migration failed. Check console for details.');
+    } finally {
+      setMigrating(false);
+    }
+  };
 
   // Fetch products from API
   const fetchProducts = async (page: number = 1, search: string = '', category: string = 'all') => {
@@ -197,13 +226,25 @@ export default function ProductManagement() {
           <h2 className="text-2xl font-bold text-gray-900">Product Management</h2>
           <p className="text-gray-600 mt-1">Manage your product catalog</p>
         </div>
-        <button
-          onClick={handleAddProduct}
-          className="px-6 py-2.5 bg-pink-600 text-white rounded-lg hover:bg-pink-700 transition-colors flex items-center gap-2"
-        >
-          <Plus className="w-5 h-5" />
-          Add Product
-        </button>
+        <div className="flex gap-3">
+          {stats.total === 0 && (
+            <button
+              onClick={handleMigrateProducts}
+              disabled={migrating}
+              className="px-6 py-2.5 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors flex items-center gap-2 disabled:opacity-50 disabled:cursor-not-allowed"
+            >
+              <Upload className="w-5 h-5" />
+              {migrating ? 'Migrating...' : 'Import Products'}
+            </button>
+          )}
+          <button
+            onClick={handleAddProduct}
+            className="px-6 py-2.5 bg-pink-600 text-white rounded-lg hover:bg-pink-700 transition-colors flex items-center gap-2"
+          >
+            <Plus className="w-5 h-5" />
+            Add Product
+          </button>
+        </div>
       </div>
 
       {/* Stats Cards */}
