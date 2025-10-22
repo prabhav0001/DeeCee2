@@ -1,7 +1,7 @@
 "use client"
 
 import React, { useState, useEffect, useMemo } from "react";
-import { User, Mail, Phone, MapPin, Package, Heart, Lock, Edit2, Save, X, ShoppingBag, Calendar, CheckCircle2, Truck, CreditCard, LogOut } from "lucide-react";
+import { User, Mail, Phone, MapPin, Package, Heart, Lock, Edit2, Save, X, ShoppingBag, Calendar, CheckCircle2, Truck, CreditCard, LogOut, Clock } from "lucide-react";
 import { useAuth } from '@/app/contexts/AuthContext';
 import { Order, Address, ProfileTab, WishlistItem } from "@/app/types";
 import { FormInput } from "@/app/components/common";
@@ -30,6 +30,8 @@ export default function ProfilePage({ onNavigateToLogin, onNavigateHome, default
   const [showSuccess, setShowSuccess] = useState(false);
   const [showAddressForm, setShowAddressForm] = useState(false);
   const [editingAddressId, setEditingAddressId] = useState<string | null>(null);
+  const [selectedOrder, setSelectedOrder] = useState<Order | null>(null);
+  const [showOrderDetails, setShowOrderDetails] = useState(false);
 
   // Redirect to login if not authenticated
   useEffect(() => {
@@ -513,7 +515,13 @@ export default function ProfilePage({ onNavigateToLogin, onNavigateHome, default
                                 {order.status}
                               </span>
                               <p className="font-bold text-gray-900">₹{order.total.toLocaleString()}</p>
-                              <button className="text-rose-600 text-sm font-medium hover:underline">
+                              <button
+                                onClick={() => {
+                                  setSelectedOrder(order);
+                                  setShowOrderDetails(true);
+                                }}
+                                className="text-rose-600 text-sm font-medium hover:underline"
+                              >
                                 View Details →
                               </button>
                             </div>
@@ -766,6 +774,156 @@ export default function ProfilePage({ onNavigateToLogin, onNavigateHome, default
           </div>
         </div>
       </div>
+
+      {/* Order Details Modal */}
+      {showOrderDetails && selectedOrder && (
+        <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 p-4">
+          <div className="bg-white rounded-2xl max-w-4xl w-full max-h-[90vh] overflow-y-auto">
+            {/* Header */}
+            <div className="sticky top-0 bg-white border-b border-gray-200 px-6 py-4 flex items-center justify-between">
+              <h3 className="text-2xl font-bold text-gray-900">Order Details</h3>
+              <button
+                onClick={() => setShowOrderDetails(false)}
+                className="p-2 hover:bg-gray-100 rounded-lg transition"
+              >
+                <X className="w-6 h-6" />
+              </button>
+            </div>
+
+            <div className="p-6 space-y-6">
+              {/* Order Info */}
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                <div>
+                  <h4 className="text-sm font-semibold text-gray-500 uppercase mb-3">Order Information</h4>
+                  <div className="space-y-2">
+                    <p className="text-gray-900">
+                      <span className="font-semibold">Order ID:</span> {selectedOrder.id}
+                    </p>
+                    <p className="text-gray-900">
+                      <span className="font-semibold">Date:</span>{' '}
+                      {new Date(selectedOrder.createdAt).toLocaleString('en-US', {
+                        day: 'numeric',
+                        month: 'long',
+                        year: 'numeric',
+                        hour: '2-digit',
+                        minute: '2-digit',
+                      })}
+                    </p>
+                    <p className="text-gray-900">
+                      <span className="font-semibold">Payment Method:</span> {selectedOrder.paymentMethod}
+                    </p>
+                    <p className="text-gray-900">
+                      <span className="font-semibold">Payment Status:</span>{' '}
+                      <span className={`px-2 py-1 rounded text-sm ${selectedOrder.paymentStatus === 'Paid' ? 'bg-green-100 text-green-800' : 'bg-yellow-100 text-yellow-800'}`}>
+                        {selectedOrder.paymentStatus}
+                      </span>
+                    </p>
+                  </div>
+                </div>
+
+                <div>
+                  <h4 className="text-sm font-semibold text-gray-500 uppercase mb-3">Status</h4>
+                  <div className="space-y-2">
+                    <div className="flex items-center gap-4">
+                      <span className={`px-4 py-2 rounded-lg font-semibold flex items-center gap-2 ${getStatusColor(selectedOrder.status)}`}>
+                        {selectedOrder.status === 'Pending' && <Clock className="w-4 h-4" />}
+                        {selectedOrder.status === 'Processing' && <Package className="w-4 h-4" />}
+                        {selectedOrder.status === 'Shipped' && <Truck className="w-4 h-4" />}
+                        {selectedOrder.status === 'Delivered' && <CheckCircle2 className="w-4 h-4" />}
+                        {selectedOrder.status}
+                      </span>
+                    </div>
+                    {selectedOrder.trackingId && (
+                      <div className="flex items-center gap-2 text-gray-600 bg-blue-50 p-3 rounded-lg">
+                        <Truck className="w-4 h-4" />
+                        <div>
+                          <p className="text-xs text-gray-500">Tracking ID</p>
+                          <p className="text-sm font-semibold">{selectedOrder.trackingId}</p>
+                        </div>
+                      </div>
+                    )}
+                  </div>
+                </div>
+              </div>
+
+              {/* Shipping Address */}
+              <div className="border-t pt-6">
+                <h4 className="text-sm font-semibold text-gray-500 uppercase mb-3 flex items-center gap-2">
+                  <MapPin className="w-4 h-4" />
+                  Shipping Address
+                </h4>
+                <div className="bg-gray-50 rounded-xl p-4">
+                  <p className="font-semibold text-gray-900">{selectedOrder.shippingAddress.name}</p>
+                  <p className="text-gray-700">{selectedOrder.shippingAddress.phone}</p>
+                  <p className="text-gray-700 mt-2">
+                    {selectedOrder.shippingAddress.addressLine1}
+                    {selectedOrder.shippingAddress.addressLine2 && `, ${selectedOrder.shippingAddress.addressLine2}`}
+                  </p>
+                  <p className="text-gray-700">
+                    {selectedOrder.shippingAddress.city}, {selectedOrder.shippingAddress.state} - {selectedOrder.shippingAddress.pincode}
+                  </p>
+                </div>
+              </div>
+
+              {/* Order Items */}
+              <div className="border-t pt-6">
+                <h4 className="text-sm font-semibold text-gray-500 uppercase mb-3">Order Items</h4>
+                <div className="space-y-4">
+                  {selectedOrder.items.map((item, index) => (
+                    <div key={index} className="flex gap-4 bg-gray-50 rounded-xl p-4">
+                      <img
+                        src={item.product.image}
+                        alt={item.product.name}
+                        className="w-20 h-20 object-cover rounded-lg"
+                      />
+                      <div className="flex-1">
+                        <h5 className="font-semibold text-gray-900">{item.product.name}</h5>
+                        <p className="text-sm text-gray-600 mt-1">
+                          Color: {item.color} | Size: {item.size}
+                        </p>
+                        <p className="text-sm text-gray-600">Quantity: {item.quantity}</p>
+                      </div>
+                      <div className="text-right">
+                        <p className="font-bold text-gray-900">₹{(item.product.price * item.quantity).toLocaleString()}</p>
+                      </div>
+                    </div>
+                  ))}
+                </div>
+              </div>
+
+              {/* Order Summary */}
+              <div className="border-t pt-6">
+                <h4 className="text-sm font-semibold text-gray-500 uppercase mb-3">Order Summary</h4>
+                <div className="bg-gray-50 rounded-xl p-4 space-y-2">
+                  <div className="flex justify-between text-gray-700">
+                    <span>Subtotal:</span>
+                    <span>₹{selectedOrder.subtotal.toLocaleString()}</span>
+                  </div>
+                  <div className="flex justify-between text-gray-700">
+                    <span>Shipping Charges:</span>
+                    <span>₹{selectedOrder.shippingCharges.toLocaleString()}</span>
+                  </div>
+                  <div className="flex justify-between text-gray-700">
+                    <span>Tax:</span>
+                    <span>₹{selectedOrder.tax.toLocaleString()}</span>
+                  </div>
+                  <div className="flex justify-between text-xl font-bold text-gray-900 pt-2 border-t">
+                    <span>Total:</span>
+                    <span>₹{selectedOrder.total.toLocaleString()}</span>
+                  </div>
+                </div>
+              </div>
+
+              {selectedOrder.notes && (
+                <div className="border-t pt-6">
+                  <h4 className="text-sm font-semibold text-gray-500 uppercase mb-3">Notes</h4>
+                  <p className="text-gray-700 bg-gray-50 rounded-xl p-4">{selectedOrder.notes}</p>
+                </div>
+              )}
+            </div>
+          </div>
+        </div>
+      )}
     </div>
   );
 }
