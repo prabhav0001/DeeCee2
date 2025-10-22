@@ -34,7 +34,7 @@ export type Appointment = {
   notes?: string;
 };
 
-export type Page = "home" | "shop" | "product" | "cart" | "contact" | "appointment" | "terms" | "privacy" | "about" | "profile" | "bestsellers";
+export type Page = "home" | "shop" | "product" | "cart" | "contact" | "appointment" | "terms" | "privacy" | "about" | "profile" | "bestsellers" | "admin-login" | "admin-dashboard";
 
 export type ReelVideo = {
   id: number;
@@ -85,6 +85,38 @@ export type WishlistItem = {
 };
 
 export type ProfileTab = "profile" | "orders" | "addresses" | "security" | "wishlist";
+
+// Admin types
+export type Admin = {
+  id: string;
+  email: string;
+  name: string;
+  role: "admin" | "superadmin";
+  createdAt: string;
+};
+
+export type AdminStats = {
+  totalUsers: number;
+  totalOrders: number;
+  totalRevenue: number;
+  totalProducts: number;
+  pendingOrders: number;
+  completedOrders: number;
+};
+
+export type AdminOrder = {
+  id: string;
+  userId: string;
+  userName: string;
+  userEmail: string;
+  items: CartItem[];
+  total: number;
+  status: "pending" | "processing" | "shipped" | "delivered" | "cancelled";
+  createdAt: string;
+  shippingAddress: Address;
+};
+
+export type AdminDashboardTab = "overview" | "products" | "orders" | "users" | "appointments";
 
 // Common form validation patterns
 export const EMAIL_REGEX = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;

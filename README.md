@@ -30,6 +30,11 @@ A modern, full-featured e-commerce web application for premium hair extensions b
   - ✅ Email confirmations with professional HTML templates (SendGrid)
   - ✅ Google Calendar integration
   - ✅ Real-time slot availability
+- **Admin Panel**: Secure admin dashboard with separate authentication
+  - ✅ Role-based access control (admin, superadmin)
+  - ✅ Dashboard with statistics overview
+  - ✅ Protected routes with Firestore verification
+  - ✅ Manage products, orders, users, and appointments
 - **Responsive Design**: Mobile-first design with Tailwind CSS
 - **Type Safety**: Full TypeScript implementation
 - **Modern UI**: Beautiful components with Lucide React icons
@@ -40,6 +45,9 @@ A modern, full-featured e-commerce web application for premium hair extensions b
 ```
 app/
 ├── api/                     # API routes (Next.js Route Handlers)
+│   ├── admin/
+│   │   └── stats/
+│   │       └── route.ts    # Admin statistics API
 │   ├── appointments/
 │   │   └── route.ts        # Appointment CRUD API
 │   └── send-email/
@@ -66,15 +74,20 @@ app/
 │   ├── PrivacyPolicyPage.tsx
 │   ├── LoginPage.tsx
 │   ├── SignupPage.tsx
-│   └── VerificationPage.tsx
+│   ├── VerificationPage.tsx
+│   ├── AdminLoginPage.tsx   # Admin login
+│   └── AdminDashboardPage.tsx # Admin dashboard
 ├── services/
 │   └── appointmentService.ts # Backend integration service
 ├── contexts/
-│   └── AuthContext.tsx      # Firebase authentication context
+│   ├── AuthContext.tsx      # Firebase authentication context
+│   └── AdminAuthContext.tsx # Admin authentication context
 ├── hooks/
 │   └── use-form-validation.ts  # Form validation hooks
 ├── types/
 │   └── index.ts             # TypeScript type definitions
+├── utils/
+│   └── adminSetup.ts        # Admin setup utilities
 ├── constants/
 │   └── products.ts          # Product data and constants
 ├── layout.tsx               # Root layout
@@ -303,6 +316,9 @@ const errors = useFormValidation({ name, email, phone });
 ### Development
 - **[.github/copilot-instructions.md](.github/copilot-instructions.md)**: AI coding assistant guide
 
+### Admin Panel
+- **[ADMIN_SETUP.md](ADMIN_SETUP.md)**: Complete admin panel setup and management guide
+
 ## 🚧 Roadmap
 
 - [x] Firebase Authentication with email verification
@@ -312,10 +328,12 @@ const errors = useFormValidation({ name, email, phone });
 - [x] Google Calendar integration
 - [x] Firebase Firestore for user addresses
 - [x] **Wishlist functionality with Firestore persistence**
+- [x] **Admin panel with role-based access control**
+- [x] **Admin dashboard with statistics overview**
 - [ ] Social authentication (Google, Facebook)
 - [ ] Payment gateway integration (Razorpay/Stripe)
-- [ ] Order management system
-- [ ] Admin dashboard
+- [ ] Order management system in admin panel
+- [ ] Product management in admin panel
 - [ ] Product reviews and ratings
 - [ ] Search functionality
 - [ ] Order history in Firestore

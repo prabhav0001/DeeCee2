@@ -32,6 +32,9 @@ const nextConfig: NextConfig = {
       { source: "/about", destination: "/" },
       { source: "/profile", destination: "/" },
       { source: "/bestsellers", destination: "/" },
+      { source: "/admin", destination: "/" },
+      { source: "/admin/login", destination: "/" },
+      { source: "/admin/dashboard", destination: "/" },
     ];
   },
 
