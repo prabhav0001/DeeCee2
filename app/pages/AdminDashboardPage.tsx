@@ -18,6 +18,7 @@ import {
 } from 'lucide-react';
 import { AdminDashboardTab, AdminStats } from '@/app/types';
 import UserManagement from '@/app/components/admin/UserManagement';
+import AppointmentManagement from '@/app/components/admin/AppointmentManagement';
 
 type AdminDashboardPageProps = {
   onLogout: () => void;
@@ -210,12 +211,7 @@ export default function AdminDashboardPage({ onLogout }: AdminDashboardPageProps
   );
 
   const AppointmentsTab = () => (
-    <div>
-      <h2 className="text-2xl font-bold text-gray-900 mb-6">Appointments Management</h2>
-      <div className="bg-white rounded-xl shadow-md p-6">
-        <p className="text-gray-600">Appointment management features coming soon...</p>
-      </div>
-    </div>
+    <AppointmentManagement />
   );
 
   return (

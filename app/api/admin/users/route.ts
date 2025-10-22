@@ -1,7 +1,7 @@
 /**
  * Admin Users API Route Handler
  * Handles GET requests for user management in admin dashboard
- * 
+ *
  * Note: This fetches users from Firestore 'users' collection
  * Users should be created/updated in Firestore during signup
  */
@@ -41,10 +41,10 @@ export async function GET(request: NextRequest) {
     const limit = parseInt(searchParams.get('limit') || '10');
 
     const auth = getAuth();
-    
+
     // Fetch users from Firebase Auth
     const listUsersResult = await auth.listUsers(1000); // Fetch up to 1000 users
-    
+
     // Convert Firebase users to AdminUser format
     let allUsers: AdminUser[] = listUsersResult.users.map((userRecord) => ({
       id: userRecord.uid,
@@ -94,7 +94,7 @@ export async function GET(request: NextRequest) {
     );
   } catch (error: any) {
     console.error('Error fetching users:', error);
-    
+
     // If Firebase Admin is not configured, return helpful error
     if (error.code === 'app/invalid-credential') {
       return NextResponse.json(
@@ -105,7 +105,7 @@ export async function GET(request: NextRequest) {
         { status: 500 }
       );
     }
-    
+
     return NextResponse.json(
       {
         success: false,
