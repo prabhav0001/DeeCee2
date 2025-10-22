@@ -113,6 +113,7 @@ function DeeceeHairApp(): React.ReactElement {
   const [selectedCurrency, setSelectedCurrency] = useState<string>("INR");
   const [showCurrencyDropdown, setShowCurrencyDropdown] = useState(false);
   const [wishlistProductIds, setWishlistProductIds] = useState<number[]>([]);
+  const [profileDefaultTab, setProfileDefaultTab] = useState<"profile" | "orders" | "addresses" | "wishlist" | "security">("profile");
 
   // Currency data with exchange rates (relative to INR)
   const currencies = {
@@ -812,6 +813,7 @@ function DeeceeHairApp(): React.ReactElement {
             onBackToCart={() => navigateTo("cart")}
             onOrderSuccess={() => {
               setCart([]);
+              setProfileDefaultTab("orders");
               navigateTo("profile");
             }}
           />
@@ -831,6 +833,7 @@ function DeeceeHairApp(): React.ReactElement {
           <ProfilePage
             onNavigateToLogin={() => setShowLogin(true)}
             onNavigateHome={() => navigateTo("home")}
+            defaultTab={profileDefaultTab}
           />
         )}
         {currentPage === "bestsellers" && (

@@ -20,11 +20,12 @@ import {
 type ProfilePageProps = {
   onNavigateToLogin: () => void;
   onNavigateHome: () => void;
+  defaultTab?: ProfileTab;
 };
 
-export default function ProfilePage({ onNavigateToLogin, onNavigateHome }: ProfilePageProps): React.ReactElement {
+export default function ProfilePage({ onNavigateToLogin, onNavigateHome, defaultTab }: ProfilePageProps): React.ReactElement {
   const { user, isAuthenticated, logout, updateUser } = useAuth();
-  const [activeTab, setActiveTab] = useState<ProfileTab>("profile");
+  const [activeTab, setActiveTab] = useState<ProfileTab>(defaultTab || "profile");
   const [isEditing, setIsEditing] = useState(false);
   const [showSuccess, setShowSuccess] = useState(false);
   const [showAddressForm, setShowAddressForm] = useState(false);
@@ -55,7 +56,8 @@ export default function ProfilePage({ onNavigateToLogin, onNavigateHome }: Profi
   }, [user]);
 
   // Orders State - Real orders from user's purchase history
-  const [orders] = useState<Order[]>([]);
+  const [orders, setOrders] = useState<Order[]>([]);
+  const [loadingOrders, setLoadingOrders] = useState(true);
 
   // Addresses State - Load from Firestore
   const [addresses, setAddresses] = useState<Address[]>([]);
@@ -73,6 +75,33 @@ export default function ProfilePage({ onNavigateToLogin, onNavigateHome }: Profi
     };
 
     loadAddresses();
+  }, [user?.email]);
+
+  // Load orders from API when user changes
+  useEffect(() => {
+    const loadOrders = async () => {
+      if (user?.email) {
+        setLoadingOrders(true);
+        try {
+          const response = await fetch(`/api/orders?userEmail=${encodeURIComponent(user.email)}`);
+          const data = await response.json();
+          
+          if (data.success) {
+            setOrders(data.orders || []);
+          } else {
+            console.error('Failed to fetch orders:', data.error);
+            setOrders([]);
+          }
+        } catch (error) {
+          console.error('Error loading orders:', error);
+          setOrders([]);
+        } finally {
+          setLoadingOrders(false);
+        }
+      }
+    };
+
+    loadOrders();
   }, [user?.email]);
 
   // New address form state
@@ -436,7 +465,12 @@ export default function ProfilePage({ onNavigateToLogin, onNavigateHome }: Profi
               {activeTab === "orders" && (
                 <div>
                   <h2 className="text-xl font-bold text-gray-900 mb-6">Order History</h2>
-                  {orders.length === 0 ? (
+                  {loadingOrders ? (
+                    <div className="text-center py-12">
+                      <div className="w-16 h-16 border-4 border-rose-200 border-t-rose-600 rounded-full animate-spin mx-auto mb-4"></div>
+                      <p className="text-gray-600">Loading orders...</p>
+                    </div>
+                  ) : orders.length === 0 ? (
                     <div className="text-center py-12">
                       <div className="w-20 h-20 bg-gray-100 rounded-full flex items-center justify-center mx-auto mb-4">
                         <ShoppingBag className="w-10 h-10 text-gray-400" />
@@ -463,9 +497,9 @@ export default function ProfilePage({ onNavigateToLogin, onNavigateHome }: Profi
                                 <h3 className="font-semibold text-gray-900">Order #{order.id}</h3>
                                 <p className="text-sm text-gray-600 flex items-center gap-2 mt-1">
                                   <Calendar className="w-4 h-4" />
-                                  {new Date(order.date).toLocaleDateString('en-US', { day: 'numeric', month: 'long', year: 'numeric' })}
+                                  {new Date(order.createdAt).toLocaleDateString('en-US', { day: 'numeric', month: 'long', year: 'numeric' })}
                                 </p>
-                                <p className="text-sm text-gray-600 mt-1">{order.items} item(s)</p>
+                                <p className="text-sm text-gray-600 mt-1">{order.items.length} item(s)</p>
                                 {order.trackingId && (
                                   <p className="text-xs text-gray-500 flex items-center gap-1 mt-1">
                                     <Truck className="w-3 h-3" />
