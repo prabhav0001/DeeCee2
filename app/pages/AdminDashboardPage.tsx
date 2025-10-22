@@ -20,6 +20,7 @@ import { AdminDashboardTab, AdminStats } from '@/app/types';
 import UserManagement from '@/app/components/admin/UserManagement';
 import AppointmentManagement from '@/app/components/admin/AppointmentManagement';
 import ProductManagement from '@/app/components/admin/ProductManagement';
+import OrderManagement from '@/app/components/admin/OrderManagement';
 
 type AdminDashboardPageProps = {
   onLogout: () => void;
@@ -288,10 +289,7 @@ export default function AdminDashboardPage({ onLogout }: AdminDashboardPageProps
               <ProductManagement />
             </div>
             <div style={{ display: activeTab === 'orders' ? 'block' : 'none' }}>
-              <h2 className="text-2xl font-bold text-gray-900 mb-6">Orders Management</h2>
-              <div className="bg-white rounded-xl shadow-md p-6">
-                <p className="text-gray-600">Order management features coming soon...</p>
-              </div>
+              <OrderManagement />
             </div>
             <div style={{ display: activeTab === 'users' ? 'block' : 'none' }}>
               <UserManagement />

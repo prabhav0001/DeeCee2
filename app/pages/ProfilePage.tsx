@@ -85,7 +85,7 @@ export default function ProfilePage({ onNavigateToLogin, onNavigateHome, default
         try {
           const response = await fetch(`/api/orders?userEmail=${encodeURIComponent(user.email)}`);
           const data = await response.json();
-          
+
           if (data.success) {
             setOrders(data.orders || []);
           } else {
