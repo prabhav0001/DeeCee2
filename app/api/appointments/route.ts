@@ -1,22 +1,45 @@
 /**
  * Appointments API Route Handler
  * Handles GET and POST requests for appointments
+ * Saves to Firestore database
  */
 
 import { NextRequest, NextResponse } from 'next/server';
+import { initializeApp, getApps, cert } from 'firebase-admin/app';
+import { getFirestore } from 'firebase-admin/firestore';
 
-// In production, replace this with actual database
-// For now, we'll use in-memory storage (will reset on server restart)
-let appointments: any[] = [];
+// Initialize Firebase Admin (only once)
+if (!getApps().length) {
+  try {
+    initializeApp({
+      credential: cert({
+        projectId: process.env.NEXT_PUBLIC_FIREBASE_PROJECT_ID,
+        clientEmail: process.env.FIREBASE_CLIENT_EMAIL,
+        privateKey: process.env.FIREBASE_PRIVATE_KEY?.replace(/\\n/g, '\n'),
+      }),
+    });
+  } catch (error) {
+    console.error('Firebase Admin initialization error:', error);
+  }
+}
 
 /**
  * GET /api/appointments
- * Fetch all appointments
+ * Fetch all appointments from Firestore
  */
 export async function GET(request: NextRequest) {
   try {
-    // In production, fetch from database
-    // Example: const appointments = await db.appointments.findMany();
+    const db = getFirestore();
+    const appointmentsRef = db.collection('appointments');
+    const snapshot = await appointmentsRef.orderBy('createdAt', 'desc').get();
+
+    const appointments: any[] = [];
+    snapshot.forEach((doc) => {
+      appointments.push({
+        id: doc.id,
+        ...doc.data(),
+      });
+    });
 
     return NextResponse.json(
       {
@@ -40,7 +63,7 @@ export async function GET(request: NextRequest) {
 
 /**
  * POST /api/appointments
- * Create a new appointment
+ * Create a new appointment and save to Firestore
  */
 export async function POST(request: NextRequest) {
   try {
@@ -60,42 +83,56 @@ export async function POST(request: NextRequest) {
       }
     }
 
-    // Check if time slot is already booked
-    const isBooked = appointments.some(
-      (apt) =>
-        apt.date === body.date &&
-        apt.location === body.location &&
-        apt.time === body.time &&
-        apt.id !== body.id
-    );
+    const db = getFirestore();
+    const appointmentsRef = db.collection('appointments');
 
-    if (isBooked) {
-      return NextResponse.json(
-        {
-          success: false,
-          error: 'This time slot is already booked',
-        },
-        { status: 409 }
-      );
+    // Check if time slot is already booked
+    const existingSnapshot = await appointmentsRef
+      .where('date', '==', body.date)
+      .where('location', '==', body.location)
+      .where('time', '==', body.time)
+      .get();
+
+    if (!existingSnapshot.empty) {
+      // Check if it's not the same appointment being updated
+      const isBooked = existingSnapshot.docs.some(doc => doc.id !== body.id);
+      if (isBooked) {
+        return NextResponse.json(
+          {
+            success: false,
+            error: 'This time slot is already booked',
+          },
+          { status: 409 }
+        );
+      }
     }
 
-    // Add timestamp
+    // Prepare appointment data
     const appointment = {
-      ...body,
+      service: body.service,
+      location: body.location,
+      date: body.date,
+      time: body.time,
+      name: body.name,
+      email: body.email,
+      phone: body.phone,
+      notes: body.notes || '',
       createdAt: new Date().toISOString(),
-      status: 'confirmed',
+      status: 'pending',
     };
 
-    // In production, save to database
-    // Example: await db.appointments.create({ data: appointment });
-    appointments.push(appointment);
+    // Save to Firestore using the provided ID
+    await appointmentsRef.doc(body.id).set(appointment);
 
-    console.log('✅ Appointment created:', appointment.id);
+    console.log('✅ Appointment saved to Firestore:', body.id);
 
     return NextResponse.json(
       {
         success: true,
-        appointment: appointment,
+        appointment: {
+          id: body.id,
+          ...appointment,
+        },
         message: 'Appointment created successfully',
       },
       { status: 201 }
@@ -114,7 +151,7 @@ export async function POST(request: NextRequest) {
 
 /**
  * DELETE /api/appointments/[id]
- * Cancel an appointment
+ * Cancel an appointment in Firestore
  */
 export async function DELETE(request: NextRequest) {
   try {
@@ -132,10 +169,12 @@ export async function DELETE(request: NextRequest) {
       );
     }
 
-    // Find and remove appointment
-    const index = appointments.findIndex((apt) => apt.id === id);
+    const db = getFirestore();
+    const appointmentRef = db.collection('appointments').doc(id);
 
-    if (index === -1) {
+    // Check if appointment exists
+    const doc = await appointmentRef.get();
+    if (!doc.exists) {
       return NextResponse.json(
         {
           success: false,
@@ -145,17 +184,18 @@ export async function DELETE(request: NextRequest) {
       );
     }
 
-    // In production, update status in database
-    // Example: await db.appointments.update({ where: { id }, data: { status: 'cancelled' } });
-    const cancelled = appointments.splice(index, 1)[0];
+    // Update status to cancelled instead of deleting
+    await appointmentRef.update({
+      status: 'cancelled',
+      updatedAt: new Date().toISOString(),
+    });
 
-    console.log('✅ Appointment cancelled:', id);
+    console.log('✅ Appointment cancelled in Firestore:', id);
 
     return NextResponse.json(
       {
         success: true,
         message: 'Appointment cancelled successfully',
-        appointment: cancelled,
       },
       { status: 200 }
     );

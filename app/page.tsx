@@ -17,7 +17,10 @@ import LoginPage from './pages/LoginPage';
 import SignupPage from './pages/SignupPage';
 import VerificationPage from './pages/VerificationPage';
 import ForgotPasswordPage from './pages/ForgotPasswordPage';
+import AdminLoginPage from './pages/AdminLoginPage';
+import AdminDashboardPage from './pages/AdminDashboardPage';
 import { AuthProvider, useAuth } from './contexts/AuthContext';
+import { AdminAuthProvider, useAdminAuth } from './contexts/AdminAuthContext';
 import { Product, CartItem, Appointment, Page, ReelVideo } from './types';
 import { IconButton, PromoSlider } from './components/common';
 import { products, promoMessages, heroSlides, reelsVideos } from './constants/products';
@@ -159,7 +162,10 @@ function DeeceeHairApp(): React.ReactElement {
     '/privacy': 'privacy',
     '/about': 'about',
     '/profile': 'profile',
-    '/bestsellers': 'bestsellers'
+    '/bestsellers': 'bestsellers',
+    '/admin': 'admin-login',
+    '/admin/login': 'admin-login',
+    '/admin/dashboard': 'admin-dashboard'
   };
 
   const PAGE_TO_ROUTE: Record<Page, string> = {
@@ -173,7 +179,9 @@ function DeeceeHairApp(): React.ReactElement {
     privacy: '/privacy',
     about: '/about',
     profile: '/profile',
-    bestsellers: '/bestsellers'
+    bestsellers: '/bestsellers',
+    'admin-login': '/admin/login',
+    'admin-dashboard': '/admin/dashboard'
   };
 
   // Sync current page with URL pathname on mount
@@ -805,6 +813,17 @@ function DeeceeHairApp(): React.ReactElement {
             convertPrice={convertPrice}
           />
         )}
+        {currentPage === "admin-login" && (
+          <AdminLoginPage
+            onLoginSuccess={() => navigateTo("admin-dashboard")}
+            onBackToHome={() => navigateTo("home")}
+          />
+        )}
+        {currentPage === "admin-dashboard" && (
+          <AdminDashboardPage
+            onLogout={() => navigateTo("admin-login")}
+          />
+        )}
       </main>
 
       {/* Login Modal */}
@@ -1055,11 +1074,13 @@ function DeeceeHairApp(): React.ReactElement {
   );
 }
 
-// AuthProvider
+// AuthProvider with AdminAuthProvider
 export default function DeeceeHair(): React.ReactElement {
   return (
     <AuthProvider>
-      <DeeceeHairApp />
+      <AdminAuthProvider>
+        <DeeceeHairApp />
+      </AdminAuthProvider>
     </AuthProvider>
   );
 }
