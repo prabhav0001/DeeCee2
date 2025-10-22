@@ -19,6 +19,7 @@ import {
 import { AdminDashboardTab, AdminStats } from '@/app/types';
 import UserManagement from '@/app/components/admin/UserManagement';
 import AppointmentManagement from '@/app/components/admin/AppointmentManagement';
+import ProductManagement from '@/app/components/admin/ProductManagement';
 
 type AdminDashboardPageProps = {
   onLogout: () => void;
@@ -184,17 +185,7 @@ export default function AdminDashboardPage({ onLogout }: AdminDashboardPageProps
   );
 
   const ProductsTab = () => (
-    <div>
-      <div className="flex items-center justify-between mb-6">
-        <h2 className="text-2xl font-bold text-gray-900">Products Management</h2>
-        <button className="bg-rose-600 text-white px-4 py-2 rounded-lg hover:bg-rose-700 transition-colors">
-          Add New Product
-        </button>
-      </div>
-      <div className="bg-white rounded-xl shadow-md p-6">
-        <p className="text-gray-600">Product management features coming soon...</p>
-      </div>
-    </div>
+    <ProductManagement />
   );
 
   const OrdersTab = () => (
