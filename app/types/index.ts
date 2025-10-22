@@ -116,6 +116,20 @@ export type AdminOrder = {
   shippingAddress: Address;
 };
 
+export type AdminUser = {
+  id: string;
+  email: string;
+  displayName: string | null;
+  phoneNumber: string | null;
+  photoURL: string | null;
+  emailVerified: boolean;
+  disabled: boolean;
+  createdAt: string;
+  lastSignInTime: string | null;
+  totalOrders: number;
+  totalSpent: number;
+};
+
 export type AdminDashboardTab = "overview" | "products" | "orders" | "users" | "appointments";
 
 // Common form validation patterns
