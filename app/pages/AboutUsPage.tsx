@@ -93,9 +93,9 @@ export default function AboutUsPage(): React.ReactElement {
             </div>
             <div className="relative">
               <img
-                src="https://raw.githubusercontent.com/prabhav0001/deecee-src/refs/heads/main/about_us_story.png"
+                src="https://raw.githubusercontent.com/prabhav0001/deecee-src/refs/heads/main/about_us_story.gif"
                 alt="DEECEE HAIR Story"
-                className="rounded-2xl shadow-2xl w-full"
+                // className="rounded-2xl shadow-2xl w-full bg-white"
               />
               <div className="absolute -bottom-6 -right-6 bg-rose-600 text-white p-6 rounded-2xl shadow-xl">
                 <div className="text-3xl font-bold">8+</div>
