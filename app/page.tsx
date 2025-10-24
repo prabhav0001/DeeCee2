@@ -24,7 +24,7 @@ import { AuthProvider, useAuth } from './contexts/AuthContext';
 import { AdminAuthProvider, useAdminAuth } from './contexts/AdminAuthContext';
 import { Product, CartItem, Appointment, Page, ReelVideo } from './types';
 import { IconButton, PromoSlider } from './components/common';
-import { products, promoMessages, heroSlides, reelsVideos } from './constants/products';
+import { products, promoMessages, reelsVideos } from './constants/products';
 
 const VideoReelCard = ({ video }: { video: ReelVideo }) => {
   const videoRef = useRef<HTMLVideoElement>(null);
@@ -103,7 +103,6 @@ function DeeceeHairApp(): React.ReactElement {
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const [searchOpen, setSearchOpen] = useState(false);
   const [filterCategory, setFilterCategory] = useState("all");
-  const [currentSlide, setCurrentSlide] = useState(0);
   const [appointments, setAppointments] = useState<Appointment[]>([]);
   const [showLogin, setShowLogin] = useState(false);
   const [showSignup, setShowSignup] = useState(false);
@@ -132,11 +131,6 @@ function DeeceeHairApp(): React.ReactElement {
     const converted = priceInINR * currencies[selectedCurrency as keyof typeof currencies].rate;
     return `${currencies[selectedCurrency as keyof typeof currencies].symbol}${Math.round(converted).toLocaleString()}`;
   }, [selectedCurrency]);
-
-  useEffect(() => {
-    const interval = setInterval(() => setCurrentSlide((prev) => (prev + 1) % heroSlides.length), 5000);
-    return () => clearInterval(interval);
-  }, []);
 
   // Handle scroll to hide/show promo slider
   useEffect(() => {
@@ -550,18 +544,25 @@ function DeeceeHairApp(): React.ReactElement {
   const HomePage = useCallback(() => (
     <div className="w-full">
       <section className="relative min-h-screen flex items-center justify-center overflow-hidden">
-        {heroSlides.map((slide, index) => (
-          <div key={index} className={`absolute inset-0 transition-opacity duration-1000 ease-in-out ${index === currentSlide ? "opacity-100 z-10" : "opacity-0 z-0"}`} style={{ backgroundImage: `url('${slide.image}')`, backgroundSize: "cover", backgroundPosition: "center" }} />
-        ))}
+        {/* Hero Video Background */}
+        <video
+          autoPlay
+          loop
+          muted
+          playsInline
+          className="absolute inset-0 w-full h-full object-cover z-0"
+        >
+          <source src="https://raw.githubusercontent.com/prabhav0001/deecee-src/refs/heads/main/videos/hero_promo_1.mp4" type="video/mp4" />
+        </video>
         <div className="absolute inset-0 bg-gradient-to-br from-rose-600/40 via-transparent to-rose-600/40"></div>
         <div className="relative z-20 w-full px-4 sm:px-6 lg:px-8 text-center">
           <div className="transform transition-all duration-700">
             <h1 className="text-3xl sm:text-4xl md:text-5xl lg:text-6xl xl:text-7xl font-bold text-white mb-4 md:mb-6 tracking-tight">
-              {heroSlides[currentSlide].title}
-              <span className="block text-xl sm:text-2xl md:text-3xl lg:text-4xl xl:text-5xl mt-2 font-light">{heroSlides[currentSlide].subtitle}</span>
+              Premium Hair
+              <span className="block text-xl sm:text-2xl md:text-3xl lg:text-4xl xl:text-5xl mt-2 font-light">Extensions</span>
             </h1>
             <p className="text-sm sm:text-base md:text-lg lg:text-xl text-white/90 mb-6 md:mb-8 max-w-2xl mx-auto px-4">
-              {heroSlides[currentSlide].description}
+              Transform your look with our luxurious collection
             </p>
           </div>
           <div className="flex flex-col sm:flex-row gap-3 md:gap-4 justify-center px-4">
@@ -572,17 +573,6 @@ function DeeceeHairApp(): React.ReactElement {
               <Calendar className="w-4 h-4 md:w-5 md:h-5" /> Book Consultation
             </button>
           </div>
-        </div>
-        <button onClick={() => setCurrentSlide((prev) => (prev - 1 + heroSlides.length) % heroSlides.length)} className="absolute left-2 sm:left-4 top-1/2 transform -translate-y-1/2 bg-white/20 backdrop-blur-sm text-white p-2 sm:p-3 rounded-full hover:bg-white/30 transition z-30">
-          <ChevronLeft className="w-5 h-5 sm:w-6 sm:h-6" />
-        </button>
-        <button onClick={() => setCurrentSlide((prev) => (prev + 1) % heroSlides.length)} className="absolute right-2 sm:right-4 top-1/2 transform -translate-y-1/2 bg-white/20 backdrop-blur-sm text-white p-2 sm:p-3 rounded-full hover:bg-white/30 transition z-30">
-          <ChevronRight className="w-5 h-5 sm:w-6 sm:h-6" />
-        </button>
-        <div className="absolute bottom-8 left-1/2 transform -translate-x-1/2 flex space-x-2 z-30">
-          {heroSlides.map((_, index) => (
-            <button key={index} onClick={() => setCurrentSlide(index)} className={`w-2 h-2 sm:w-3 sm:h-3 rounded-full transition-all ${index === currentSlide ? "bg-white w-6 sm:w-8" : "bg-white/50 hover:bg-white/70"}`} aria-label={`Slide ${index + 1}`} />
-          ))}
         </div>
       </section>
 
@@ -735,7 +725,7 @@ function DeeceeHairApp(): React.ReactElement {
         </div>
       </section>
     </div>
-  ), [currentSlide, navigateTo, convertPrice]);
+  ), [navigateTo, convertPrice]);
 
   // Check if current page is admin page
   const isAdminPage = currentPage === 'admin-login' || currentPage === 'admin-dashboard';
