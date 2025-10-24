@@ -95,6 +95,7 @@ const VideoReelCard = ({ video }: { video: ReelVideo }) => {
 
 function DeeceeHairApp(): React.ReactElement {
   const { isAuthenticated, user } = useAuth();
+  const heroVideoRef = useRef<HTMLVideoElement>(null);
   const [currentPage, setCurrentPage] = useState<Page>("home");
   const [selectedProduct, setSelectedProduct] = useState<Product | null>(null);
   const [selectedColor, setSelectedColor] = useState("");
@@ -131,6 +132,15 @@ function DeeceeHairApp(): React.ReactElement {
     const converted = priceInINR * currencies[selectedCurrency as keyof typeof currencies].rate;
     return `${currencies[selectedCurrency as keyof typeof currencies].symbol}${Math.round(converted).toLocaleString()}`;
   }, [selectedCurrency]);
+
+  // Ensure hero video plays
+  useEffect(() => {
+    if (heroVideoRef.current) {
+      heroVideoRef.current.play().catch(error => {
+        console.log("Video autoplay prevented:", error);
+      });
+    }
+  }, []);
 
   // Handle scroll to hide/show promo slider
   useEffect(() => {
@@ -543,33 +553,36 @@ function DeeceeHairApp(): React.ReactElement {
 
   const HomePage = useCallback(() => (
     <div className="w-full">
-      <section className="relative min-h-screen flex items-center justify-center overflow-hidden">
+      <section className="relative min-h-screen flex items-center justify-center overflow-hidden bg-gray-900">
         {/* Hero Video Background */}
         <video
           autoPlay
           loop
           muted
           playsInline
+          preload="auto"
           className="absolute inset-0 w-full h-full object-cover z-0"
+          style={{ objectFit: 'cover' }}
         >
-          <source src="https://raw.githubusercontent.com/prabhav0001/deecee-src/refs/heads/main/videos/hero_promo_1.mp4" type="video/mp4" />
+          <source src="https://raw.githubusercontent.com/prabhav0001/deecee-src/main/videos/hero_promo_1.mp4" type="video/mp4" />
+          Your browser does not support the video tag.
         </video>
-        <div className="absolute inset-0 bg-gradient-to-br from-rose-600/40 via-transparent to-rose-600/40"></div>
+        <div className="absolute inset-0 bg-gradient-to-br from-rose-600/40 via-transparent to-rose-600/40 z-10"></div>
         <div className="relative z-20 w-full px-4 sm:px-6 lg:px-8 text-center">
           <div className="transform transition-all duration-700">
-            <h1 className="text-3xl sm:text-4xl md:text-5xl lg:text-6xl xl:text-7xl font-bold text-white mb-4 md:mb-6 tracking-tight">
+            <h1 className="text-3xl sm:text-4xl md:text-5xl lg:text-6xl xl:text-7xl font-bold text-white mb-4 md:mb-6 tracking-tight animate-fade-in-up">
               Premium Hair
-              <span className="block text-xl sm:text-2xl md:text-3xl lg:text-4xl xl:text-5xl mt-2 font-light">Extensions</span>
+              <span className="block text-xl sm:text-2xl md:text-3xl lg:text-4xl xl:text-5xl mt-2 font-light animate-fade-in-up animation-delay-200">Extensions</span>
             </h1>
-            <p className="text-sm sm:text-base md:text-lg lg:text-xl text-white/90 mb-6 md:mb-8 max-w-2xl mx-auto px-4">
+            <p className="text-sm sm:text-base md:text-lg lg:text-xl text-white/90 mb-6 md:mb-8 max-w-2xl mx-auto px-4 animate-fade-in-up animation-delay-400">
               Transform your look with our luxurious collection
             </p>
           </div>
-          <div className="flex flex-col sm:flex-row gap-3 md:gap-4 justify-center px-4">
-            <button onClick={() => navigateTo("shop")} className="bg-white text-rose-600 px-6 sm:px-7 md:px-8 py-2.5 sm:py-3 md:py-3.5 lg:py-4 rounded-full font-semibold hover:bg-gray-100 transition transform hover:scale-105 shadow-lg text-sm md:text-base">
+          <div className="flex flex-col sm:flex-row gap-3 md:gap-4 justify-center px-4 animate-fade-in-up animation-delay-600">
+            <button onClick={() => navigateTo("shop")} className="bg-white text-rose-600 px-6 sm:px-7 md:px-8 py-2.5 sm:py-3 md:py-3.5 lg:py-4 rounded-full font-semibold hover:bg-gray-100 transition-all duration-300 transform hover:scale-105 hover:shadow-2xl shadow-lg text-sm md:text-base">
               Shop Collection
             </button>
-            <button onClick={() => navigateTo("appointment")} className="bg-transparent border-2 border-white text-white px-6 sm:px-7 md:px-8 py-2.5 sm:py-3 md:py-3.5 lg:py-4 rounded-full font-semibold hover:bg-white hover:text-rose-600 transition transform hover:scale-105 flex items-center justify-center gap-2 text-sm md:text-base">
+            <button onClick={() => navigateTo("appointment")} className="bg-transparent border-2 border-white text-white px-6 sm:px-7 md:px-8 py-2.5 sm:py-3 md:py-3.5 lg:py-4 rounded-full font-semibold hover:bg-white hover:text-rose-600 transition-all duration-300 transform hover:scale-105 hover:shadow-2xl flex items-center justify-center gap-2 text-sm md:text-base">
               <Calendar className="w-4 h-4 md:w-5 md:h-5" /> Book Consultation
             </button>
           </div>
