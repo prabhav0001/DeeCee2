@@ -741,7 +741,9 @@ export default function ProfilePage({ onNavigateToLogin, onNavigateHome, default
                     <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4">
                       {wishlistItems.map((item) => (
                         <div key={item.id} className="border border-gray-200 rounded-xl overflow-hidden hover:shadow-lg transition-shadow">
-                          <img src={item.image} alt={item.name} className="w-full h-48 object-cover" />
+                          <div className="aspect-video overflow-hidden">
+                            <img src={item.image} alt={item.name} className="w-full h-full object-cover" />
+                          </div>
                           <div className="p-4">
                             <h3 className="font-semibold text-gray-900 mb-2 line-clamp-1">{item.name}</h3>
                             <p className="text-rose-600 font-bold mb-3">₹{item.price.toLocaleString()}</p>

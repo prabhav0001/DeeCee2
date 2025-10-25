@@ -134,13 +134,13 @@ export default function ProductPage({
         <div className="w-full md:w-1/2">
           {/* Main Image Display with Zoom */}
           <div
-            className="mb-4 rounded-2xl overflow-hidden shadow-lg relative group cursor-pointer"
+            className="mb-4 rounded-2xl overflow-hidden shadow-lg relative group cursor-pointer aspect-video"
             onClick={() => setShowZoomModal(true)}
           >
             <img
               src={productImages[selectedImageIndex]}
               alt={`${product.name} - View ${selectedImageIndex + 1}`}
-              className="w-full h-[400px] sm:h-[500px] object-cover transition-transform duration-300 group-hover:scale-105"
+              className="w-full h-full object-cover transition-transform duration-300 group-hover:scale-105"
             />
             {/* Zoom Icon Indicator */}
             <div className="absolute top-4 right-4 bg-black/60 backdrop-blur-sm text-white p-2 rounded-full opacity-0 group-hover:opacity-100 transition-opacity flex items-center gap-2 px-3">
@@ -155,7 +155,7 @@ export default function ProductPage({
               <button
                 key={index}
                 onClick={() => setSelectedImageIndex(index)}
-                className={`rounded-xl overflow-hidden transition-all duration-300 ${
+                className={`rounded-xl overflow-hidden transition-all duration-300 aspect-video ${
                   selectedImageIndex === index
                     ? 'ring-4 ring-rose-600 shadow-xl transform scale-105'
                     : 'ring-2 ring-gray-200 hover:ring-rose-300 shadow-md'
@@ -164,7 +164,7 @@ export default function ProductPage({
                 <img
                   src={img}
                   alt={`${product.name} - Thumbnail ${index + 1}`}
-                  className="w-full h-[120px] sm:h-[150px] object-cover"
+                  className="w-full h-full object-cover"
                 />
               </button>
             ))}

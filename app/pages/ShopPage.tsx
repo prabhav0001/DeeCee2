@@ -20,8 +20,8 @@ const ProductCard = ({
 }) => (
   <div className="border border-gray-200 rounded-2xl p-4 hover:shadow-2xl transition-all duration-300 transform hover:-translate-y-2 bg-white group relative">
     <div onClick={onClick} className="cursor-pointer">
-      <div className="relative overflow-hidden rounded-xl mb-4">
-        <img src={product.image} alt={product.name} className="w-full h-48 object-cover transform group-hover:scale-110 transition-transform duration-500" />
+      <div className="relative overflow-hidden rounded-xl mb-4 aspect-video">
+        <img src={product.image} alt={product.name} className="w-full h-full object-cover transform group-hover:scale-110 transition-transform duration-500" />
         <div className="absolute inset-0 bg-gradient-to-t from-black/40 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
       </div>
       <h3 className="text-base sm:text-lg font-semibold text-gray-900 mb-2 line-clamp-1">{product.name}</h3>

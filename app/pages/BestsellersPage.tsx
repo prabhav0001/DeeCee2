@@ -42,18 +42,18 @@ export default function BestsellersPage({
           <p className="text-gray-500 text-lg">No bestseller products available at the moment.</p>
         </div>
       ) : (
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6 sm:gap-8">
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-6 sm:gap-8">
           {bestsellers.map((product) => (
             <div
               key={product.id}
               className="group cursor-pointer rounded-2xl shadow-lg overflow-hidden bg-white hover:shadow-2xl transition-all duration-300"
               onClick={() => onProductClick(product)}
             >
-              <div className="relative overflow-hidden">
+              <div className="relative overflow-hidden aspect-video">
                 <img
                   src={product.image}
                   alt={product.name}
-                  className="w-full h-64 sm:h-80 object-cover group-hover:scale-110 transition-transform duration-500"
+                  className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500"
                 />
                 <div className="absolute top-4 right-4 bg-rose-600 text-white px-3 py-1 rounded-full text-xs font-semibold flex items-center gap-1 shadow-md">
                   <Star className="w-3 h-3 fill-current" /> Bestseller
