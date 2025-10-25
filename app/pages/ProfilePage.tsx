@@ -746,7 +746,11 @@ export default function ProfilePage({ onNavigateToLogin, onNavigateHome, default
                           </div>
                           <div className="p-4">
                             <h3 className="font-semibold text-gray-900 mb-2 line-clamp-1">{item.name}</h3>
-                            <p className="text-rose-600 font-bold mb-3">₹{item.price.toLocaleString()}</p>
+                            <div className="flex items-center gap-2 mb-3 flex-wrap">
+                              <p className="text-rose-600 font-bold text-lg">₹{item.price.toLocaleString()}</p>
+                              <p className="text-gray-400 line-through text-sm">₹{Math.round(item.price * 1.5).toLocaleString()}</p>
+                              <span className="text-xs font-semibold bg-green-500 text-white px-2 py-0.5 rounded">50% OFF</span>
+                            </div>
                             <div className="flex gap-2">
                               <button
                                 onClick={() => {

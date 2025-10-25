@@ -63,9 +63,15 @@ export default function BestsellersPage({
                   <h3 className="text-xl sm:text-2xl font-bold text-white mb-2 line-clamp-1">
                     {product.name}
                   </h3>
-                  <p className="text-white text-lg font-semibold mb-2">
-                    {convertPrice(product.price)}
-                  </p>
+                  <div className="flex items-center gap-2 mb-2 flex-wrap">
+                    <p className="text-white text-lg font-semibold">
+                      {convertPrice(product.price)}
+                    </p>
+                    <p className="text-white/70 line-through text-sm">
+                      {convertPrice(product.price * 1.5)}
+                    </p>
+                    <span className="text-xs font-semibold bg-green-500 text-white px-2 py-0.5 rounded">50% OFF</span>
+                  </div>
                   <div className="flex flex-wrap gap-1 mb-2">
                     {product.colors.slice(0, 3).map((color, idx) => (
                       <span

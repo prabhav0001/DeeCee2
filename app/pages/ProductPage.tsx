@@ -173,8 +173,12 @@ export default function ProductPage({
 
         {/* Product Details Section */}
         <div className="flex flex-col flex-1">
-          <h1 className="text-2xl sm:text-3xl font-bold text-gray-900 mb-6 truncate">{product.name}</h1>
-          <p className="text-rose-600 text-2xl font-extrabold mb-8">{convertPrice(product.price)}</p>
+          <h1 className="text-2xl sm:text-3xl font-bold text-gray-900 mb-4 truncate">{product.name}</h1>
+          <div className="flex items-center gap-3 mb-8 flex-wrap">
+            <p className="text-rose-600 text-3xl font-extrabold">{convertPrice(product.price)}</p>
+            <p className="text-gray-400 line-through text-xl">{convertPrice(product.price * 1.5)}</p>
+            <span className="text-sm font-semibold bg-green-500 text-white px-3 py-1.5 rounded-lg">50% OFF</span>
+          </div>
 
           {/* Product Description */}
           {product.description && (

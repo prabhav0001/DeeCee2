@@ -25,7 +25,11 @@ const ProductCard = ({
         <div className="absolute inset-0 bg-gradient-to-t from-black/40 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
       </div>
       <h3 className="text-base sm:text-lg font-semibold text-gray-900 mb-2 line-clamp-1">{product.name}</h3>
-      <p className="text-rose-600 font-bold text-lg">{convertPrice(product.price)}</p>
+      <div className="flex items-center gap-2 mb-1">
+        <p className="text-rose-600 font-bold text-lg">{convertPrice(product.price)}</p>
+        <p className="text-gray-400 line-through text-sm">{convertPrice(product.price * 1.5)}</p>
+        <span className="text-green-600 text-xs font-semibold bg-green-50 px-2 py-1 rounded">50% OFF</span>
+      </div>
       <div className="mt-3 flex flex-wrap gap-2">
         {product.isBestseller && <span className="inline-block px-3 py-1 text-xs font-semibold bg-gradient-to-r from-rose-100 to-rose-50 text-rose-700 rounded-full">Bestseller</span>}
         {product.isNew && <span className="inline-block px-3 py-1 text-xs font-semibold bg-gradient-to-r from-green-100 to-green-50 text-green-700 rounded-full">New</span>}
